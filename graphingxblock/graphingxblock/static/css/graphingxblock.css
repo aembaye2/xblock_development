@@ -1,0 +1,9 @@
+/* CSS for GrXBlock */
+
+.graphingxblock_block .count {
+    font-weight: bold;
+}
+
+.graphingxblock_block p {
+    cursor: pointer;
+}

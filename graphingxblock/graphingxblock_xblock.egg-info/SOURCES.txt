@@ -1,0 +1,13 @@
+setup.py
+graphingxblock/__init__.py
+graphingxblock/graphingxblock.py
+graphingxblock/static/README.txt
+graphingxblock/static/css/graphingxblock.css
+graphingxblock/static/html/graphingxblock.html
+graphingxblock/static/js/src/graphingxblock.js
+graphingxblock_xblock.egg-info/PKG-INFO
+graphingxblock_xblock.egg-info/SOURCES.txt
+graphingxblock_xblock.egg-info/dependency_links.txt
+graphingxblock_xblock.egg-info/entry_points.txt
+graphingxblock_xblock.egg-info/requires.txt
+graphingxblock_xblock.egg-info/top_level.txt
