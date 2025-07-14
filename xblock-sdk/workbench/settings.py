@@ -176,7 +176,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'djpyfs',
     'workbench',
-    'problem_builder',  # Added for problem-builder XBlock
+    #'problem_builder',  # Added for problem-builder XBlock
     # 'edx_jsme',  # Commented out - requires full edX platform with capa system
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',

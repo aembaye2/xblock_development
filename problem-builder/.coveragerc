@@ -1,8 +1,0 @@
-[run]
-branch = True
-parallel = True
-source = problem_builder
-omit =
-    */tests/*
-    venv/*
-    /*/migrations/*

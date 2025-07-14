@@ -1,6 +1,0 @@
-# Core requirements for using this application
--c constraints.txt
-
-xblock-utils
-edx-opaque-keys
-Django

@@ -1299,10 +1299,10 @@ class DragAndDropBlock(
         A canned scenario for display in the workbench.
         """
         return [
-            (
-                "Dragdrop2 standard",
-                "<vertical_demo><dragdrop2/></vertical_demo>"
-            ),
+            # (
+            #     "Dragdrop2 standard",
+            #     "<vertical_demo><dragdrop2/></vertical_demo>"
+            # ),
             (
                 "Dragdrop2 assessment",
                 "<vertical_demo><dragdrop2 mode='assessment' max_attempts='3'/></vertical_demo>"

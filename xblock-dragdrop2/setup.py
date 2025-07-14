@@ -142,7 +142,7 @@ README = open(os.path.join(os.path.dirname(__file__), 'README.md'), encoding="ut
 CHANGELOG = open(os.path.join(os.path.dirname(__file__), 'Changelog.md'), encoding="utf8").read()
 
 setup(
-    name='xblock-adddrop2',
+    name='xblock-dragdrop2',
     version=VERSION,
     description='XBlock - Drag-and-Drop v2',
     long_description=README + '\n\n' + CHANGELOG,

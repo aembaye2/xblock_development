@@ -37,6 +37,13 @@ pip install django-pyfs
 # 5. Install XBlocks in development mode
 echo "📚 Installing XBlocks in development mode..."
 
+if [ -d "xblock-sdk" ]; then
+    echo "  - Installing XBlock SDK..."
+    pip install -e ./xblock-sdk
+else
+    echo "  ⚠️  Warning: xblock-sdk directory not found"
+fi
+
 if [ -d "graphingxblock" ]; then
     echo "  - Installing graphing XBlock..."
     pip install -e ./graphingxblock
@@ -45,17 +52,10 @@ else
 fi
 
 if [ -d "xblock-dragdrop2" ]; then
-    echo "  - Installing drag-and-drop XBlock..."
+    echo "  - Installing dragdrop2 XBlock..."
     pip install -e ./xblock-dragdrop2
 else
     echo "  ⚠️  Warning: xblock-dragdrop2 directory not found"
-fi
-
-if [ -d "xblock-sdk" ]; then
-    echo "  - Installing XBlock SDK..."
-    pip install -e ./xblock-sdk
-else
-    echo "  ⚠️  Warning: xblock-sdk directory not found"
 fi
 
 if [ -d "DoneXBlock" ]; then
@@ -65,12 +65,6 @@ else
     echo "  ⚠️  Warning: DoneXBlock directory not found"
 fi
 
-if [ -d "edx-jsme" ]; then
-    echo "  - Installing JSME XBlock..."
-    pip install -e ./edx-jsme
-else
-    echo "  ⚠️  Warning: edx-jsme directory not found"
-fi
 
 # 6. Verify installation
 echo "📋 Verifying installation..."
