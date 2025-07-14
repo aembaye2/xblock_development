@@ -59,12 +59,5 @@ class GrXBlock(XBlock):
         return [
             ("GrXBlock",
              """<graphingxblock/>
-             """),
-            ("Multiple GrXBlock",
-             """<vertical_demo>
-                <graphingxblock/>
-                <graphingxblock/>
-                <graphingxblock/>
-                </vertical_demo>
-             """),
+             """)
         ]
