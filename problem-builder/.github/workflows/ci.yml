@@ -1,0 +1,54 @@
+name: Python CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.11, 3.12]
+        toxenv: [django42, django52, quality]
+
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v4
+
+    - name: setup python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Required System Packages
+      if: ${{ startsWith(matrix.toxenv, 'integration') }}
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xvfb
+
+    - name: Install Dependencies
+      run: make requirements
+
+    - name: Run Tests
+      env:
+        TOXENV: ${{ matrix.toxenv }}
+      run: tox
+
+    - name: Run coverage
+      if: matrix.python-version == '3.11' && matrix.toxenv == 'django42'
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        flags: unittests
+        fail_ci_if_error: true

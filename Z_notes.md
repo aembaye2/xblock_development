@@ -66,3 +66,20 @@ The server will be available at http://localhost:8000/
 - Changed python3 to python (python3 command not available in this environment)
 - Fixed XBlock registration: dragdrop2 scenarios were using incorrect tag name "adddrop2"
 - Updated installation steps to avoid requirements.txt conflicts
+- **DoneXBlock Django Compatibility**: Fixed Django version conflict by installing Django 4.2.23 instead of 5.2.4
+  - Issue: `djpyfs` dependency uses deprecated `index_together` attribute removed in Django 5.x
+  - Solution: Install `Django==4.2.23` and `django-pyfs` before installing XBlocks
+- Updated setup_env.sh to automatically handle correct Django version and DoneXBlock installation
+- **edx-jsme XBlock Compatibility**: Converted from legacy CAPA system to standalone XBlock
+  - Issue: Original version required full edX platform's `capa` (Computer Assisted Personalized Approach) system
+  - Solution: Completely rewrote as a proper XBlock using XBlock SDK standards
+  - Current Status: **Working with text-based SMILES input** (graphical editor integration pending)
+  - New Features: 
+    - Text-based chemical structure input using SMILES notation
+    - Proper XBlock fields and handlers
+    - Studio configuration interface
+    - Grade submission and scoring
+    - Attempt tracking and limits
+    - Auto-save functionality
+  - Entry Point: `jsme = edx_jsme.jsme_xblock:JSMEXBlock`
+  - Note: Full graphical JSME integration requires additional work to properly embed the JSME applet

@@ -27,7 +27,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://*.preview.app.github.dev',
     'https://*.preview.app.github.dev',
     'https://*.app.github.dev',
-    'https://laughing-orbit-x5pw7wv6qqg36rrq-8000.app.github.dev',
+    'https://laughing-rotary-phone-g4rqjq79wvw2vgwg-8007.app.github.dev/',
 ]
 
 if os.environ.get('EXCLUDE_SAMPLE_XBLOCKS') == 'yes':
@@ -176,7 +176,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'djpyfs',
     'workbench',
-
+    'problem_builder',  # Added for problem-builder XBlock
+    # 'edx_jsme',  # Commented out - requires full edX platform with capa system
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
 
