@@ -1300,12 +1300,12 @@ class DragAndDropBlock(
         """
         return [
             (
-                "Adddrop2 standard",
-                "<vertical_demo><adddrop2/></vertical_demo>"
+                "Dragdrop2 standard",
+                "<vertical_demo><dragdrop2/></vertical_demo>"
             ),
             (
-                "Adddrop2 assessment",
-                "<vertical_demo><adddrop2 mode='assessment' max_attempts='3'/></vertical_demo>"
+                "Dragdrop2 assessment",
+                "<vertical_demo><dragdrop2 mode='assessment' max_attempts='3'/></vertical_demo>"
             ),
         ]
 

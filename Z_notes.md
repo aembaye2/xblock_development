@@ -1,46 +1,68 @@
+# XBlock Development Environment Setup
 
-# Since the xblock-env folder is huge due to being venv, just repo the requirements.txt and other folders and next time just install from there
-
-
-# Great question! Here are the steps you should follow to recreate the xblock-env virtual environment from your requirements.txt file when you restart the repository in a new Codespace:
+Since the xblock-env folder is huge due to being a virtual environment, we exclude it from the repo and recreate it using installation steps.
 
 # Steps to Recreate the Virtual Environment:
-# 1. Navigate to your project directory
 
-cd /workspaces/xblock_development
+## 1. Navigate to your project directory
 
-# 2. Create a new virtual environment
+```bash
+cd /workspaces/xblock_development
+```
 
-python3 -m venv xblock-env
+## 2. Create a new virtual environment
 
-# 3. Activate the virtual environment
+```bash
+python -m venv xblock-env
+```
 
-source xblock-env/bin/activate
+## 3. Activate the virtual environment
 
-# 4. Upgrade pip (recommended)
+```bash
+source xblock-env/bin/activate
+```
 
-pip install --upgrade pip
+## 4. Upgrade pip (recommended)
 
-# 5. Install dependencies from requirements.txt
+```bash
+pip install --upgrade pip
+```
 
-pip install -r requirements.txt
+## 5. Install XBlocks in development mode
+Since the requirements.txt has some dependency conflicts, install the XBlocks directly:
 
-# 6. Install your custom XBlocks in development mode (if needed)
+```bash
+# Install the graphing XBlock
+pip install -e ./graphingxblock
 
-# For your graphing XBlockcd graphingxblockpip install -e .cd ..# For the drag-and-drop XBlock (if you want to work with it)
-# from root folder
-cd xblock-dragdrop2
+# Install the drag-and-drop XBlock
+pip install -e ./xblock-dragdrop2
 
-pip install -e . 
+# Install the XBlock SDK
+pip install -e ./xblock-sdk
+```
 
-cd
+## 6. Verify the installation
 
-# 7. Verify the installation
+```bash
+pip list
+```
 
-pip list
+## 7. Run database migrations
 
-# 8. Test that everything works
+```bash
+python xblock-sdk/manage.py migrate
+```
 
-# from the root folder
+## 8. Start the development server
 
+```bash
 python xblock-sdk/manage.py runserver
+```
+
+The server will be available at http://localhost:8000/
+
+## Fixed Issues:
+- Changed python3 to python (python3 command not available in this environment)
+- Fixed XBlock registration: dragdrop2 scenarios were using incorrect tag name "adddrop2"
+- Updated installation steps to avoid requirements.txt conflicts
