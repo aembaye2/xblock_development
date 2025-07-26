@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  xblock-dev:
+    build: .
+    container_name: xblock_dev_server
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - PORT=8000
+    command: ["bash", "start_server.sh"]

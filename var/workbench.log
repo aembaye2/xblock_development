@@ -1,96 +1,28 @@
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0' AND "workbench_xblockstate"."tag" = 'dragdrop2' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('dragdrop2-assessment', 'usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'dragdrop2'); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0' AND "workbench_xblockstate"."tag" = 'dragdrop2' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('dragdrop2-assessment', 'usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'dragdrop2', 'student_1'); alias=default
-(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'usage', "scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0', "user_id" = 'student_1', "scenario" = 'dragdrop2-assessment', "tag" = 'dragdrop2', "created" = '2025-07-14 18:41:29.638104', "state" = '{
-  "attempts": 1,
-  "item_state": {
-    "0": {
-      "correct": true,
-      "zone": "top"
-    },
-    "1": {
-      "correct": true,
-      "zone": "middle"
-    },
-    "2": {
-      "correct": true,
-      "zone": "bottom"
-    },
-    "3": {
-      "correct": true,
-      "zone": "bottom"
-    }
-  }
-}' WHERE "workbench_xblockstate"."id" = 779; args=('usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'student_1', 'dragdrop2-assessment', 'dragdrop2', '2025-07-14 18:41:29.638104', '{\n  "attempts": 1,\n  "item_state": {\n    "0": {\n      "correct": true,\n      "zone": "top"\n    },\n    "1": {\n      "correct": true,\n      "zone": "middle"\n    },\n    "2": {\n      "correct": true,\n      "zone": "bottom"\n    },\n    "3": {\n      "correct": true,\n      "zone": "bottom"\n    }\n  }\n}', 779); alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.000) INSERT INTO "workbench_xblockstate" ("scope", "scope_id", "user_id", "scenario", "tag", "created", "state") VALUES ('usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'student_1', 'dragdrop2-assessment', 'dragdrop2', '2025-07-26 06:38:18.975238', '{}') RETURNING "workbench_xblockstate"."id"; args=('usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'student_1', 'dragdrop2-assessment', 'dragdrop2', '2025-07-26 06:38:18.975238', '{}'); alias=default
+(0.004) COMMIT; args=None; alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0' AND "workbench_xblockstate"."tag" = 'dragdrop2' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('dragdrop2-assessment', 'usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'dragdrop2', 'student_1'); alias=default
-(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'usage', "scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0', "user_id" = 'student_1', "scenario" = 'dragdrop2-assessment', "tag" = 'dragdrop2', "created" = '2025-07-14 18:41:29.638104', "state" = '{
-  "attempts": 1,
-  "completed": true,
-  "item_state": {
-    "0": {
-      "correct": true,
-      "zone": "top"
-    },
-    "1": {
-      "correct": true,
-      "zone": "middle"
-    },
-    "2": {
-      "correct": true,
-      "zone": "bottom"
-    },
-    "3": {
-      "correct": true,
-      "zone": "bottom"
-    }
-  }
-}' WHERE "workbench_xblockstate"."id" = 779; args=('usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'student_1', 'dragdrop2-assessment', 'dragdrop2', '2025-07-14 18:41:29.638104', '{\n  "attempts": 1,\n  "completed": true,\n  "item_state": {\n    "0": {\n      "correct": true,\n      "zone": "top"\n    },\n    "1": {\n      "correct": true,\n      "zone": "middle"\n    },\n    "2": {\n      "correct": true,\n      "zone": "bottom"\n    },\n    "3": {\n      "correct": true,\n      "zone": "bottom"\n    }\n  }\n}', 779); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0' AND "workbench_xblockstate"."tag" = 'dragdrop2' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('dragdrop2-assessment', 'usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'dragdrop2'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('dragdrop2-assessment', 'usage', 'dragdrop2-assessment.vertical_demo.d0.u0', 'vertical_demo'); alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.000) INSERT INTO "workbench_xblockstate" ("scope", "scope_id", "user_id", "scenario", "tag", "created", "state") VALUES ('usage', 'dragdrop2-assessment.vertical_demo.d0.u0', NULL, 'dragdrop2-assessment', 'vertical_demo', '2025-07-26 06:38:18.984675', '{}') RETURNING "workbench_xblockstate"."id"; args=('usage', 'dragdrop2-assessment.vertical_demo.d0.u0', None, 'dragdrop2-assessment', 'vertical_demo', '2025-07-26 06:38:18.984675', '{}'); alias=default
+(0.004) COMMIT; args=None; alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('dragdrop2-assessment', 'parent', 'dragdrop2-assessment.vertical_demo.d0.u0', 'vertical_demo'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('dragdrop2-assessment', 'parent', 'dragdrop2-assessment.vertical_demo.d0.u0', 'vertical_demo'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('dragdrop2-assessment', 'usage', 'dragdrop2-assessment.vertical_demo.d0.u0', 'vertical_demo'); alias=default
+"GET /scenario/dragdrop2.0/ HTTP/1.1" 200 109944
+"GET /resource/dragdrop2/public/css/drag_and_drop.css HTTP/1.1" 200 19802
+"GET /jsi18n/ HTTP/1.1" 200 3343
+"GET /resource/dragdrop2/public/img/triangle.png HTTP/1.1" 200 34942
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0' AND "workbench_xblockstate"."tag" = 'dragdrop2' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('dragdrop2-assessment', 'usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'dragdrop2', 'student_1'); alias=default
-(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'usage', "scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0', "user_id" = 'student_1', "scenario" = 'dragdrop2-assessment', "tag" = 'dragdrop2', "created" = '2025-07-14 18:41:29.638104', "state" = '{
-  "attempts": 1,
-  "completed": true,
-  "item_state": {
-    "0": {
-      "correct": true,
-      "zone": "top"
-    },
-    "1": {
-      "correct": true,
-      "zone": "middle"
-    },
-    "2": {
-      "correct": true,
-      "zone": "bottom"
-    },
-    "3": {
-      "correct": true,
-      "zone": "bottom"
-    }
-  },
-  "raw_earned": 1.0
-}' WHERE "workbench_xblockstate"."id" = 779; args=('usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'student_1', 'dragdrop2-assessment', 'dragdrop2', '2025-07-14 18:41:29.638104', '{\n  "attempts": 1,\n  "completed": true,\n  "item_state": {\n    "0": {\n      "correct": true,\n      "zone": "top"\n    },\n    "1": {\n      "correct": true,\n      "zone": "middle"\n    },\n    "2": {\n      "correct": true,\n      "zone": "bottom"\n    },\n    "3": {\n      "correct": true,\n      "zone": "bottom"\n    }\n  },\n  "raw_earned": 1.0\n}', 779); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0' AND "workbench_xblockstate"."tag" = 'dragdrop2' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('dragdrop2-assessment', 'usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'dragdrop2'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0' AND "workbench_xblockstate"."tag" = 'dragdrop2' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('dragdrop2-assessment', 'usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'dragdrop2'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.dragdrop2.d0' AND "workbench_xblockstate"."tag" = 'dragdrop2' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('dragdrop2-assessment', 'definition', 'dragdrop2-assessment.dragdrop2.d0', 'dragdrop2'); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0' AND "workbench_xblockstate"."tag" = 'dragdrop2' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('dragdrop2-assessment', 'usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'dragdrop2', 'student_1'); alias=default
-(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'usage', "scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0', "user_id" = 'student_1', "scenario" = 'dragdrop2-assessment', "tag" = 'dragdrop2', "created" = '2025-07-14 18:41:29.638104', "state" = '{
-  "attempts": 1,
-  "completed": true,
-  "item_state": {
-    "0": {
-      "correct": true,
-      "zone": "top"
-    },
-    "1": {
-      "correct": true,
-      "zone": "middle"
-    },
-    "2": {
-      "correct": true,
-      "zone": "bottom"
-    },
-    "3": {
-      "correct": true,
-      "zone": "bottom"
-    }
-  },
-  "raw_earned": 1.0,
-  "raw_possible": 1.0
-}' WHERE "workbench_xblockstate"."id" = 779; args=('usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'student_1', 'dragdrop2-assessment', 'dragdrop2', '2025-07-14 18:41:29.638104', '{\n  "attempts": 1,\n  "completed": true,\n  "item_state": {\n    "0": {\n      "correct": true,\n      "zone": "top"\n    },\n    "1": {\n      "correct": true,\n      "zone": "middle"\n    },\n    "2": {\n      "correct": true,\n      "zone": "bottom"\n    },\n    "3": {\n      "correct": true,\n      "zone": "bottom"\n    }\n  },\n  "raw_earned": 1.0,\n  "raw_possible": 1.0\n}', 779); alias=default
-"POST /handler/dragdrop2-assessment.dragdrop2.d0.u0/do_attempt/?student=student_1& HTTP/1.1" 200 372
-"GET / HTTP/1.1" 200 1667
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0' AND "workbench_xblockstate"."tag" = 'dragdrop2' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('dragdrop2-assessment', 'usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'dragdrop2'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0' AND "workbench_xblockstate"."tag" = 'dragdrop2' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('dragdrop2-assessment', 'usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'dragdrop2'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'dragdrop2-assessment' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'dragdrop2-assessment.dragdrop2.d0.u0' AND "workbench_xblockstate"."tag" = 'dragdrop2' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('dragdrop2-assessment', 'usage', 'dragdrop2-assessment.dragdrop2.d0.u0', 'dragdrop2', 'student_1'); alias=default
+"GET /handler/dragdrop2-assessment.dragdrop2.d0.u0/student_view_user_state/?student=student_1& HTTP/1.1" 200 165
+"POST /handler/dragdrop2-assessment.dragdrop2.d0.u0/publish_event/?student=student_1& HTTP/1.1" 200 21

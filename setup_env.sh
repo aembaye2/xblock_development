@@ -44,12 +44,6 @@ else
     echo "  ⚠️  Warning: xblock-sdk directory not found"
 fi
 
-if [ -d "graphingxblock" ]; then
-    echo "  - Installing graphing XBlock..."
-    pip install -e ./graphingxblock
-else
-    echo "  ⚠️  Warning: graphingxblock directory not found"
-fi
 
 if [ -d "xblock-dragdrop2" ]; then
     echo "  - Installing dragdrop2 XBlock..."
@@ -68,7 +62,7 @@ fi
 
 # 6. Verify installation
 echo "📋 Verifying installation..."
-pip list | grep -E "(xblock|graphing|drag|done|Django)"
+pip list | grep -E "(xblock|drag|done|Django)"
 
 # 7. Run database migrations
 echo "🗄️  Running database migrations..."
@@ -83,5 +77,3 @@ echo ""
 echo "🎯 To start the development server, run:"
 echo "   source xblock-env/bin/activate"
 echo "   python xblock-sdk/manage.py runserver"
-echo ""
-echo "🌐 The server will be available at http://localhost:8000/"
