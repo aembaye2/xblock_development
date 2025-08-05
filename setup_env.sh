@@ -59,6 +59,20 @@ else
     echo "  ⚠️  Warning: DoneXBlock directory not found"
 fi
 
+if [ -d "xblock-drawing" ]; then
+    echo "  - Installing drawing Xblock..."
+    pip install -e ./xblock-drawing
+else
+    echo "  ⚠️  Warning: xblock-drawing directory not found"
+fi
+
+if [ -d "xblock-vectordraw" ]; then
+    echo "  - Installing xblock-vectordraw..."
+    pip install -e ./xblock-vectordraw
+else
+    echo "  ⚠️  Warning: xblock-drawing directory not found"
+fi
+
 
 # 6. Verify installation
 echo "📋 Verifying installation..."

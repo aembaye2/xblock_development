@@ -1,0 +1,11 @@
+
+{% load i18n %}
+<div class="themed-xblock xblock--drawing">
+  <h3>{% trans "Draw a line with positive slope" %}</h3>
+  <canvas id="drawing-canvas" width="400" height="400" style="border:1px solid #333; background:#fff;"></canvas>
+  <div style="margin-top:10px;">
+    <button id="submit-drawing">{% trans "Submit" %}</button>
+    <span id="drawing-feedback"></span>
+  </div>
+</div>
+<script src="/static/drawing/js/drag_and_drop.js"></script>
