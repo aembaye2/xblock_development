@@ -1,18 +1,33 @@
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0.u0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('box-incline', 'usage', 'box-incline.vectordraw.d0.u0', 'vectordraw', 'student_1'); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0.u0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('box-incline', 'usage', 'box-incline.vectordraw.d0.u0', 'vectordraw', 'student_1'); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0.u0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'usage', 'box-incline.vectordraw.d0.u0', 'vectordraw'); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'box-incline.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'usage', 'box-incline.vertical_demo.d0.u0', 'vertical_demo'); alias=default
-(0.002) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'box-incline.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'parent', 'box-incline.vertical_demo.d0.u0', 'vertical_demo'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'box-incline.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'parent', 'box-incline.vertical_demo.d0.u0', 'vertical_demo'); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'box-incline.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'parent', 'box-incline.vertical_demo.d0.u0', 'vertical_demo'); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'box-incline.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'usage', 'box-incline.vertical_demo.d0.u0', 'vertical_demo'); alias=default
 "GET /scenario/vectordraw.0/ HTTP/1.1" 200 12800
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/conf/locale/en/formats.py first seen with mtime 1754277773.543037
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/conf/locale/en/__init__.py first seen with mtime 1754277773.543037
+"GET /static/workbench/js/vendor/jquery-migrate.min.js HTTP/1.1" 304 0
+"GET /static/workbench/js/runtime/1.js HTTP/1.1" 304 0
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/conf/locale/en/formats.py first seen with mtime 1754630851.4666796
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/conf/locale/en/__init__.py first seen with mtime 1754630851.4656796
 "GET /jsi18n/ HTTP/1.1" 200 3343
+"GET /static/workbench/js/vendor/jquery.cookie.js HTTP/1.1" 304 0
+"GET /static/workbench/js/vendor/jquery.min.js HTTP/1.1" 304 0
 "GET /resource/vectordraw/public/css/vectordraw.css HTTP/1.1" 200 4168
 "GET /resource/vectordraw/public/js/vectordraw.js HTTP/1.1" 200 26941
+"GET /static/workbench/js/runtime/logger.js HTTP/1.1" 304 0
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0.u0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('box-incline', 'usage', 'box-incline.vectordraw.d0.u0', 'vectordraw', 'student_1'); alias=default
-(0.004) UPDATE "workbench_xblockstate" SET "scope" = 'usage', "scope_id" = 'box-incline.vectordraw.d0.u0', "user_id" = 'student_1', "scenario" = 'box-incline', "tag" = 'vectordraw', "created" = '2025-08-05 03:39:36.722700', "state" = '{
+(0.004) UPDATE "workbench_xblockstate" SET "scope" = 'usage', "scope_id" = 'box-incline.vectordraw.d0.u0', "user_id" = 'student_1', "scenario" = 'box-incline', "tag" = 'vectordraw', "created" = '2025-08-08 05:31:53.232912', "state" = '{
   "answer": {
     "points": {
       "cm": [
@@ -30,22 +45,12 @@ File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/djan
           4.82842712474619,
           4.82842712474619
         ]
-      },
-      "f": {
-        "tail": [
-          -5.01243481748897,
-          -5.448856799037305
-        ],
-        "tip": [
-          5.29482551143201,
-          -1.636582430806258
-        ]
       }
     }
   }
-}' WHERE "workbench_xblockstate"."id" = 1414; args=('usage', 'box-incline.vectordraw.d0.u0', 'student_1', 'box-incline', 'vectordraw', '2025-08-05 03:39:36.722700', '{\n  "answer": {\n    "points": {\n      "cm": [\n        -0.6,\n        0.4\n      ]\n    },\n    "vectors": {\n      "N": {\n        "tail": [\n          2,\n          2\n        ],\n        "tip": [\n          4.82842712474619,\n          4.82842712474619\n        ]\n      },\n      "f": {\n        "tail": [\n          -5.01243481748897,\n          -5.448856799037305\n        ],\n        "tip": [\n          5.29482551143201,\n          -1.636582430806258\n        ]\n      }\n    }\n  }\n}', 1414); alias=default
+}' WHERE "workbench_xblockstate"."id" = 1656; args=('usage', 'box-incline.vectordraw.d0.u0', 'student_1', 'box-incline', 'vectordraw', '2025-08-08 05:31:53.232912', '{\n  "answer": {\n    "points": {\n      "cm": [\n        -0.6,\n        0.4\n      ]\n    },\n    "vectors": {\n      "N": {\n        "tail": [\n          2,\n          2\n        ],\n        "tip": [\n          4.82842712474619,\n          4.82842712474619\n        ]\n      }\n    }\n  }\n}', 1656); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0.u0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('box-incline', 'usage', 'box-incline.vectordraw.d0.u0', 'vectordraw', 'student_1'); alias=default
-(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'usage', "scope_id" = 'box-incline.vectordraw.d0.u0', "user_id" = 'student_1', "scenario" = 'box-incline', "tag" = 'vectordraw', "created" = '2025-08-05 03:39:36.722700', "state" = '{
+(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'usage', "scope_id" = 'box-incline.vectordraw.d0.u0', "user_id" = 'student_1', "scenario" = 'box-incline', "tag" = 'vectordraw', "created" = '2025-08-08 05:31:53.232912', "state" = '{
   "answer": {
     "points": {
       "cm": [
@@ -63,16 +68,6 @@ File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/djan
           4.82842712474619,
           4.82842712474619
         ]
-      },
-      "f": {
-        "tail": [
-          -5.01243481748897,
-          -5.448856799037305
-        ],
-        "tip": [
-          5.29482551143201,
-          -1.636582430806258
-        ]
       }
     }
   },
@@ -80,101 +75,5 @@ File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/djan
     "correct": false,
     "msg": "Vector N does not start at correct point."
   }
-}' WHERE "workbench_xblockstate"."id" = 1414; args=('usage', 'box-incline.vectordraw.d0.u0', 'student_1', 'box-incline', 'vectordraw', '2025-08-05 03:39:36.722700', '{\n  "answer": {\n    "points": {\n      "cm": [\n        -0.6,\n        0.4\n      ]\n    },\n    "vectors": {\n      "N": {\n        "tail": [\n          2,\n          2\n        ],\n        "tip": [\n          4.82842712474619,\n          4.82842712474619\n        ]\n      },\n      "f": {\n        "tail": [\n          -5.01243481748897,\n          -5.448856799037305\n        ],\n        "tip": [\n          5.29482551143201,\n          -1.636582430806258\n        ]\n      }\n    }\n  },\n  "result": {\n    "correct": false,\n    "msg": "Vector N does not start at correct point."\n  }\n}', 1414); alias=default
+}' WHERE "workbench_xblockstate"."id" = 1656; args=('usage', 'box-incline.vectordraw.d0.u0', 'student_1', 'box-incline', 'vectordraw', '2025-08-08 05:31:53.232912', '{\n  "answer": {\n    "points": {\n      "cm": [\n        -0.6,\n        0.4\n      ]\n    },\n    "vectors": {\n      "N": {\n        "tail": [\n          2,\n          2\n        ],\n        "tip": [\n          4.82842712474619,\n          4.82842712474619\n        ]\n      }\n    }\n  },\n  "result": {\n    "correct": false,\n    "msg": "Vector N does not start at correct point."\n  }\n}', 1656); alias=default
 "POST /handler/box-incline.vectordraw.d0.u0/check_answer/?student=student_1& HTTP/1.1" 200 82
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0.u0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('box-incline', 'usage', 'box-incline.vectordraw.d0.u0', 'vectordraw', 'student_1'); alias=default
-(0.004) UPDATE "workbench_xblockstate" SET "scope" = 'usage', "scope_id" = 'box-incline.vectordraw.d0.u0', "user_id" = 'student_1', "scenario" = 'box-incline', "tag" = 'vectordraw', "created" = '2025-08-05 03:39:36.722700', "state" = '{
-  "answer": {
-    "points": {
-      "cm": [
-        -0.6,
-        0.4
-      ]
-    },
-    "vectors": {
-      "N": {
-        "tail": [
-          2.6353790613718413,
-          2.917769755314882
-        ],
-        "tip": [
-          5.463806186118033,
-          5.746196880061078
-        ]
-      },
-      "f": {
-        "tail": [
-          -5.01243481748897,
-          -5.448856799037305
-        ],
-        "tip": [
-          5.29482551143201,
-          -1.636582430806258
-        ]
-      },
-      "g": {
-        "tail": [
-          3.353389490573606,
-          0.9755314881668669
-        ],
-        "tip": [
-          4.200561572402727,
-          5.423184917769755
-        ]
-      }
-    }
-  },
-  "result": {
-    "correct": false,
-    "msg": "Vector N does not start at correct point."
-  }
-}' WHERE "workbench_xblockstate"."id" = 1414; args=('usage', 'box-incline.vectordraw.d0.u0', 'student_1', 'box-incline', 'vectordraw', '2025-08-05 03:39:36.722700', '{\n  "answer": {\n    "points": {\n      "cm": [\n        -0.6,\n        0.4\n      ]\n    },\n    "vectors": {\n      "N": {\n        "tail": [\n          2.6353790613718413,\n          2.917769755314882\n        ],\n        "tip": [\n          5.463806186118033,\n          5.746196880061078\n        ]\n      },\n      "f": {\n        "tail": [\n          -5.01243481748897,\n          -5.448856799037305\n        ],\n        "tip": [\n          5.29482551143201,\n          -1.636582430806258\n        ]\n      },\n      "g": {\n        "tail": [\n          3.353389490573606,\n          0.9755314881668669\n        ],\n        "tip": [\n          4.200561572402727,\n          5.423184917769755\n        ]\n      }\n    }\n  },\n  "result": {\n    "correct": false,\n    "msg": "Vector N does not start at correct point."\n  }\n}', 1414); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0.u0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('box-incline', 'usage', 'box-incline.vectordraw.d0.u0', 'vectordraw', 'student_1'); alias=default
-(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'usage', "scope_id" = 'box-incline.vectordraw.d0.u0', "user_id" = 'student_1', "scenario" = 'box-incline', "tag" = 'vectordraw', "created" = '2025-08-05 03:39:36.722700', "state" = '{
-  "answer": {
-    "points": {
-      "cm": [
-        -0.6,
-        0.4
-      ]
-    },
-    "vectors": {
-      "N": {
-        "tail": [
-          2.6353790613718413,
-          2.917769755314882
-        ],
-        "tip": [
-          5.463806186118033,
-          5.746196880061078
-        ]
-      },
-      "f": {
-        "tail": [
-          -5.01243481748897,
-          -5.448856799037305
-        ],
-        "tip": [
-          5.29482551143201,
-          -1.636582430806258
-        ]
-      },
-      "g": {
-        "tail": [
-          3.353389490573606,
-          0.9755314881668669
-        ],
-        "tip": [
-          4.200561572402727,
-          5.423184917769755
-        ]
-      }
-    }
-  },
-  "result": {
-    "correct": false,
-    "msg": "Vector N does not start at correct point."
-  }
-}' WHERE "workbench_xblockstate"."id" = 1414; args=('usage', 'box-incline.vectordraw.d0.u0', 'student_1', 'box-incline', 'vectordraw', '2025-08-05 03:39:36.722700', '{\n  "answer": {\n    "points": {\n      "cm": [\n        -0.6,\n        0.4\n      ]\n    },\n    "vectors": {\n      "N": {\n        "tail": [\n          2.6353790613718413,\n          2.917769755314882\n        ],\n        "tip": [\n          5.463806186118033,\n          5.746196880061078\n        ]\n      },\n      "f": {\n        "tail": [\n          -5.01243481748897,\n          -5.448856799037305\n        ],\n        "tip": [\n          5.29482551143201,\n          -1.636582430806258\n        ]\n      },\n      "g": {\n        "tail": [\n          3.353389490573606,\n          0.9755314881668669\n        ],\n        "tip": [\n          4.200561572402727,\n          5.423184917769755\n        ]\n      }\n    }\n  },\n  "result": {\n    "correct": false,\n    "msg": "Vector N does not start at correct point."\n  }\n}', 1414); alias=default
-"POST /handler/box-incline.vectordraw.d0.u0/check_answer/?student=student_1& HTTP/1.1" 200 82
-"GET /resource/vectordraw/public/css/vectordraw.css HTTP/1.1" 200 4168
