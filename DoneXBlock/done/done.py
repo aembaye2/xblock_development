@@ -115,8 +115,8 @@ class DoneXBlock(XBlock):
             ("DoneXBlock",
              """<vertical_demo>
                   <done align="left"> </done>
-                  <done align="right"> </done>
-                  <done align="center"> </done>
+                   <done align="right"> </done>
+                   <done align="center"> </done>
                 </vertical_demo>
              """),
         ]

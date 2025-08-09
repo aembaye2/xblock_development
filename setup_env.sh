@@ -68,11 +68,17 @@ fi
 
 if [ -d "xblock-vectordraw" ]; then
     echo "  - Installing xblock-vectordraw..."
-    pip install -e ./xblock-vectordraw
+    pip install -e ./xblock-vectordraw2
 else
-    echo "  ⚠️  Warning: xblock-drawing directory not found"
+    echo "  ⚠️  Warning: xblock-vectordraw2 directory not found"
 fi
 
+if [ -d "mcxblock" ]; then
+    echo "  - Installing mcxblock..."
+    pip install -e ./mcxblock
+else
+    echo "  ⚠️  Warning: xmcxblock directory not found"
+fi
 
 # 6. Verify installation
 echo "📋 Verifying installation..."

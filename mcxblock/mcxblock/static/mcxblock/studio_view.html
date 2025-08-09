@@ -1,0 +1,14 @@
+<div class="mcq-edit">
+  <label>Question:</label><br>
+  <input type="text" id="mcq-question" value="{{ question }}" style="width:100%"><br><br>
+
+  <label>Choices (JSON list or one-per-line):</label><br>
+  <textarea id="mcq-choices" rows="6" style="width:100%">{{ choices }}</textarea><br><br>
+
+  <label>Correct Choice Index (0-based):</label><br>
+  <input type="number" id="mcq-correct" value="{{ correct_index }}"><br><br>
+
+  <button class="save-button">Save</button>
+  <button class="cancel-button">Cancel</button>
+  <span id="mcq-status" style="margin-left:10px"></span>
+</div>
