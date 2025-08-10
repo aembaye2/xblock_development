@@ -21,6 +21,16 @@ pip install -e xblockname
 
 pip uninstall xblockname
 
+####
+source xblock-env/bin/activate
+python xblock-sdk/manage.py runserver 
+
+
+## git commands
+
+git add .
+git commit -m "commited on 8/10/2023"
+git push origin main
 
 
 

@@ -80,6 +80,14 @@ else
     echo "  ⚠️  Warning: xmcxblock directory not found"
 fi
 
+if [ -d "formula_excercise_block" ]; then
+    echo "  - Installing mcxblock..."
+    pip install -e ./formula_excercise_block
+else
+    echo "  ⚠️  Warning: formula_excercise_block directory not found"
+fi
+
+
 # 6. Verify installation
 echo "📋 Verifying installation..."
 pip list | grep -E "(xblock|drag|done|Django)"
@@ -92,6 +100,9 @@ else
     echo "  ⚠️  Warning: manage.py not found, skipping migrations"
 fi
 
+
+
+formula_excercise_block
 echo "✅ Setup complete!"
 echo ""
 echo "🎯 To start the development server, run:"

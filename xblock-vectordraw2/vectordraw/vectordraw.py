@@ -227,6 +227,19 @@ class VectorDrawXBlock(StudioEditableXBlockMixin, XBlock):
         enforce_type=True
     )
 
+    # Legacy / compatibility field:
+    # Some runtimes (e.g. edx-platform modulestore descriptors, or generic
+    # utilities in the workbench) expect blocks to expose a "url_name" field/attribute.
+    # This XBlock does not actually use it for anything, but its absence causes
+    # noisy warnings in the workbench logs such as:
+    #   WARNING:root:<class 'xblock.core.VectorDrawXBlockWithMixins'> does not contain field url_name
+    # Defining it here (hidden from Studio) silences the warning without changing behavior.
+    url_name = String(
+        help="Legacy url_name (not shown in Studio; retained for LMS/workbench compatibility).",
+        default="",
+        scope=Scope.settings
+    )
+
     # Dictionary that keeps track of vector positions for correct answer;
     # treated as an editable field but hidden from author in Studio
     # since changes to it are implicit

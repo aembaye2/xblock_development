@@ -2,10 +2,11 @@ import json
 import pkg_resources
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
-from xblock.fields import String, Integer, Scope
+from xblock.fields import String, Integer, Float, Scope
+from xblock.scorable import ScorableXBlockMixin, Score
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
-class MCXBlock(StudioEditableXBlockMixin, XBlock):
+class MCXBlock(StudioEditableXBlockMixin, ScorableXBlockMixin, XBlock):
     """
     Multiple Choice Question XBlock (static files)
     """
@@ -36,6 +37,13 @@ class MCXBlock(StudioEditableXBlockMixin, XBlock):
         scope=Scope.user_state,
         help="The index of the choice the student selected"
     )
+
+    # Persisted raw score components (for ScorableXBlockMixin compatibility)
+    _raw_earned = Float(default=0.0, scope=Scope.user_state, help="Earned raw score")
+    _raw_possible = Float(default=1.0, scope=Scope.user_state, help="Possible raw score")
+
+    # Optional weight (mirrors other scorable blocks; used by LMS aggregation)
+    weight = Float(default=1.0, scope=Scope.settings, help="Problem weight applied to raw score")
 
     editable_fields = ('display_name', 'question', 'choices', 'correct_index')
 
@@ -80,20 +88,33 @@ class MCXBlock(StudioEditableXBlockMixin, XBlock):
         # Check correctness
         correct = (choice == self.correct_index)
 
-        # Compute grade
-        grade = 1.0 if correct else 0.0
-
-        #print(f"[MCXBlock] Publishing grade: value={grade}, max_value=1.0")
-        # Publish grade to LMS
-        self.runtime.publish(self, 'grade', {
-            'value': grade,
-            'max_value': 1.0
-        })
-
-        # Also update XBlock grading state for LMS
-        self._grade = grade  # Optional: if you have a @XBlock.json_handler that returns scores
-
+        # Compute and persist score via ScorableXBlockMixin API
+        score = self.calculate_score()
+        self.set_score(score)
+        # Publish (using mixin helper for consistency)
+        self._publish_grade(score)
         return {'correct': correct}
+
+    # --- ScorableXBlockMixin required methods ---
+    def has_submitted_answer(self):  # noqa: D401 (simple predicate)
+        return self.student_choice != -1
+
+    def get_score(self):
+        return Score(raw_earned=self._raw_earned, raw_possible=self._raw_possible)
+
+    def set_score(self, score):
+        self._raw_earned = float(score.raw_earned)
+        self._raw_possible = float(score.raw_possible)
+
+    def calculate_score(self):
+        # Single-question MCQ: full credit if selected index matches correct_index.
+        raw_earned = 1.0 if self.student_choice == self.correct_index else 0.0
+        return Score(raw_earned=raw_earned, raw_possible=1.0)
+
+    # Legacy interface (some runtimes look for has_score / max_score)
+    has_score = True
+    def max_score(self):  # noqa: D401
+        return 1.0
 
     def studio_view(self, context=None):
         frag = Fragment()
