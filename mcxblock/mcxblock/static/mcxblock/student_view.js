@@ -147,9 +147,16 @@
         if (!(this instanceof MCXBlock)) {
             return new MCXBlock(runtime, element);
         }
+        // Coerce jQuery-wrapped elements or view-like objects to a DOM node
+        var el = element;
+        try {
+            if (el && el.jquery) el = el[0];
+            else if (el && typeof el.get === 'function') el = el.get(0);
+            else if (el && el.el) el = el.el;
+        } catch (e) {}
         this.runtime = runtime;
-        this.element = element;
-        renderChoices(runtime, element);
+        this.element = el;
+        renderChoices(runtime, el);
     }
 
     if (typeof define === 'function' && define.amd) {

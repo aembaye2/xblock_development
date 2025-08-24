@@ -1,9 +1,34 @@
 (function() {
     function MCXBlockStudio(runtime, element) {
-        if (!element) {
-            console.error('MCXBlockStudio: missing element');
-            return;
+        // Support cases where Studio passes a jQuery-wrapped element or a view-like object.
+    var el = element;
+    var _debug = (typeof window !== 'undefined' && window.MCX_DEBUG) ? true : false;
+        try {
+            if (el && el.jquery) el = el[0];
+            else if (el && typeof el.get === 'function') el = el.get(0);
+            else if (el && el.el) el = el.el;
+        } catch (e) {
+            // ignore and let the subsequent checks surface a useful error
         }
+        if (!_debug) {
+            if (!el || typeof el.querySelector !== 'function') {
+                console.error('MCXBlockStudio: element is not a DOM node. Received:', element);
+                return;
+            }
+        } else {
+            // In debug mode, log details to help diagnose wrapper types
+            try {
+                console.debug('MCXBlockStudio: raw element:', element);
+                console.debug('MCXBlockStudio: resolved el:', el);
+                if (element && element.constructor) console.debug('constructor:', element.constructor.name);
+                if (el && el.constructor) console.debug('resolved constructor:', el.constructor.name);
+            } catch (e) { console.debug('MCXBlockStudio: debug logging failed', e); }
+            if (!el || typeof el.querySelector !== 'function') {
+                console.error('MCXBlockStudio: element is not a DOM node after coercion. Received:', element);
+                return;
+            }
+        }
+        element = el;
         var save = element.querySelector('.save-button');
         var cancel = element.querySelector('.cancel-button');
         var status = element.querySelector('#mcq-status');
