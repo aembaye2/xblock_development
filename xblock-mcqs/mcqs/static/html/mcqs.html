@@ -1,0 +1,23 @@
+ <div id="question-block"
+      {% if self.user_choice %}class="attempted {%if self.correct %}correct{% else %}incorrect{% endif %}"{% endif %}>
+    <p>{{ self.question }}</p>
+    <div id="choices">
+        {% for choice in self.choices %}
+        <div>
+            <label class="{% if forloop.counter == self.user_choice %}user-choice{% endif %}
+           {% if self.user_choice and forloop.counter == self.correct_choice %} correct-choice{% endif %}">
+               <input type="radio" name="choice" value="{{ forloop.counter }}"
+                {% if self.user_choice == forloop.counter %}checked="checked"{% endif %} />
+               {{ choice }}
+            </label>
+       </div>
+        {% endfor %}
+    </div>
+    <div class="hint-block">
+        {% if not self.user_choice %}
+        <span class="help-tip" title="Get Hint"></span>
+        <span id="hint">
+        {% endif %}
+    </div>
+    <input type="button" id="submit" value="Check"  />
+ </div>

@@ -153,6 +153,16 @@
             if (el && el.jquery) el = el[0];
             else if (el && typeof el.get === 'function') el = el.get(0);
             else if (el && el.el) el = el.el;
+            else if (el && el.$el) {
+                if (el.$el.jquery) el = el.$el[0];
+                else if (el.$el[0]) el = el.$el[0];
+            }
+            else if (el && typeof el.length === 'number' && el[0]) {
+                el = el[0];
+            }
+            else if (el && el.el && el.el[0]) {
+                el = el.el[0];
+            }
         } catch (e) {}
         this.runtime = runtime;
         this.element = el;

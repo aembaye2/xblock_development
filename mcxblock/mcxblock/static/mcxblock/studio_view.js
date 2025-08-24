@@ -7,6 +7,16 @@
             if (el && el.jquery) el = el[0];
             else if (el && typeof el.get === 'function') el = el.get(0);
             else if (el && el.el) el = el.el;
+            else if (el && el.$el) { // Backbone/Marionette style
+                if (el.$el.jquery) el = el.$el[0];
+                else if (el.$el[0]) el = el.$el[0];
+            }
+            else if (el && typeof el.length === 'number' && el[0]) {
+                el = el[0];
+            }
+            else if (el && el.el && el.el[0]) {
+                el = el.el[0];
+            }
         } catch (e) {
             // ignore and let the subsequent checks surface a useful error
         }

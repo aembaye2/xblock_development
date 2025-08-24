@@ -1,0 +1,61 @@
+/* CSS for McqsXBlock */
+
+.mcqs_block{
+    padding: 10px;
+}
+#submit{
+    width:150px;
+    height:40px;
+    margin-top: 10px;
+    font-size: 18px;
+}
+#choices > div{
+    border: 1px solid #eeeeff;
+}
+#choices label {
+    cursor: pointer;
+    display: block;
+    padding: 15px;
+}
+#choices label:hover{
+    background-color: #EFEFEF;
+}
+div.attempted{
+   pointer-events: none;
+    opacity: 0.4;
+}
+
+div.incorrect .user-choice{
+    border: 1px solid red;
+}
+
+div.correct .user-choice{
+    border: 1px solid green;
+}
+
+label.correct-choice{
+    border: 1px solid green;
+}
+
+.hint-block {
+    font-size: 14px;
+    margin: 10px;
+}
+
+.help-tip{
+	text-align: center;
+	background-color: #BCDBEA;
+	border-radius: 50%;
+	width: 24px;
+	height: 24px;
+	font-size: 14px;
+	line-height: 26px;
+	cursor: pointer;
+    display: inline-block;
+}
+
+.help-tip:before{
+	content:'?';
+	font-weight: bold;
+	color:#fff;
+}
