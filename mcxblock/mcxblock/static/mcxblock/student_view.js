@@ -9,11 +9,32 @@
     }
 
     function renderChoices(runtime, element) {
+        if (!element) {
+            console.error('MCXBlock: missing element during renderChoices');
+            return;
+        }
         var form = element.querySelector('#mcq-form');
+        if (!form) {
+            console.error('MCXBlock: #mcq-form not found inside element', element);
+            return;
+        }
         var raw = form.getAttribute('data-choices') || '[]';
         var selected = parseInt(form.getAttribute('data-selected') || '-1');
         var choices = [];
         try { choices = JSON.parse(raw); } catch (e) { choices = []; }
+        var demoMode = false;
+        // If no choices provided, render a small demo question so the UI is testable
+        if (!choices || choices.length === 0) {
+            demoMode = true;
+            choices = [
+                'Example option A (demo)',
+                'Example option B (demo)',
+                'Example option C (demo)'
+            ];
+            // reflect in attributes so other code may read it if needed
+            try { form.setAttribute('data-choices', JSON.stringify(choices)); } catch (e) { /* ignore */ }
+            form.setAttribute('data-selected', '-1');
+        }
 
         var html = '';
         for (var i = 0; i < choices.length; i++) {
@@ -28,7 +49,8 @@
 
         var feedback = form.querySelector('#mcq-feedback');
         var submit = form.querySelector('#mcq-submit');
-        if (submit) submit.onclick = function() {
+    var handleSubmit = function(evt) {
+            if (evt && typeof evt.preventDefault === 'function') evt.preventDefault();
             var radios = form.elements['choice'];
             var sel = -1;
             if (!radios) { sel = -1; }
@@ -38,6 +60,27 @@
                 for (var j = 0; j < radios.length; j++) {
                     if (radios[j].checked) { sel = radios[j].value; break; }
                 }
+            }
+
+            // Require a selection
+            if (sel === -1 || sel === undefined || sel === null || sel === '') {
+                if (feedback) {
+                    feedback.innerHTML = '<span style="color:white; background-color:orange; padding:4px 8px; border-radius:4px;">⚠️ Please select an option.</span>';
+                } else {
+                    console.warn('MCXBlock: no selection and no feedback element to show message');
+                }
+                return;
+            }
+            // If demoMode, handle locally without contacting server
+            if (demoMode) {
+                var correctIndex = 0; // demo: first option is 'correct'
+                if (parseInt(sel, 10) === correctIndex) {
+                    if (feedback) feedback.innerHTML = '<span style="color:white; background-color:green; padding:4px 8px; border-radius:4px;">✅ Correct! (demo)</span>';
+                    disableInputs(form);
+                } else {
+                    if (feedback) feedback.innerHTML = '<span style="color:white; background-color:red; padding:4px 8px; border-radius:4px;">❌ Incorrect. (demo)</span>';
+                }
+                return;
             }
 
             var xhr = new XMLHttpRequest();
@@ -84,19 +127,36 @@
             };
             xhr.send(JSON.stringify({choice: sel}));
         };
+        if (submit && submit.addEventListener) {
+            submit.addEventListener('click', handleSubmit, false);
+        } else if (submit) {
+            submit.onclick = handleSubmit;
+        }
     }
 
     function disableInputs(form) {
         var inputs = form.querySelectorAll('input[type="radio"], button');
-        inputs.forEach(function(input) {
-            input.disabled = true;
-        });
+        if (inputs.forEach) {
+            inputs.forEach(function(input) { input.disabled = true; });
+        } else {
+            for (var i = 0; i < inputs.length; i++) { inputs[i].disabled = true; }
+        }
     }
 
     function MCXBlock(runtime, element) {
+        if (!(this instanceof MCXBlock)) {
+            return new MCXBlock(runtime, element);
+        }
+        this.runtime = runtime;
+        this.element = element;
         renderChoices(runtime, element);
     }
 
-    window.MCXBlock = MCXBlock;
+    if (typeof define === 'function' && define.amd) {
+        define(function() { return MCXBlock; });
+    }
+    if (typeof window !== 'undefined') {
+        window.MCXBlock = MCXBlock;
+    }
 })();
 
