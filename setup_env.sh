@@ -100,9 +100,6 @@ else
     echo "  ⚠️  Warning: manage.py not found, skipping migrations"
 fi
 
-
-
-formula_excercise_block
 echo "✅ Setup complete!"
 echo ""
 echo "🎯 To start the development server, run:"
