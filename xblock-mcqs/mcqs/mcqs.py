@@ -174,11 +174,11 @@ class McqsXBlock(ScorableXBlockMixin, XBlock, StudioEditableXBlockMixin):
             ("McqsXBlock",
              """<mcqs/>
              """),
-            ("Multiple McqsXBlock",
-             """<vertical_demo>
-                <mcqs/>
-                <mcqs/>
-                <mcqs/>
-                </vertical_demo>
-             """),
+            # ("Multiple McqsXBlock",
+            #  """<vertical_demo>
+            #     <mcqs/>
+            #     <mcqs/>
+            #     <mcqs/>
+            #     </vertical_demo>
+            #  """),
         ]

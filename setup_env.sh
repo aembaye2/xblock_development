@@ -87,6 +87,13 @@ else
     echo "  ⚠️  Warning: xblock-mcqs directory not found"
 fi
 
+if [ -d "xblock-sortable" ]; then
+    echo "  - Installing xblock-sortable..."
+    pip install -e ./xblock-sortable
+else
+    echo "  ⚠️  Warning: xblock-sortable directory not found"
+fi
+
 # 6. Verify installation
 echo "📋 Verifying installation..."
 pip list | grep -E "(xblock|drag|done|Django)"
