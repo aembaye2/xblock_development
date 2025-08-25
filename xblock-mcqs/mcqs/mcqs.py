@@ -5,14 +5,15 @@ import pkg_resources
 from django.template import Template, Context
 
 from xblock.core import XBlock
-from xblock.fields import Scope, Integer, String, List, Boolean
+from xblock.fields import Scope, Integer, String, List, Boolean, Float
 from xblock.fragment import Fragment
+from xblock.scorable import ScorableXBlockMixin, Score
 from xblock.validation import ValidationMessage
 
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
 
-class McqsXBlock(XBlock, StudioEditableXBlockMixin):
+class McqsXBlock(ScorableXBlockMixin, XBlock, StudioEditableXBlockMixin):
     """
     Multiple Choice Questions XBlock
     """
@@ -22,17 +23,17 @@ class McqsXBlock(XBlock, StudioEditableXBlockMixin):
 
     question = String(
         display_name='Question',
-        default='Which of the following languages is more suited to a structured program?',
+        default='What is the capital city of Germany?',
         scope=Scope.content, help='Question statement'
     )
     choices = List(
         display_name='Choices',
-        default=['PL/1', 'FORTRAN', 'BASIC', 'PASCAL'],
+        default=['Berlin', 'Munich', 'Frankfurt', 'Hamburg'],
         scope=Scope.content, help='Choices for MCQs'
     )
     correct_choice = Integer(
         display_name='Correct Choice',
-        default=4, scope=Scope.content,
+        default=1, scope=Scope.content,
         help='Index of correct choice among given choices. For example if third choice is correct, enter 3'
     )
     hint = String(
@@ -42,6 +43,9 @@ class McqsXBlock(XBlock, StudioEditableXBlockMixin):
 
     user_choice = Integer(default=None, scope=Scope.user_state, help='Index of choice selected by User')
     correct = Boolean(default=False, scope=Scope.user_state, help='User selection is correct or not')
+    # persisted score values for ScorableXBlockMixin
+    _raw_earned = Float(default=0.0, scope=Scope.user_state, help='Earned raw score')
+    _raw_possible = Float(default=1.0, scope=Scope.user_state, help='Possible raw score')
 
     def resource_string(self, path):
         """
@@ -99,10 +103,58 @@ class McqsXBlock(XBlock, StudioEditableXBlockMixin):
         if ans == self.correct_choice:
             self.correct = True
             response['correct'] = True
+            earned = 1.0
         else:
             response['correct_choice'] = self.correct_choice
+            earned = 0.0
 
+        # compute and persist score using ScorableXBlockMixin
+        score = Score(raw_earned=earned, raw_possible=1.0)
+        self.set_score(score)
+        try:
+            # publish grade to LMS (mixin helper)
+            self._publish_grade(score)
+        except Exception:
+            # don't let publishing errors break response
+            pass
+
+        # include grade info in response for client-side confirmation
+        response['grade'] = score.raw_earned
+        response['max_grade'] = score.raw_possible
         return response
+
+    # --- ScorableXBlockMixin required methods ---
+    def has_submitted_answer(self):
+        return self.user_choice is not None
+
+    def get_score(self):
+        return Score(raw_earned=self._raw_earned, raw_possible=self._raw_possible)
+
+    def set_score(self, score):
+        try:
+            self._raw_earned = float(score.raw_earned)
+            self._raw_possible = float(score.raw_possible)
+        except Exception:
+            pass
+
+    def calculate_score(self):
+        raw_earned = 1.0 if self.correct else 0.0
+        return Score(raw_earned=raw_earned, raw_possible=1.0)
+
+    def publish_grade(self, score=None, only_if_higher=None):
+        """
+        Publish the student's current grade to the system as an event and return a dict
+        with the grade and max grade.
+        """
+        if not score:
+            score = self.get_score()
+        try:
+            # use mixin helper to publish; some runtimes expect two args
+            self._publish_grade(score, only_if_higher)
+        except Exception:
+            # best-effort; ignore failures in dev environments
+            pass
+        return {'grade': score.raw_earned, 'max_grade': score.raw_possible}
 
     @XBlock.json_handler
     def get_hint(self, data, suffix=''):

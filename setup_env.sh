@@ -80,13 +80,12 @@ else
     echo "  ⚠️  Warning: xmcxblock directory not found"
 fi
 
-if [ -d "formula_excercise_block" ]; then
-    echo "  - Installing mcxblock..."
-    pip install -e ./formula_excercise_block
+if [ -d "xblock-mcqs" ]; then
+    echo "  - Installing xblock-mcqs..."
+    pip install -e ./xblock-mcqs
 else
-    echo "  ⚠️  Warning: formula_excercise_block directory not found"
+    echo "  ⚠️  Warning: xblock-mcqs directory not found"
 fi
-
 
 # 6. Verify installation
 echo "📋 Verifying installation..."

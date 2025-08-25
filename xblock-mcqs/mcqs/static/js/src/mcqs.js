@@ -18,6 +18,10 @@ function McqsXBlock(runtime, element) {
 
                 if(data.correct == true){
                     $('#question-block', element).addClass('correct');
+                    if (data.grade !== undefined) {
+                        // show quick grade confirmation
+                        $('<div class="grade-confirm">Grade: ' + data.grade + '/' + data.max_grade + '</div>').appendTo('#question-block');
+                    }
                 }else{
                     // indicate correct and incorrect
                     $('#question-block', element).addClass('incorrect');

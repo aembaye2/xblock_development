@@ -29,7 +29,7 @@ python xblock-sdk/manage.py runserver
 ## git commands
 
 git add .
-git commit -m "commited on 8/10/2024d"
+git commit -m "commited on 8/24/2024"
 git push origin main
 
 
