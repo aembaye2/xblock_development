@@ -59,9 +59,9 @@ else
     echo "  ⚠️  Warning: DoneXBlock directory not found"
 fi
 
-if [ -d "xblock-drawing" ]; then
-    echo "  - Installing drawing Xblock..."
-    pip install -e ./xblock-drawing
+if [ -d "xblock-graphing" ]; then
+    echo "  - Installing graphing Xblock..."
+    pip install -e ./xblock-graphing
 else
     echo "  ⚠️  Warning: xblock-drawing directory not found"
 fi
@@ -87,9 +87,9 @@ else
     echo "  ⚠️  Warning: xblock-mcqs directory not found"
 fi
 
-if [ -d "xblock-sortable" ]; then
-    echo "  - Installing xblock-sortable..."
-    pip install -e ./xblock-sortable
+if [ -d "xblock-sortable2" ]; then
+    echo "  - Installing xblock-sortable2..."
+    pip install -e ./xblock-sortable2
 else
     echo "  ⚠️  Warning: xblock-sortable directory not found"
 fi

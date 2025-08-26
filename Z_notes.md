@@ -22,8 +22,7 @@ pip install -e xblockname
 pip uninstall xblockname
 
 ####
-source xblock-env/bin/activate
-python xblock-sdk/manage.py runserver 
+source xblock-env/bin/activate && python xblock-sdk/manage.py runserver 
 
 
 ## git commands
