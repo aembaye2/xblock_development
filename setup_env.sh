@@ -94,12 +94,20 @@ else
     echo "  ⚠️  Warning: xblock-sortable directory not found"
 fi
 
-if [ -d "formula_excercise_block" ]; then
-    echo "  - Installing formula_excercise_block..."
-    pip install -e ./formula_excercise_block
+# if [ -d "formula_excercise_block" ]; then
+#     echo "  - Installing formula_excercise_block..."
+#     pip install -e ./formula_excercise_block
+# else
+#     echo "  ⚠️  Warning: formula_excercise_block directory not found"
+# fi
+
+if [ -d "xblock-react" ]; then
+    echo "  - Installing xblock-react..."
+    pip install -e ./xblock-react
 else
-    echo "  ⚠️  Warning: xblock-sortable directory not found"
+    echo "  ⚠️  Warning: xblock-react directory not found"
 fi
+
 # 6. Verify installation
 echo "📋 Verifying installation..."
 pip list | grep -E "(xblock|drag|done|Django)"

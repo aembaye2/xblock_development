@@ -174,7 +174,7 @@ setup(
     ],
     entry_points={
         'xblock.v1': [
-            'react_xblock_5 = react_xblock_2:ReactXBlock8',
+            'react_xblock_2 = react_xblock_2:ReactXBlock8',
         ]
     },
     package_data=package_data("react_xblock_2", ["static", "public"]),

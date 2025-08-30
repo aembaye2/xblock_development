@@ -351,13 +351,13 @@ class FormulaExerciseXBlock(StudioEditableXBlockMixin, ScorableXBlockMixin, XBlo
             ("FormulaExerciseXBlock",
              """<formula_exercise_block/>
              """),
-            ("Multiple FormulaExerciseXBlock",
-             """<vertical_demo>
-                <formula_exercise_block/>
-                <formula_exercise_block/>
-                <formula_exercise_block/>
-                </vertical_demo>
-             """),
+            # ("Multiple FormulaExerciseXBlock",
+            #  """<vertical_demo>
+            #     <formula_exercise_block/>
+            #     <formula_exercise_block/>
+            #     <formula_exercise_block/>
+            #     </vertical_demo>
+            #  """),
         ]
 
     def has_submitted_answer(self):

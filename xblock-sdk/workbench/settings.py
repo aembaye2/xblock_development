@@ -249,3 +249,4 @@ try:
 except ImportError:
     pass
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+#from react_xblock_2.react_xblock_2 import ReactXBlock8

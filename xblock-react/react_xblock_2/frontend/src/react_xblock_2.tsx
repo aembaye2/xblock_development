@@ -45,7 +45,7 @@ const StudentView: React.FC<Props> = ({ runtime, ...props }) => {
         */}
       <p>
         <FormattedMessage
-          description="Sentence describing how many times the button has been clicked."
+          description="Sentence describing how many times the button has been clicked!"
           defaultMessage="{count, plural,
             one {The button has been clicked <bold>1</bold> time.}
             other {The button has been clicked <bold>{count, number}</bold> times.}

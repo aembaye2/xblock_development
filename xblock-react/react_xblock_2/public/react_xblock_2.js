@@ -5674,6 +5674,71 @@
 	    }
 	}
 
+	var tQLRmz$1 = [
+		{
+			type: 0,
+			value: "افزایش"
+		}
+	];
+	var faMessages = {
+		"61Tkpq": [
+		{
+			offset: 0,
+			options: {
+				one: {
+					value: [
+						{
+							type: 0,
+							value: "دکمه "
+						},
+						{
+							children: [
+								{
+									type: 0,
+									value: "۱"
+								}
+							],
+							type: 8,
+							value: "bold"
+						},
+						{
+							type: 0,
+							value: " بار کلیک شده است."
+						}
+					]
+				},
+				other: {
+					value: [
+						{
+							type: 0,
+							value: "دکمه "
+						},
+						{
+							children: [
+								{
+									style: null,
+									type: 2,
+									value: "count"
+								}
+							],
+							type: 8,
+							value: "bold"
+						},
+						{
+							type: 0,
+							value: " بار کلیک شده است."
+						}
+					]
+				}
+			},
+			pluralType: "cardinal",
+			type: 6,
+			value: "count"
+		}
+	],
+		tQLRmz: tQLRmz$1
+	};
+
 	var tQLRmz = [
 		{
 			type: 0,
@@ -5742,6 +5807,7 @@
 	const messages = {
 	    // List all your supported languages here, after running 'npm run i18n:extract',
 	    // editing the messages in the 'lang' folder, and running 'npm run i18n:compile'
+	    fa: faMessages, // RTL language
 	    fr: frMessages,
 	};
 	const StudentView = ({ runtime, ...props }) => {
@@ -5752,7 +5818,7 @@
 	        setCount(newData.count);
 	    }, [runtime]);
 	    // Note: for more sophisticated fetch/cache/mutate behavior, use @tanstack/react-query to manage your data.
-	    return jsxRuntimeExports.jsxs("div", { className: "react_xblock_2_block", children: [jsxRuntimeExports.jsx("h1", { children: "ReactXBlock8" }), jsxRuntimeExports.jsx("p", { children: jsxRuntimeExports.jsx(MemoizedFormattedMessage, { id: '61Tkpq', defaultMessage: [{ type: 6, value: "count", options: { one: { value: [{ type: 0, value: "The button has been clicked " }, { type: 8, value: "bold", children: [{ type: 0, value: "1" }] }, { type: 0, value: " time." }] }, other: { value: [{ type: 0, value: "The button has been clicked " }, { type: 8, value: "bold", children: [{ type: 2, value: "count", style: null }] }, { type: 0, value: " times." }] } }, offset: 0, pluralType: "cardinal" }], values: { count, bold: text => jsxRuntimeExports.jsx("span", { className: "count", children: text }) } }) }), jsxRuntimeExports.jsxs("button", { className: "btn btn-primary", onClick: increment, children: ["+ ", jsxRuntimeExports.jsx(MemoizedFormattedMessage, { id: 'tQLRmz', defaultMessage: [{ type: 0, value: "Increment" }] })] })] });
+	    return jsxRuntimeExports.jsxs("div", { className: "react_xblock_2_block", children: [jsxRuntimeExports.jsx("h1", { children: "ReactXBlock8" }), jsxRuntimeExports.jsx("p", { children: jsxRuntimeExports.jsx(MemoizedFormattedMessage, { id: 'eYjOvr', defaultMessage: [{ type: 6, value: "count", options: { one: { value: [{ type: 0, value: "The button has been clicked " }, { type: 8, value: "bold", children: [{ type: 0, value: "1" }] }, { type: 0, value: " time." }] }, other: { value: [{ type: 0, value: "The button has been clicked " }, { type: 8, value: "bold", children: [{ type: 2, value: "count", style: null }] }, { type: 0, value: " times." }] } }, offset: 0, pluralType: "cardinal" }], values: { count, bold: text => jsxRuntimeExports.jsx("span", { className: "count", children: text }) } }) }), jsxRuntimeExports.jsxs("button", { className: "btn btn-primary", onClick: increment, children: ["+ ", jsxRuntimeExports.jsx(MemoizedFormattedMessage, { id: 'tQLRmz', defaultMessage: [{ type: 0, value: "Increment" }] })] })] });
 	};
 	function initStudentView(runtime, container, initData) {
 	    if ('jquery' in container) {

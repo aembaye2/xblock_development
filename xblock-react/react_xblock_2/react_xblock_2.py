@@ -83,3 +83,10 @@ class ReactXBlock8(XBlock):
         if "display_name" in data:
             self.display_name = data['display_name']
         return {}
+
+    @classmethod
+    def workbench_scenarios(cls):
+        """Scenarios for display in the workbench."""
+        return [
+            ("ReactX Based XBlock", "<react_xblock_2/>")
+        ]
