@@ -367,11 +367,11 @@ class GraphingXBlock(ScorableXBlockMixin ,XBlock):
             ("GraphingXBlock",
              """<graphing/>
              """),
-            ("Multiple graphingXBlock",
-             """<vertical_demo>
-                <graphing/>
-                <graphing/>
-                <graphing/>
-                </vertical_demo>
-             """),
+            # ("Multiple graphingXBlock",
+            #  """<vertical_demo>
+            #     <graphing/>
+            #     <graphing/>
+            #     <graphing/>
+            #     </vertical_demo>
+            #  """),
         ]

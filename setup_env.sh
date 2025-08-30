@@ -94,6 +94,12 @@ else
     echo "  ⚠️  Warning: xblock-sortable directory not found"
 fi
 
+if [ -d "formula_excercise_block" ]; then
+    echo "  - Installing formula_excercise_block..."
+    pip install -e ./formula_excercise_block
+else
+    echo "  ⚠️  Warning: xblock-sortable directory not found"
+fi
 # 6. Verify installation
 echo "📋 Verifying installation..."
 pip list | grep -E "(xblock|drag|done|Django)"

@@ -367,11 +367,11 @@ class SortableXBlock(ScorableXBlockMixin ,XBlock):
             ("SortableXBlock",
              """<sortable/>
              """),
-            ("Multiple SortableXBlock",
-             """<vertical_demo>
-                <sortable/>
-                <sortable/>
-                <sortable/>
-                </vertical_demo>
-             """),
+            # ("Multiple SortableXBlock",
+            #  """<vertical_demo>
+            #     <sortable/>
+            #     <sortable/>
+            #     <sortable/>
+            #     </vertical_demo>
+            #  """),
         ]
