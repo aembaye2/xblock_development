@@ -4,3 +4,7 @@ The main file for the XBlock's user interface is react_xblock_2/frontend/src/rea
 cd xblock-react/react_xblock_2/frontend/
 npm install
 npm run watch
+
+cd xblock-myxblock/myxblock/frontend/
+npm install
+npm run watch
