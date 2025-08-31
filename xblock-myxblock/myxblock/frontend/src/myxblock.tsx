@@ -6,8 +6,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { BoundRuntime, type JQueryWrappedDiv, type XBlockRuntime } from './xblock-utils';
-import faMessages from '../lang/compiled/fa.json';
-import frMessages from '../lang/compiled/fr.json';
+import faMessages from '../lang/fa.json';
+import frMessages from '../lang/fr.json';
 
 const messages = {
   // List all your supported languages here, after running 'npm run i18n:extract',
@@ -32,10 +32,10 @@ const StudentView: React.FC<Props> = ({ runtime, ...props }) => {
 
   // Handlers:
   const increment = React.useCallback(async () => {
-    if (count >= 5) {
-      setMessage('Maximum count reached (5).');
-      return;
-    }
+    // if (count >= 11) {
+    //   setMessage('Maximum count reached (5).');
+    //   return;
+    // }
     interface IncrementResponse { count: number; }
     const newData = await runtime.postHandler<IncrementResponse>('increment_count');
     setCount(newData.count);
@@ -43,10 +43,10 @@ const StudentView: React.FC<Props> = ({ runtime, ...props }) => {
   }, [runtime, count]);
 
   const decrement = React.useCallback(() => {
-    if (count <= 0) {
-      setMessage('Minimum count reached (0).');
-      return;
-    }
+    // if (count <= 0) {
+    //   setMessage('Minimum count reached (0).');
+    //   return;
+    // }
     setCount(count - 1);
     setMessage(null);
   }, [count]);

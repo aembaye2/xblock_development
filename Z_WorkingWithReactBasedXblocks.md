@@ -8,3 +8,7 @@ npm run watch
 cd xblock-myxblock/myxblock/frontend/
 npm install
 npm run watch
+
+cd xblock-myxblock/myxblock/frontend2/
+npm install
+npm run watch

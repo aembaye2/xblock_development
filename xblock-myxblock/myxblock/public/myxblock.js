@@ -5674,133 +5674,25 @@
 	    }
 	}
 
-	var tQLRmz$1 = [
-		{
-			type: 0,
-			value: "افزایش"
-		}
-	];
+	var tQLRmz$1 = {
+		defaultMessage: "افزایش"
+	};
 	var faMessages = {
-		"61Tkpq": [
-		{
-			offset: 0,
-			options: {
-				one: {
-					value: [
-						{
-							type: 0,
-							value: "دکمه "
-						},
-						{
-							children: [
-								{
-									type: 0,
-									value: "۱"
-								}
-							],
-							type: 8,
-							value: "bold"
-						},
-						{
-							type: 0,
-							value: " بار کلیک شده است."
-						}
-					]
-				},
-				other: {
-					value: [
-						{
-							type: 0,
-							value: "دکمه "
-						},
-						{
-							children: [
-								{
-									style: null,
-									type: 2,
-									value: "count"
-								}
-							],
-							type: 8,
-							value: "bold"
-						},
-						{
-							type: 0,
-							value: " بار کلیک شده است."
-						}
-					]
-				}
-			},
-			pluralType: "cardinal",
-			type: 6,
-			value: "count"
-		}
-	],
+		"61Tkpq": {
+		defaultMessage: "{count, plural, one {دکمه <bold>۱</bold> بار کلیک شده است.} other {دکمه <bold>{count, number}</bold> بار کلیک شده است.} }",
+		description: "جمله‌ای که توصیف می‌کند دکمه چند بار کلیک شده است."
+	},
 		tQLRmz: tQLRmz$1
 	};
 
-	var tQLRmz = [
-		{
-			type: 0,
-			value: "Incrémenter"
-		}
-	];
+	var tQLRmz = {
+		defaultMessage: "Incrémenter"
+	};
 	var frMessages = {
-		"61Tkpq": [
-		{
-			offset: 0,
-			options: {
-				one: {
-					value: [
-						{
-							type: 0,
-							value: "Le bouton a été cliqué "
-						},
-						{
-							children: [
-								{
-									type: 0,
-									value: "1"
-								}
-							],
-							type: 8,
-							value: "bold"
-						},
-						{
-							type: 0,
-							value: " fois."
-						}
-					]
-				},
-				other: {
-					value: [
-						{
-							type: 0,
-							value: "Le bouton a été cliqué "
-						},
-						{
-							children: [
-								{
-									style: null,
-									type: 2,
-									value: "count"
-								}
-							],
-							type: 8,
-							value: "bold"
-						},
-						{
-							type: 0,
-							value: " fois."
-						}
-					]
-				}
-			},
-			pluralType: "cardinal",
-			type: 6,
-			value: "count"
-		}
-	],
+		"61Tkpq": {
+		defaultMessage: "{count, plural, one {Le bouton a été cliqué <bold>1</bold> fois.} other {Le bouton a été cliqué <bold>{count, number}</bold> fois.} }",
+		description: "Sentence describing how many times the button has been clicked."
+	},
 		tQLRmz: tQLRmz
 	};
 
@@ -5815,19 +5707,15 @@
 	    const [message, setMessage] = React.useState(null);
 	    // Handlers:
 	    const increment = React.useCallback(async () => {
-	        if (count >= 5) {
-	            setMessage('Maximum count reached (5).');
-	            return;
-	        }
 	        const newData = await runtime.postHandler('increment_count');
 	        setCount(newData.count);
 	        setMessage(null);
 	    }, [runtime, count]);
 	    const decrement = React.useCallback(() => {
-	        if (count <= 0) {
-	            setMessage('Minimum count reached (0).');
-	            return;
-	        }
+	        // if (count <= 0) {
+	        //   setMessage('Minimum count reached (0).');
+	        //   return;
+	        // }
 	        setCount(count - 1);
 	        setMessage(null);
 	    }, [count]);

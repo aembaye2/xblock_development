@@ -73,12 +73,6 @@ else
     echo "  ⚠️  Warning: xblock-vectordraw2 directory not found"
 fi
 
-if [ -d "mcxblock" ]; then
-    echo "  - Installing mcxblock..."
-    pip install -e ./mcxblock
-else
-    echo "  ⚠️  Warning: xmcxblock directory not found"
-fi
 
 if [ -d "xblock-mcqs" ]; then
     echo "  - Installing xblock-mcqs..."
@@ -104,6 +98,13 @@ fi
 if [ -d "xblock-react" ]; then
     echo "  - Installing xblock-react..."
     pip install -e ./xblock-react
+else
+    echo "  ⚠️  Warning: xblock-react directory not found"
+fi
+
+if [ -d "xblock-myxblock" ]; then
+    echo "  - Installing xblock-myxblock..."
+    pip install -e ./xblock-myxblock
 else
     echo "  ⚠️  Warning: xblock-react directory not found"
 fi
