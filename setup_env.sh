@@ -88,6 +88,13 @@ else
     echo "  ⚠️  Warning: xblock-sortable directory not found"
 fi
 
+if [ -d "xblock-sortable4" ]; then
+    echo "  - Installing xblock-sortable4..."
+    pip install -e ./xblock-sortable4
+else
+    echo "  ⚠️  Warning: xblock-sortable directory not found"
+fi
+
 # if [ -d "formula_excercise_block" ]; then
 #     echo "  - Installing formula_excercise_block..."
 #     pip install -e ./formula_excercise_block
@@ -106,7 +113,7 @@ if [ -d "xblock-myxblock" ]; then
     echo "  - Installing xblock-myxblock..."
     pip install -e ./xblock-myxblock
 else
-    echo "  ⚠️  Warning: xblock-react directory not found"
+    echo "  ⚠️  Warning: xblock-myxblock directory not found"
 fi
 
 # 6. Verify installation
