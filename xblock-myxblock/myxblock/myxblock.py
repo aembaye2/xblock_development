@@ -3,7 +3,7 @@ import os
 
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
-from xblock.fields import Integer, Scope, String
+from xblock.fields import Integer, Scope, String, List
 from xblock.utils.resources import ResourceLoader
 
 resource_loader = ResourceLoader(__name__)
@@ -17,10 +17,22 @@ class MyXBlock(XBlock):
     # Fields are defined on the class.  You can access them in your code as
     # self.<fieldname>.
 
-    # TO-DO: delete count, and define your own fields.
-    count = Integer(
-        default=0, scope=Scope.user_state,
-        help="A simple counter, to show something happening",
+
+    question = String(
+        default="What is 2 + 2?", scope=Scope.content,
+        help="Quiz question",
+    )
+    options = List(
+        default=["2", "3", "4", "5"], scope=Scope.content,
+        help="Answer options",
+    )
+    correct = Integer(
+        default=2, scope=Scope.content,
+        help="Index of correct answer",
+    )
+    user_answer = Integer(
+        default=None, scope=Scope.user_state,
+        help="User's answer index",
     )
 
     display_name = String(
@@ -29,60 +41,53 @@ class MyXBlock(XBlock):
         default="MyXBlock",
     )
 
-    # TO-DO: change this view to display your data your own way.
+
     def student_view(self, context=None):
-        """
-        Create primary view of the MyXBlock, shown to students when viewing courses.
-        """
-        # Create our HTML fragment. The HTML will get replace by React, so
-        # this is mostly to load our React JavaScript bundle and CSS.
-        frag = Fragment('<p>Loading...</p>')
+        # Create an explicit container so React can mount reliably
+        frag = Fragment()
+        frag.add_content('<div id="myxblock"></div>')
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/myxblock.css'))
         frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/myxblock.js'))
-        frag.initialize_js('initMyXBlockStudentView', {
-            # Only fields that we specify here will be available to React:
-            "count": self.count,
-        })
+        # Only include user_answer in init data if it's set for this user.
+        init_data = {
+            "question": self.question,
+            "options": self.options,
+            "correct": self.correct,
+        }
+        if self.user_answer is not None:
+            init_data["user_answer"] = self.user_answer
+        frag.initialize_js('initMyXBlockStudentView', init_data)
         return frag
 
-    # TO-DO: change this view to display your data your own way.
+
     def studio_view(self, context=None):
-        """
-        UI where authors can edit the settings of this block.
-        """
-        # Create our HTML fragment. The HTML will get replace by React, so
-        # this is mostly to load our React JavaScript bundle and CSS.
-        frag = Fragment('<p>Loading...</p>')
+        frag = Fragment()
+        frag.add_content('<div id="myxblock-studio"></div>')
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/myxblock.css'))
         frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/myxblock_studio.js'))
-        frag.initialize_js('initMyXBlockStudioView', {
-            # Pass all fields to the studio edit UI. This is safe for authors, but we wouldn't do this for learners
-            # (in student_view) because these fields could contain answers etc.
-            "fields": {
-                field_name: self.fields[field_name].to_json(getattr(self, field_name))
-                for field_name in self.fields.keys()
-            }
-        })
+        init_data = {
+            "question": self.question,
+            "options": self.options,
+            "correct": self.correct,
+        }
+        frag.initialize_js('initMyXBlockStudioView', init_data)
         return frag
 
-    # TO-DO: change this handler to perform your own actions.  You may need more
-    # than one handler, or you may not need any handlers at all.
-    @XBlock.json_handler
-    def increment_count(self, _data, _suffix=''):
-        """
-        Increments data. An example handler.
-        """
-        self.count += 1
-        return {"count": self.count}
 
     @XBlock.json_handler
-    def save_authored_data(self, data, suffix=''):
-        """
-        Handler for saving changes that an author made using the studio_view
-        """
-        if "display_name" in data:
-            self.display_name = data['display_name']
-        return {}
+    def submit_answer(self, data, suffix=''):
+        answer = data.get('answer')
+        self.user_answer = answer
+        return {
+            "correct": answer == self.correct
+        }
+
+    @XBlock.json_handler
+    def save_quiz(self, data, suffix=''):
+        self.question = data.get('question', self.question)
+        self.options = data.get('options', self.options)
+        self.correct = data.get('correct', self.correct)
+        return {"result": "success"}
 
     @classmethod
     def workbench_scenarios(cls):

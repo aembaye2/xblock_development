@@ -4,9 +4,7 @@
 
 ./setup_env.sh
 
-# Then start the server by running:
-
-./start_server.sh
+source xblock-env/bin/activate && python xblock-sdk/manage.py runserver 
 
 # After this, each time you want to run the server:
 

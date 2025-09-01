@@ -5674,65 +5674,174 @@
 	    }
 	}
 
-	var tQLRmz$1 = {
-		defaultMessage: "افزایش"
-	};
+	var tQLRmz$1 = [
+		{
+			type: 0,
+			value: "افزایش"
+		}
+	];
 	var faMessages = {
-		"61Tkpq": {
-		defaultMessage: "{count, plural, one {دکمه <bold>۱</bold> بار کلیک شده است.} other {دکمه <bold>{count, number}</bold> بار کلیک شده است.} }",
-		description: "جمله‌ای که توصیف می‌کند دکمه چند بار کلیک شده است."
-	},
+		"61Tkpq": [
+		{
+			offset: 0,
+			options: {
+				one: {
+					value: [
+						{
+							type: 0,
+							value: "دکمه "
+						},
+						{
+							children: [
+								{
+									type: 0,
+									value: "۱"
+								}
+							],
+							type: 8,
+							value: "bold"
+						},
+						{
+							type: 0,
+							value: " بار کلیک شده است."
+						}
+					]
+				},
+				other: {
+					value: [
+						{
+							type: 0,
+							value: "دکمه "
+						},
+						{
+							children: [
+								{
+									style: null,
+									type: 2,
+									value: "count"
+								}
+							],
+							type: 8,
+							value: "bold"
+						},
+						{
+							type: 0,
+							value: " بار کلیک شده است."
+						}
+					]
+				}
+			},
+			pluralType: "cardinal",
+			type: 6,
+			value: "count"
+		}
+	],
 		tQLRmz: tQLRmz$1
 	};
 
-	var tQLRmz = {
-		defaultMessage: "Incrémenter"
-	};
+	var tQLRmz = [
+		{
+			type: 0,
+			value: "Incrémenter"
+		}
+	];
 	var frMessages = {
-		"61Tkpq": {
-		defaultMessage: "{count, plural, one {Le bouton a été cliqué <bold>1</bold> fois.} other {Le bouton a été cliqué <bold>{count, number}</bold> fois.} }",
-		description: "Sentence describing how many times the button has been clicked."
-	},
+		"61Tkpq": [
+		{
+			offset: 0,
+			options: {
+				one: {
+					value: [
+						{
+							type: 0,
+							value: "Le bouton a été cliqué "
+						},
+						{
+							children: [
+								{
+									type: 0,
+									value: "1"
+								}
+							],
+							type: 8,
+							value: "bold"
+						},
+						{
+							type: 0,
+							value: " fois."
+						}
+					]
+				},
+				other: {
+					value: [
+						{
+							type: 0,
+							value: "Le bouton a été cliqué "
+						},
+						{
+							children: [
+								{
+									style: null,
+									type: 2,
+									value: "count"
+								}
+							],
+							type: 8,
+							value: "bold"
+						},
+						{
+							type: 0,
+							value: " fois."
+						}
+					]
+				}
+			},
+			pluralType: "cardinal",
+			type: 6,
+			value: "count"
+		}
+	],
 		tQLRmz: tQLRmz
 	};
 
 	const messages = {
-	    // List all your supported languages here, after running 'npm run i18n:extract',
-	    // editing the messages in the 'lang' folder, and running 'npm run i18n:compile'
-	    fa: faMessages, // RTL language
+	    fa: faMessages,
 	    fr: frMessages,
 	};
-	const StudentView = ({ runtime, ...props }) => {
-	    const [count, setCount] = React.useState(props.initialCount);
-	    const [message, setMessage] = React.useState(null);
-	    // Handlers:
-	    const increment = React.useCallback(async () => {
-	        const newData = await runtime.postHandler('increment_count');
-	        setCount(newData.count);
-	        setMessage(null);
-	    }, [runtime, count]);
-	    const decrement = React.useCallback(() => {
-	        // if (count <= 0) {
-	        //   setMessage('Minimum count reached (0).');
-	        //   return;
-	        // }
-	        setCount(count - 1);
-	        setMessage(null);
-	    }, [count]);
-	    // Note: for more sophisticated fetch/cache/mutate behavior, use @tanstack/react-query to manage your data.
-	    return jsxRuntimeExports.jsxs("div", { className: "myxblock", children: [jsxRuntimeExports.jsx("h1", { children: "MyXBlock" }), jsxRuntimeExports.jsx("p", { children: jsxRuntimeExports.jsx(MemoizedFormattedMessage, { id: 'eYjOvr', defaultMessage: [{ type: 6, value: "count", options: { one: { value: [{ type: 0, value: "The button has been clicked " }, { type: 8, value: "bold", children: [{ type: 0, value: "1" }] }, { type: 0, value: " time." }] }, other: { value: [{ type: 0, value: "The button has been clicked " }, { type: 8, value: "bold", children: [{ type: 2, value: "count", style: null }] }, { type: 0, value: " times." }] } }, offset: 0, pluralType: "cardinal" }], values: { count, bold: text => jsxRuntimeExports.jsx("span", { className: "count", children: text }) } }) }), jsxRuntimeExports.jsxs("button", { className: "btn btn-primary", onClick: increment, children: ["+ ", jsxRuntimeExports.jsx(MemoizedFormattedMessage, { id: 'tQLRmz', defaultMessage: [{ type: 0, value: "Increment" }] })] }), jsxRuntimeExports.jsxs("button", { className: "btn btn-secondary", onClick: decrement, style: { marginLeft: '8px' }, children: ["- ", jsxRuntimeExports.jsx(MemoizedFormattedMessage, { id: '/rDQbU', defaultMessage: [{ type: 0, value: "Decrement" }] })] }), message && jsxRuntimeExports.jsx("div", { style: { color: 'red', marginTop: '10px' }, children: message })] });
+	const StudentView = ({ runtime, question, options, correct, user_answer }) => {
+	    const [selected, setSelected] = React.useState(user_answer);
+	    // Treat missing key as not-submitted. Only if a real number is present do we mark submitted.
+	    const [submitted, setSubmitted] = React.useState(typeof user_answer === 'number');
+	    const [feedback, setFeedback] = React.useState(null);
+	    // Ensure radio buttons update correctly
+	    const handleChange = (e) => {
+	        const val = Number(e.target.value);
+	        setSelected(val);
+	        // eslint-disable-next-line no-console
+	        console.log('radio clicked, value=', val);
+	    };
+	    const submitAnswer = async () => {
+	        if (selected === undefined)
+	            return;
+	        const resp = await runtime.postHandler('submit_answer', { answer: selected });
+	        setSubmitted(true);
+	        setFeedback(resp.correct ? 'Correct!' : 'Incorrect. Try again next time.');
+	        // Small debug log so we can see clicks in the console
+	        // eslint-disable-next-line no-console
+	        console.log('Submitted answer', selected, 'server response', resp);
+	    };
+	    return (jsxRuntimeExports.jsxs("div", { className: "myxblock", children: [jsxRuntimeExports.jsx("h1", { children: "Quiz" }), jsxRuntimeExports.jsx("p", { children: question }), jsxRuntimeExports.jsx("form", { children: options.map((opt, idx) => (jsxRuntimeExports.jsx("div", { children: jsxRuntimeExports.jsxs("label", { children: [jsxRuntimeExports.jsx("input", { type: "radio", name: "option", value: idx, checked: selected === idx, disabled: submitted, onChange: handleChange }), opt] }) }, idx))) }), !submitted && (jsxRuntimeExports.jsx("button", { className: "btn btn-primary", onClick: submitAnswer, disabled: selected === undefined, children: jsxRuntimeExports.jsx(MemoizedFormattedMessage, { id: 'wSZR47', defaultMessage: [{ type: 0, value: "Submit" }] }) })), feedback && jsxRuntimeExports.jsx("div", { className: "feedback", children: feedback })] }));
 	};
 	function initStudentView(runtime, container, initData) {
-	    if ('jquery' in container) {
-	        // Fix inconsistent parameter typing:
+	    if ('jquery' in container)
 	        container = container[0];
-	    }
-	    /** Get the language selected by the user, e.g. 'en' or 'fr' */
 	    const languageCode = document.body.parentElement.lang;
 	    const root = ReactDOM.createRoot(container);
-	    root.render(jsxRuntimeExports.jsx(IntlProvider, { messages: messages[languageCode], locale: languageCode, defaultLocale: "en", children: jsxRuntimeExports.jsx(StudentView, { runtime: new BoundRuntime(runtime, container), initialCount: initData.count }) }));
+	    // Debug: confirm init was called and container is correct
+	    // eslint-disable-next-line no-console
+	    console.log('initMyXBlockStudentView called. container=', container, 'initData=', initData);
+	    root.render(jsxRuntimeExports.jsx(IntlProvider, { messages: messages[languageCode], locale: languageCode, defaultLocale: "en", children: jsxRuntimeExports.jsx(StudentView, { runtime: new BoundRuntime(runtime, container), question: initData.question, options: initData.options, correct: initData.correct, user_answer: initData.user_answer }) }));
 	}
-	// We need to add our init function to the global (window) namespace, without conflicts:
 	globalThis.initMyXBlockStudentView = initStudentView;
 
 })();

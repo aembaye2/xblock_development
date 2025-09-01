@@ -10,68 +10,133 @@ import faMessages from '../lang/compiled/fa.json';
 import frMessages from '../lang/compiled/fr.json';
 
 const messages = {
-  // List all your supported languages here, after running 'npm run i18n:extract',
-  // editing the messages in the 'lang' folder, and running 'npm run i18n:compile'
-  fa: faMessages, // RTL language
+  fa: faMessages,
   fr: frMessages,
-}
+};
 
-interface Fields {
-  display_name: string;
-  count: number;
-}
-
-/** Data passed from our student_view render method when it calls frag.initialize_js() */
 interface InitData {
-  fields: Fields;
+  question: string;
+  options: string[];
+  correct: number;
 }
 
 interface Props {
   runtime: BoundRuntime;
-  fields: Fields;
+  question: string;
+  options: string[];
+  correct: number;
 }
 
-const StudioView: React.FC<Props> = ({ runtime, fields }) => {
+const StudioView: React.FC<Props> = ({ runtime, question, options, correct }) => {
+  const [q, setQ] = React.useState(question);
+  const [opts, setOpts] = React.useState(options);
+  const [corr, setCorr] = React.useState(correct);
+  const [isSaving, setIsSaving] = React.useState(false);
+  const [errors, setErrors] = React.useState<string[]>([]);
 
-  const [displayName, setDisplayName] = React.useState<string>(fields.display_name);
-  const displayNameId = React.useId();
+  const handleOptionChange = (idx: number, value: string) => {
+    const newOpts = [...opts];
+    newOpts[idx] = value;
+    setOpts(newOpts);
+  };
 
-  const saveChanges = React.useCallback(async () => {
-    // Show that we're starting to save changes:
-    await runtime.studioSaveAndClose(
-      runtime.postHandler('save_authored_data', {
-        display_name: displayName,
-      })
-    );
-  }, [runtime, displayName]);
+  const addOption = () => setOpts([...opts, ""]);
+  const removeOption = (idx: number) => setOpts(opts.filter((_, i) => i !== idx));
 
-  return <div className="react_xblock_2_block">
-    <label htmlFor={displayNameId} style={{display: 'block'}}>Display name</label>
-    <input
-      id={displayNameId}
-      type="text"
-      value={displayName}
-      onChange={(event) => { setDisplayName(event.target.value) }}
-    />
-    <br />
-    <button onClick={saveChanges}>Save</button>
-  </div>;
-}
+  const removeOptionSafe = (idx: number) => {
+    // Prevent removing options when there would be fewer than 2
+    if (opts.length <= 2) return;
+    const newOpts = opts.filter((_, i) => i !== idx);
+    // Adjust correct index if needed
+    let newCorr = corr;
+    if (idx === corr) {
+      newCorr = 0; // reset to first option
+    } else if (idx < corr) {
+      newCorr = corr - 1;
+    }
+    setOpts(newOpts);
+    setCorr(newCorr);
+  };
+
+  const validate = (): string[] => {
+    const errs: string[] = [];
+    if (!q || q.trim().length === 0) errs.push('Question is required.');
+    const trimmed = opts.map(o => (o ?? '').trim());
+    if (trimmed.length < 2) errs.push('At least two options are required.');
+    trimmed.forEach((o, i) => { if (!o) errs.push(`Option ${i + 1} must not be empty.`); });
+    if (typeof corr !== 'number' || corr < 0 || corr >= opts.length) errs.push('A valid correct answer must be selected.');
+    return errs;
+  };
+
+  const save = async () => {
+    const validation = validate();
+    setErrors(validation);
+    if (validation.length > 0) return;
+
+    setIsSaving(true);
+    try {
+      // Use the BoundRuntime helper to show Studio saving UI and close modal on success
+      await runtime.studioSaveAndClose(runtime.postHandler('save_quiz', {
+        question: q,
+        options: opts,
+        correct: corr,
+      }));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <div className="myxblock-studio">
+      <h2>Edit Quiz</h2>
+      <div>
+        <label>Question:</label>
+        <input type="text" value={q} onChange={e => setQ(e.target.value)} />
+      </div>
+      <div>
+        <label>Options:</label>
+        {opts.map((opt, idx) => (
+          <div key={idx}>
+            <input
+              type="text"
+              value={opt}
+              onChange={e => handleOptionChange(idx, e.target.value)}
+            />
+            <input
+              type="radio"
+              name="correct"
+              checked={corr === idx}
+              onChange={() => setCorr(idx)}
+            /> Correct
+            <button type="button" onClick={() => removeOptionSafe(idx)} disabled={opts.length <= 2}>Remove</button>
+          </div>
+        ))}
+        <button type="button" onClick={addOption}>Add Option</button>
+      </div>
+      {errors.length > 0 && (
+        <div className="studio-errors">
+          {errors.map((err, i) => <div key={i} className="text-danger">{err}</div>)}
+        </div>
+      )}
+      <button className="btn btn-primary" onClick={save} disabled={isSaving}>{isSaving ? 'Saving...' : 'Save'}</button>
+    </div>
+  );
+};
 
 function initStudioView(runtime: XBlockRuntime, container: HTMLDivElement | JQueryWrappedDiv, initData: InitData) {
-  if ('jquery' in container) {
-    // Fix inconsistent parameter typing:
-    container = container[0];
-  }
-  /** Get the language selected by the user, e.g. 'en' or 'fr' */
+  if ('jquery' in container) container = container[0];
   const languageCode = document.body.parentElement!.lang;
   const root = ReactDOM.createRoot(container!);
   root.render(
     <IntlProvider messages={(messages as any)[languageCode]} locale={languageCode} defaultLocale="en">
-      <StudioView runtime={new BoundRuntime(runtime, container)} fields={initData.fields} />
+      <StudioView
+        runtime={new BoundRuntime(runtime, container)}
+        question={initData.question}
+        options={initData.options}
+        correct={initData.correct}
+      />
     </IntlProvider>
   );
 }
 
-// We need to add our init function to the global (window) namespace, without conflicts:
 (globalThis as any).initMyXBlockStudioView = initStudioView;

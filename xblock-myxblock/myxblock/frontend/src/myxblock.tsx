@@ -2,92 +2,112 @@
 // Remember: changes in this file will only take effect when you run          //
 // npm run build       or      npm run watch                                  //
 ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+// Remember: changes in this file will only take effect when you run          //
+// npm run build       or      npm run watch                                  //
+////////////////////////////////////////////////////////////////////////////////
+
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { BoundRuntime, type JQueryWrappedDiv, type XBlockRuntime } from './xblock-utils';
-import faMessages from '../lang/fa.json';
-import frMessages from '../lang/fr.json';
+import faMessages from '../lang/compiled/fa.json';
+import frMessages from '../lang/compiled/fr.json';
 
 const messages = {
-  // List all your supported languages here, after running 'npm run i18n:extract',
-  // editing the messages in the 'lang' folder, and running 'npm run i18n:compile'
-  fa: faMessages, // RTL language
+  fa: faMessages,
   fr: frMessages,
-}
+};
 
-/** Data passed from our student_view render method when it calls frag.initialize_js() */
 interface InitData {
-  count: number;
+  question: string;
+  options: string[];
+  correct: number;
+  user_answer?: number;
 }
 
 interface Props {
   runtime: BoundRuntime;
-  initialCount: number;
+  question: string;
+  options: string[];
+  correct: number;
+  user_answer?: number;
 }
 
-const StudentView: React.FC<Props> = ({ runtime, ...props }) => {
-  const [count, setCount] = React.useState(props.initialCount);
-  const [message, setMessage] = React.useState<string | null>(null);
+const StudentView: React.FC<Props> = ({ runtime, question, options, correct, user_answer }) => {
+  const [selected, setSelected] = React.useState<number | undefined>(user_answer);
+  // Treat missing key as not-submitted. Only if a real number is present do we mark submitted.
+  const [submitted, setSubmitted] = React.useState<boolean>(typeof user_answer === 'number');
+  const [feedback, setFeedback] = React.useState<string | null>(null);
 
-  // Handlers:
-  const increment = React.useCallback(async () => {
-    // if (count >= 11) {
-    //   setMessage('Maximum count reached (5).');
-    //   return;
-    // }
-    interface IncrementResponse { count: number; }
-    const newData = await runtime.postHandler<IncrementResponse>('increment_count');
-    setCount(newData.count);
-    setMessage(null);
-  }, [runtime, count]);
+  // Ensure radio buttons update correctly
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const val = Number(e.target.value);
+  setSelected(val);
+  // eslint-disable-next-line no-console
+  console.log('radio clicked, value=', val);
+  };
 
-  const decrement = React.useCallback(() => {
-    // if (count <= 0) {
-    //   setMessage('Minimum count reached (0).');
-    //   return;
-    // }
-    setCount(count - 1);
-    setMessage(null);
-  }, [count]);
+  const submitAnswer = async () => {
+    if (selected === undefined) return;
+    const resp = await runtime.postHandler<{ correct: boolean }>('submit_answer', { answer: selected });
+    setSubmitted(true);
+    setFeedback(resp.correct ? 'Correct!' : 'Incorrect. Try again next time.');
+  // Small debug log so we can see clicks in the console
+  // eslint-disable-next-line no-console
+  console.log('Submitted answer', selected, 'server response', resp);
+  };
 
-  // Note: for more sophisticated fetch/cache/mutate behavior, use @tanstack/react-query to manage your data.
-
-  return <div className="myxblock">
-      <h1>MyXBlock</h1>
-      {/* Below is the correct internationalized way to render the following simple paragraph:
-        *   <p>The button has been clicked <span className="count">{count}</span> times.</p>
-        */}
-      <p>
-        <FormattedMessage
-          description="Sentence describing how many times the button has been clicked!"
-          defaultMessage="{count, plural,
-            one {The button has been clicked <bold>1</bold> time.}
-            other {The button has been clicked <bold>{count, number}</bold> times.}
-          }"
-          values={{ count, bold: text => <span className="count">{text}</span> }}
-        />
-      </p>
-      <button className="btn btn-primary" onClick={increment}>+ <FormattedMessage defaultMessage="Increment" /></button>
-      <button className="btn btn-secondary" onClick={decrement} style={{marginLeft: '8px'}}>- <FormattedMessage defaultMessage="Decrement" /></button>
-      {message && <div style={{color: 'red', marginTop: '10px'}}>{message}</div>}
+  return (
+    <div className="myxblock">
+      <h1>Quiz</h1>
+      <p>{question}</p>
+      <form>
+        {options.map((opt, idx) => (
+          <div key={idx}>
+            <label>
+              <input
+                type="radio"
+                name="option"
+                value={idx}
+                checked={selected === idx}
+                disabled={submitted}
+                onChange={handleChange}
+              />
+              {opt}
+            </label>
+          </div>
+        ))}
+      </form>
+      {!submitted && (
+        <button className="btn btn-primary" onClick={submitAnswer} disabled={selected === undefined}>
+          <FormattedMessage defaultMessage="Submit" />
+        </button>
+      )}
+      {feedback && <div className="feedback">{feedback}</div>}
     </div>
-}
+  );
+};
 
 function initStudentView(runtime: XBlockRuntime, container: HTMLDivElement | JQueryWrappedDiv, initData: InitData) {
-  if ('jquery' in container) {
-    // Fix inconsistent parameter typing:
-    container = container[0];
-  }
-  /** Get the language selected by the user, e.g. 'en' or 'fr' */
+  if ('jquery' in container) container = container[0];
   const languageCode = document.body.parentElement!.lang;
   const root = ReactDOM.createRoot(container!);
+  // Debug: confirm init was called and container is correct
+  // eslint-disable-next-line no-console
+  console.log('initMyXBlockStudentView called. container=', container, 'initData=', initData);
   root.render(
     <IntlProvider messages={(messages as any)[languageCode]} locale={languageCode} defaultLocale="en">
-      <StudentView runtime={new BoundRuntime(runtime, container)} initialCount={initData.count} />
+      <StudentView
+        runtime={new BoundRuntime(runtime, container)}
+        question={initData.question}
+        options={initData.options}
+        correct={initData.correct}
+        user_answer={initData.user_answer}
+      />
     </IntlProvider>
   );
 }
 
-// We need to add our init function to the global (window) namespace, without conflicts:
 (globalThis as any).initMyXBlockStudentView = initStudentView;
