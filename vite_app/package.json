@@ -1,5 +1,5 @@
 {
-  "name": "frontend2",
+  "name": "vite_simple_starter_app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,14 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "ae-drawable-canvas": "^3.1.3",
-    "d3": "^7.9.0",
-    "fabric": "^4.6.0",
-    "lodash-es": "^4.17.21",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "install": "^0.13.0",
     "react": "^19.1.1",
-    "react-beautiful-dnd": "^13.1.1",
-    "react-dom": "^19.1.1",
-    "react-intl": "^7.1.11"
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
@@ -33,3 +31,5 @@
     "vite": "^7.1.2"
   }
 }
+
+

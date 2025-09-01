@@ -9,6 +9,10 @@ cd xblock-myxblock/myxblock/frontend/
 npm install
 npm run watch
 
-cd xblock-myxblock/myxblock/frontend2/
-npm install
-npm run watch
+
+
+# Next step on React/rollup based xblock:
+
+1. polish the xblock-sortable4 xblock so that it is grading correctly and then test it in the VPS
+
+2. Use this xblock as template to work on xblock-drawing
