@@ -26,7 +26,7 @@ source xblock-env/bin/activate && python xblock-sdk/manage.py runserver
 ## git commands
 
 git add .
-git commit -m "commited on 9/1/2025b"
+git commit -m "commited on 9/2/2025b"
 git push origin main
 
 

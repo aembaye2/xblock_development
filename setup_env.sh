@@ -116,6 +116,14 @@ else
     echo "  ⚠️  Warning: xblock-myxblock directory not found"
 fi
 
+if [ -d "Inline-dropdown-xblock" ]; then
+    echo "  - Installing Inline-dropdown-xblock ..."
+    pip install -e ./Inline-dropdown-xblock
+else
+    echo "  ⚠️  Warning: xblock-myxblock directory not found"
+fi
+
+
 # 6. Verify installation
 echo "📋 Verifying installation..."
 pip list | grep -E "(xblock|drag|done|Django)"
