@@ -5,7 +5,7 @@ cd xblock-react/react_xblock_2/frontend/
 npm install
 npm run watch
 
-cd xblock-myxblock/myxblock/frontend/
+cd xblock-myxblock-react/myxblock/frontend/
 npm install
 npm run watch
 

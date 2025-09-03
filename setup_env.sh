@@ -109,9 +109,9 @@ else
     echo "  ⚠️  Warning: xblock-react directory not found"
 fi
 
-if [ -d "xblock-myxblock" ]; then
-    echo "  - Installing xblock-myxblock..."
-    pip install -e ./xblock-myxblock
+if [ -d "xblock-myxblock-react" ]; then
+    echo "  - Installing xblock-myxblock-react ..."
+    pip install -e ./xblock-myxblock-react
 else
     echo "  ⚠️  Warning: xblock-myxblock directory not found"
 fi
