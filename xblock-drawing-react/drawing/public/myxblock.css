@@ -1,5 +1,21 @@
 /* CSS for MyXblock */
 
-.myxblock .count {
-    font-weight: bold;
+
+/* New styles to stack canvas above block info and prevent overlap */
+.myxblock {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.myxblock .drawing-container {
+    /* make sure the canvas area sits on top, does not collapse */
+    z-index: 2;
+    padding-bottom: 100px ;
+}
+
+.myxblock .block-info {
+    /* information area below the canvas */
+    z-index: 1;
+    padding: 0.5rem 0;
 }

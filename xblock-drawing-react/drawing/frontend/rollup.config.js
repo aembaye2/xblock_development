@@ -7,8 +7,8 @@ import { transform as intlTransform } from '@formatjs/ts-transformer';
 
 export default {
   output: {
-    dir: '../public',
-    format: 'iife',
+  dir: '../public',
+  format: 'iife',
   },
   plugins: [
     json(),
@@ -22,7 +22,9 @@ export default {
       'process.env.NODE_ENV': JSON.stringify('production'),
       preventAssignment: true,
     }),
-    commonjs(),
-    nodeResolve(),
+    // Resolve node modules for browser (prefer browser field)
+    nodeResolve({ browser: true, preferBuiltins: false }),
+    // Convert CommonJS modules to ES modules so rollup can include them
+    commonjs({ transformMixedEsModules: true }),
   ]
 };

@@ -1,7 +1,7 @@
 """
-Init for the MyXBlock package.
+Init for the DrawingXBlock package.
 """
 
-from .myxblock import MyXBlock
+from .drawing import DrawingXBlock
 
 __version__ = '1.0.0'

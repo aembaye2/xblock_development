@@ -21,13 +21,14 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
 
 
     question = String(
-        default="What is 2 + 2?", scope=Scope.content,
+        default="Question: Draw a line, just a line segment, nothing else: ", scope=Scope.content,
         help="Quiz question",
     )
     options = List(
         default=["2", "3", "4", "5"], scope=Scope.content,
         help="Answer options",
     )
+
     correct = Integer(
         default=2, scope=Scope.content,
         help="Index of correct answer",
@@ -86,10 +87,35 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         """Remaining number of attempts"""
         return max(self.max_attempts - self.attempts, 0)
 
-    display_name = String(
-        display_name="Display Name",
+    AssessName = String(
+        display_name="quiz1",
         scope=Scope.settings,
-        default="DrawingXBlock",
+        default="quiz1",
+    )
+
+    # Drawing-specific configuration fields
+    index = Integer(
+        default=0,
+        scope=Scope.content,
+        help="Initial drawing index",
+    )
+
+    canvasWidth = Integer(
+        default=500,
+        scope=Scope.settings,
+        help="Canvas width in pixels",
+    )
+
+    canvasHeight = Integer(
+        default=400,
+        scope=Scope.settings,
+        help="Canvas height in pixels",
+    )
+
+    nextButtonClicked = Boolean(
+        default=False,
+        scope=Scope.user_state,
+        help="Whether the next button has been clicked",
     )
 
 
@@ -99,18 +125,25 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         frag.add_content('<div id="myxblock"></div>')
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/myxblock.css'))
         frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/myxblock.js'))
+
         # Only include user_answer in init data if it's set for this user.
         init_data = {
             "question": self.question,
             "options": self.options,
             "correct": self.correct,
+            # Drawing app init values from XBlock fields
+            "index": self.index,
+            "AssessName": self.AssessName,
+            "canvasWidth": self.canvasWidth,
+            "canvasHeight": self.canvasHeight,
+            "nextButtonClicked": self.nextButtonClicked,
         }
         if self.user_answer is not None:
             init_data["user_answer"] = self.user_answer
-    # pass attempt information to the frontend
-    init_data["attempts"] = self.attempts
-    init_data["remaining_attempts"] = self.remaining_attempts
-    frag.initialize_js('initMyXBlockStudentView', init_data)
+        # pass attempt information to the frontend
+        init_data["attempts"] = self.attempts
+        init_data["remaining_attempts"] = self.remaining_attempts
+        frag.initialize_js('initMyXBlockStudentView', init_data)
         return frag
 
 
@@ -118,7 +151,9 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         frag = Fragment()
         frag.add_content('<div id="myxblock-studio"></div>')
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/myxblock.css'))
+        # Load Fabric.js in studio as well so previews work in the workbench.
         frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/myxblock_studio.js'))
+
         init_data = {
             "question": self.question,
             "options": self.options,

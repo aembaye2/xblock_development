@@ -30,4 +30,5 @@ git commit -m "commited on 9/2/2025b"
 git push origin main
 
 
+npm install --legacy-peer-deps
 

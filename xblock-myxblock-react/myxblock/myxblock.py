@@ -107,10 +107,10 @@ class MyXBlock(ScorableXBlockMixin, XBlock):
         }
         if self.user_answer is not None:
             init_data["user_answer"] = self.user_answer
-    # pass attempt information to the frontend
-    init_data["attempts"] = self.attempts
-    init_data["remaining_attempts"] = self.remaining_attempts
-    frag.initialize_js('initMyXBlockStudentView', init_data)
+        # pass attempt information to the frontend
+        init_data["attempts"] = self.attempts
+        init_data["remaining_attempts"] = self.remaining_attempts
+        frag.initialize_js('initMyXBlockStudentView', init_data)
         return frag
 
 
@@ -238,5 +238,5 @@ class MyXBlock(ScorableXBlockMixin, XBlock):
     def workbench_scenarios(cls):
         """Scenarios for display in the workbench."""
         return [
-            ("MyXBlock based on react", "<myxblock/>")
+            ("MyXBlock Quiz based on react", "<myxblock/>")
         ]

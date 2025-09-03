@@ -10,7 +10,11 @@ npm install
 npm run watch
 
 
+cd xblock-drawing-react/drawing/frontend/
+npm install
+npm run watch
 
+npm install --legacy-peer-deps
 # Next step on React/rollup based xblock:
 
 1. polish the xblock-sortable4 xblock so that it is grading correctly and then test it in the VPS

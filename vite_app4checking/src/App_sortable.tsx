@@ -94,10 +94,10 @@ const App = () => {
     const correctOrder = [...countries].slice().sort();
     if (JSON.stringify(countries) === JSON.stringify(correctOrder)) {
       setResult(
-        "Correct! 🎉 You arranged the countries in alphabetical order."
+        "Correct! 🎉 You arranged the items in alphabetical order."
       );
     } else {
-      setResult("Oops! 😞 The countries are not in the correct order.");
+      setResult("Oops! 😞 The items are not in the correct order.");
     }
   };
 
@@ -171,4 +171,6 @@ const App = () => {
 };
 
 export default App;
+
+
 
