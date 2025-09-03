@@ -59,9 +59,9 @@ else
     echo "  ⚠️  Warning: DoneXBlock directory not found"
 fi
 
-if [ -d "xblock-graphing" ]; then
-    echo "  - Installing graphing Xblock..."
-    pip install -e ./xblock-graphing
+if [ -d "xblock-drawing-react" ]; then
+    echo "  - Installing xblock-drawing-react ..."
+    pip install -e ./xblock-drawing-react
 else
     echo "  ⚠️  Warning: xblock-drawing directory not found"
 fi
@@ -116,17 +116,13 @@ else
     echo "  ⚠️  Warning: xblock-myxblock directory not found"
 fi
 
-if [ -d "Inline-dropdown-xblock" ]; then
-    echo "  - Installing Inline-dropdown-xblock ..."
-    pip install -e ./Inline-dropdown-xblock
+if [ -d "openedx-xblock-inline-dropdown" ]; then
+    echo "  - openedx-xblock-inline-dropdown ..."
+    pip install -e ./openedx-xblock-inline-dropdown
 else
     echo "  ⚠️  Warning: xblock-myxblock directory not found"
 fi
 
-
-# 6. Verify installation
-echo "📋 Verifying installation..."
-pip list | grep -E "(xblock|drag|done|Django)"
 
 # 7. Run database migrations
 echo "🗄️  Running database migrations..."
