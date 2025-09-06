@@ -2,9 +2,9 @@
 import React from "react"
 //import { HelloWorld } from "@embaye/drawable-canvas"
 import "./App.css"
-// import { DrawingApp } from "./components/canvas/DrawingApp"
-// import { modes } from "./components/canvas/modesfile"
-import { DrawingApp, modes } from "ae-drawable-canvas" // if this is uncommented, the above two must be commented
+import { DrawingApp } from "./components/canvas/DrawingApp"
+import { modes } from "./components/canvas/modesfile"
+//import { DrawingApp, modes } from "ae-drawable-canvas" // if this is uncommented, the above two must be commented
 
 const App = () => {
   const currentQuestionIndex = 0
