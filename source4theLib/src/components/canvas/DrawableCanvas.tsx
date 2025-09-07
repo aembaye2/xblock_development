@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react"
 import { fabric } from "fabric"
 import CanvasToolbar from "./CanvasToolbar"
 import { useCanvasState } from "./DrawableCanvasState"
-import { tools, FabricTool } from "./lib"
+import { tools, FabricTool } from "./libs"
 // import {
 //   downloadCallback,
 //   //downloadCallback4Json,
