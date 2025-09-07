@@ -13,8 +13,12 @@ import { IntlProvider } from 'react-intl';
 import { BoundRuntime, type JQueryWrappedDiv, type XBlockRuntime } from './xblock-utils';
 import faMessages from '../lang/compiled/fa.json';
 import frMessages from '../lang/compiled/fr.json';
-// Use the drawing canvas package
-import { DrawingApp, modes } from 'ae-drawable-canvas';
+import "./App.css"
+// user the drawing canvas package from local files instead
+import { DrawingApp } from "./components/canvas/DrawingApp"
+import { modes } from "./components/canvas/modesfile"
+// Use the drawing canvas package from npm instead
+//import { DrawingApp, modes } from 'ae-drawable-canvas';
 
 
 const messages = {
@@ -35,6 +39,7 @@ interface InitData {
   canvasWidth?: number;
   canvasHeight?: number;
   nextButtonClicked?: boolean;
+  bgnumber?: number; // New prop for selecting the background
 }
 
 interface Props {
@@ -54,7 +59,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   const canvasWidth = initData.canvasWidth ?? 500
   const canvasHeight = initData.canvasHeight ?? 400
   const nextButtonClicked = initData.nextButtonClicked ?? false
-
+  const bgnumber = initData.bgnumber ?? 0 // New prop for selecting the background
   return (
     <>
     <div className="block-info">
@@ -68,6 +73,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
           canvasHeight={canvasHeight}
           nextButtonClicked={nextButtonClicked}
           modes={modes}
+          bgnumber={bgnumber} // Pass the bgnumber prop to DrawingApp
         />
       </div>
     </>
