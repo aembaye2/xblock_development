@@ -59,7 +59,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   const canvasWidth = initData.canvasWidth ?? 500
   const canvasHeight = initData.canvasHeight ?? 400
   const nextButtonClicked = initData.nextButtonClicked ?? false
-  const bgnumber = initData.bgnumber ?? 0 // New prop for selecting the background
+  const bgnumber = initData.bgnumber ?? 1 // New prop for selecting the background
   return (
     <>
     <div className="block-info">
@@ -86,7 +86,7 @@ function initStudentView(runtime: XBlockRuntime, container: HTMLDivElement | JQu
   const root = ReactDOM.createRoot(container!);
   // Debug: confirm init was called and container is correct
   // eslint-disable-next-line no-console
-  console.log('initMyXBlockStudentView called. container=', container, 'initData=', initData);
+  console.log('initDrawingXBlockStudentView called. container=', container, 'initData=', initData);
   root.render(
     <IntlProvider messages={(messages as any)[languageCode]} locale={languageCode} defaultLocale="en">
       <StudentView
@@ -97,4 +97,4 @@ function initStudentView(runtime: XBlockRuntime, container: HTMLDivElement | JQu
   );
 }
 
-(globalThis as any).initMyXBlockStudentView = initStudentView;
+(globalThis as any).initDrawingXBlockStudentView = initStudentView;

@@ -34,3 +34,10 @@ git push origin main
 
 npm install --legacy-peer-deps
 
+
+
+# Troubleshooting when xblock doesn't work or gives error:
+
+- try to fix it based on the error on build and then don't forget to reinstall the xblock; installing it many times doesn't hurt
+
+9/7:  You can fix the esthetics of the canvas but focus on functionality-- capture the drawing in .json file, or table with (like the streamlit drawing-canvas) and send it to drawing.py file for processing i.e., whether the drawing is right or wrong

@@ -15,8 +15,10 @@ npm install --legacy-peer-deps
 npm run watch
 
 npm install --legacy-peer-deps
+
 # Next step on React/rollup based xblock:
-
 1. polish the xblock-sortable4 xblock so that it is grading correctly and then test it in the VPS
-
 2. Use this xblock as template to work on xblock-drawing
+
+## pushing to repo
+git add .

@@ -169,4 +169,4 @@ function initStudioView(runtime: XBlockRuntime, container: HTMLDivElement | JQue
   );
 }
 
-(globalThis as any).initMyXBlockStudioView = initStudioView;
+(globalThis as any).initDrawingXBlockStudioView = initStudioView;

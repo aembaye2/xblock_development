@@ -1,17 +1,28 @@
 import typescript from '@rollup/plugin-typescript';
+import url from '@rollup/plugin-url';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import replace from '@rollup/plugin-replace';
 import json from '@rollup/plugin-json';
 import { transform as intlTransform } from '@formatjs/ts-transformer';
+import postcss from 'rollup-plugin-postcss';
+import image from '@rollup/plugin-image';
 
 export default {
   output: {
   dir: '../public',
   format: 'iife',
+  entryFileNames: '[name].js',
+  sourcemap: true,  
   },
   plugins: [
+    postcss(),
     json(),
+    url({
+      include: ['**/*.svg'],
+      limit: 0, // Always copy SVG files
+    }),
+    image(),
     typescript({
       // Configure a transformer to automatically add message IDs to <FormattedMessage /> and other react-intl usages
       transformers: () => ({

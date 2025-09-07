@@ -5871,6 +5871,7 @@
 	    const root = ReactDOM.createRoot(container);
 	    root.render(jsxRuntimeExports.jsx(IntlProvider, { messages: messages[languageCode], locale: languageCode, defaultLocale: "en", children: jsxRuntimeExports.jsx(StudioView, { runtime: new BoundRuntime(runtime, container), question: initData.question, options: initData.options, correct: initData.correct }) }));
 	}
-	globalThis.initMyXBlockStudioView = initStudioView;
+	globalThis.initDrawingXBlockStudioView = initStudioView;
 
 })();
+//# sourceMappingURL=drawing_studio.js.map

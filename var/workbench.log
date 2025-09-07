@@ -1,3 +1,24 @@
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'children' AND "workbench_xblockstate"."scope_id" = 'box-incline.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'children', 'box-incline.vertical_demo.d0.u0', 'vertical_demo'); alias=default
+(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'children', "scope_id" = 'box-incline.vertical_demo.d0.u0', "user_id" = NULL, "scenario" = 'box-incline', "tag" = 'vertical_demo', "created" = '2025-09-07 21:55:33.749060', "state" = '{
+  "children": [
+    "box-incline.vectordraw.d0.u0"
+  ]
+}' WHERE "workbench_xblockstate"."id" = 10066; args=('children', 'box-incline.vertical_demo.d0.u0', 'box-incline', 'vertical_demo', '2025-09-07 21:55:33.749060', '{\n  "children": [\n    "box-incline.vectordraw.d0.u0"\n  ]\n}', 10066); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'box-incline.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'parent', 'box-incline.vertical_demo.d0.u0', 'vertical_demo'); alias=default
+(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'parent', "scope_id" = 'box-incline.vertical_demo.d0.u0', "user_id" = NULL, "scenario" = 'box-incline', "tag" = 'vertical_demo', "created" = '2025-09-03 05:44:13.872233', "state" = '{
+  "parent": null
+}' WHERE "workbench_xblockstate"."id" = 9867; args=('parent', 'box-incline.vertical_demo.d0.u0', 'box-incline', 'vertical_demo', '2025-09-03 05:44:13.872233', '{\n  "parent": null\n}', 9867); alias=default
+"GET / HTTP/1.1" 200 2348
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/staticfiles/storage.py first seen with mtime 1757278334.270524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/auth/context_processors.py first seen with mtime 1757278333.7885242
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/messages/context_processors.py first seen with mtime 1757278334.076524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/templatetags/i18n.py first seen with mtime 1757278348.603524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/template/context_processors.py first seen with mtime 1757278334.345524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/templatetags/__init__.py first seen with mtime 1757278348.602524
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'definition', 'drawingxblock-based-on-react.drawing_xblock.d0', 'drawing_xblock'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'definition', 'drawingxblock-based-on-react.drawing_xblock.d0', 'drawing_xblock'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'definition', 'drawingxblock-based-on-react.drawing_xblock.d0', 'drawing_xblock'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'definition', 'drawingxblock-based-on-react.drawing_xblock.d0', 'drawing_xblock'); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
@@ -15,23 +36,64 @@
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock', 'student_1'); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
 "GET /scenario/drawing_xblock.0/ HTTP/1.1" 200 3594
-Not Found: /resource/drawing_xblock/public/drawing.js
-Not Found: /resource/drawing_xblock/public/drawing.js
-"GET /resource/drawing_xblock/public/drawing.js HTTP/1.1" 404 3940
-"GET /static/workbench/js/runtime/1.js HTTP/1.1" 200 4540
-"GET /static/workbench/js/vendor/jquery.cookie.js HTTP/1.1" 200 1941
-"GET /static/workbench/js/runtime/logger.js HTTP/1.1" 200 4432
-"GET /static/workbench/js/vendor/jquery-migrate.min.js HTTP/1.1" 200 9459
-Not Found: /resource/drawing_xblock/public/drawing.css
-Not Found: /resource/drawing_xblock/public/drawing.css
-"GET /static/workbench/js/vendor/jquery.min.js HTTP/1.1" 200 85659
-"GET /resource/drawing_xblock/public/drawing.css HTTP/1.1" 404 3943
+"GET /resource/drawing_xblock/public/drawing.js HTTP/1.1" 200 2196283
 "GET /jsi18n/ HTTP/1.1" 200 3343
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/conf/locale/en/formats.py first seen with mtime 1757278333.5115242
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/conf/locale/en/__init__.py first seen with mtime 1757278333.5115242
 Not Found: /resource/drawing_xblock/public/drawing.css
 Not Found: /resource/drawing_xblock/public/drawing.css
 "GET /resource/drawing_xblock/public/drawing.css HTTP/1.1" 404 3943
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/conf/locale/en/__init__.py first seen with mtime 1757278333.5115242
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/conf/locale/en/formats.py first seen with mtime 1757278333.5115242
+File /usr/local/python/3.12.1/lib/python3.12/encodings/unicode_escape.py first seen with mtime 1752148677.0
+Not Found: /resource/drawing_xblock/public/drawing.css
+Not Found: /resource/drawing_xblock/public/drawing.css
+"GET /resource/drawing_xblock/public/drawing.css HTTP/1.1" 404 3943
+Exception while resolving variable 'name' in template 'unknown'.
+Traceback (most recent call last):
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/views/static.py", line 40, in serve
+    raise Http404(_("“%(path)s” does not exist") % {"path": fullpath})
+django.http.response.Http404: “/workspaces/xblock_development/scenario/drawing_xblock.0/5e2af42263c8b291.svg” does not exist
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/template/base.py", line 880, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'URLResolver' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/template/base.py", line 890, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'URLResolver' object has no attribute 'name'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/template/base.py", line 896, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'name'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/template/base.py", line 903, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [name] in <URLResolver <URLPattern list> (admin:admin) '^admin/'>
+Not Found: /scenario/drawing_xblock.0/5e2af42263c8b291.svg
+Not Found: /scenario/drawing_xblock.0/5e2af42263c8b291.svg
+"GET /scenario/drawing_xblock.0/5e2af42263c8b291.svg HTTP/1.1" 404 4702
+"GET /resource/drawing_xblock/public/drawing.js.map HTTP/1.1" 200 3723252
+"GET /static/workbench/css/workbench.css HTTP/1.1" 304 0
 Not Found: /resource/drawing_xblock/public/drawing.css
 Not Found: /resource/drawing_xblock/public/drawing.css
 "GET /resource/drawing_xblock/public/drawing.css HTTP/1.1" 404 3943

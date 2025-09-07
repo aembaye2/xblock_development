@@ -149,7 +149,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
 
     def studio_view(self, context=None):
         frag = Fragment()
-        frag.add_content('<div id="drawing-studio"></div>')
+        #frag.add_content('<div id="drawing-studio"></div>')
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/drawing.css'))
         # Load Fabric.js in studio as well so previews work in the workbench.
         frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/drawing_studio.js'))
