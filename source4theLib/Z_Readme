@@ -1,5 +1,9 @@
 # This file builds from previous versions of ae-drawable-canvas library and modifies and test new changes
 
-cd source4theLib && npm i --legacy-peer-deps
+cd source4theLib 
+
+npm i --legacy-peer-deps
+
+npm run start
 
 

@@ -4,7 +4,9 @@
 
 ./setup_env.sh
 
-source xblock-env/bin/activate && python xblock-sdk/manage.py runserver 
+source xblock-env/bin/activate 
+
+python xblock-sdk/manage.py runserver 
 
 # After this, each time you want to run the server:
 

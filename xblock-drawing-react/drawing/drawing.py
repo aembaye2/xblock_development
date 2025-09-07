@@ -122,7 +122,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     def student_view(self, context=None):
         # Create an explicit container so React can mount reliably
         frag = Fragment()
-        frag.add_content('<div id="myxblock"></div>')
+        #frag.add_content('<div id="myxblock"></div>')
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/myxblock.css'))
         frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/myxblock.js'))
 
