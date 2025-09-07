@@ -22,3 +22,5 @@ npm install --legacy-peer-deps
 
 ## pushing to repo
 git add .
+git commit -m "on 9/7/2025 success!"
+git push origin main
