@@ -122,9 +122,9 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     def student_view(self, context=None):
         # Create an explicit container so React can mount reliably
         frag = Fragment()
-        #frag.add_content('<div id="myxblock"></div>')
-        frag.add_css_url(self.runtime.local_resource_url(self, 'public/myxblock.css'))
-        frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/myxblock.js'))
+        #frag.add_content('<div id="drawing"></div>')
+        frag.add_css_url(self.runtime.local_resource_url(self, 'public/drawing.css'))
+        frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/drawing.js'))
 
         # Only include user_answer in init data if it's set for this user.
         init_data = {
@@ -143,16 +143,16 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         # pass attempt information to the frontend
         init_data["attempts"] = self.attempts
         init_data["remaining_attempts"] = self.remaining_attempts
-        frag.initialize_js('initMyXBlockStudentView', init_data)
+        frag.initialize_js('initDrawingXBlockStudentView', init_data)
         return frag
 
 
     def studio_view(self, context=None):
         frag = Fragment()
-        frag.add_content('<div id="myxblock-studio"></div>')
-        frag.add_css_url(self.runtime.local_resource_url(self, 'public/myxblock.css'))
+        frag.add_content('<div id="drawing-studio"></div>')
+        frag.add_css_url(self.runtime.local_resource_url(self, 'public/drawing.css'))
         # Load Fabric.js in studio as well so previews work in the workbench.
-        frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/myxblock_studio.js'))
+        frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/drawing_studio.js'))
 
         init_data = {
             "question": self.question,
@@ -162,7 +162,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "weight": self.weight,
             "has_score": self.has_score,
         }
-        frag.initialize_js('initMyXBlockStudioView', init_data)
+        frag.initialize_js('initDrawingXBlockStudioView', init_data)
         return frag
 
 

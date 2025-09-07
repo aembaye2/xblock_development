@@ -13,7 +13,7 @@ import { IntlProvider } from 'react-intl';
 import { BoundRuntime, type JQueryWrappedDiv, type XBlockRuntime } from './xblock-utils';
 import faMessages from '../lang/compiled/fa.json';
 import frMessages from '../lang/compiled/fr.json';
-import "./App.css"
+//import "./App.css"
 // user the drawing canvas package from local files instead
 import { DrawingApp } from "./components/canvas/DrawingApp"
 import { modes } from "./components/canvas/modesfile"

@@ -1,55 +1,3 @@
-(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'parent', "scope_id" = 'reactx-based-xblock.react_xblock_2.d0.u0', "user_id" = NULL, "scenario" = 'reactx-based-xblock', "tag" = 'react_xblock_2', "created" = '2025-09-03 05:44:13.732525', "state" = '{
-  "parent": null
-}' WHERE "workbench_xblockstate"."id" = 9856; args=('parent', 'reactx-based-xblock.react_xblock_2.d0.u0', 'reactx-based-xblock', 'react_xblock_2', '2025-09-03 05:44:13.732525', '{\n  "parent": null\n}', 9856); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'sortablexblock' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'sortablexblock.sortable.d0.u0' AND "workbench_xblockstate"."tag" = 'sortable' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('sortablexblock', 'parent', 'sortablexblock.sortable.d0.u0', 'sortable'); alias=default
-(0.004) UPDATE "workbench_xblockstate" SET "scope" = 'parent', "scope_id" = 'sortablexblock.sortable.d0.u0', "user_id" = NULL, "scenario" = 'sortablexblock', "tag" = 'sortable', "created" = '2025-09-03 05:44:13.741545', "state" = '{
-  "parent": null
-}' WHERE "workbench_xblockstate"."id" = 9857; args=('parent', 'sortablexblock.sortable.d0.u0', 'sortablexblock', 'sortable', '2025-09-03 05:44:13.741545', '{\n  "parent": null\n}', 9857); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'three-thumbs-at-once' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'three-thumbs-at-once.thumbs.d0.u0' AND "workbench_xblockstate"."tag" = 'thumbs' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('three-thumbs-at-once', 'parent', 'three-thumbs-at-once.thumbs.d0.u0', 'thumbs'); alias=default
-(0.004) UPDATE "workbench_xblockstate" SET "scope" = 'parent', "scope_id" = 'three-thumbs-at-once.thumbs.d0.u0', "user_id" = NULL, "scenario" = 'three-thumbs-at-once', "tag" = 'thumbs', "created" = '2025-09-03 05:44:13.751090', "state" = '{
-  "parent": "three-thumbs-at-once.vertical_demo.d0.u0"
-}' WHERE "workbench_xblockstate"."id" = 9858; args=('parent', 'three-thumbs-at-once.thumbs.d0.u0', 'three-thumbs-at-once', 'thumbs', '2025-09-03 05:44:13.751090', '{\n  "parent": "three-thumbs-at-once.vertical_demo.d0.u0"\n}', 9858); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'three-thumbs-at-once' AND "workbench_xblockstate"."scope" = 'children' AND "workbench_xblockstate"."scope_id" = 'three-thumbs-at-once.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('three-thumbs-at-once', 'children', 'three-thumbs-at-once.vertical_demo.d0.u0', 'vertical_demo'); alias=default
-(0.000) BEGIN; args=None; alias=default
-(0.000) INSERT INTO "workbench_xblockstate" ("scope", "scope_id", "user_id", "scenario", "tag", "created", "state") VALUES ('children', 'three-thumbs-at-once.vertical_demo.d0.u0', NULL, 'three-thumbs-at-once', 'vertical_demo', '2025-09-07 14:57:01.922927', '{}') RETURNING "workbench_xblockstate"."id"; args=('children', 'three-thumbs-at-once.vertical_demo.d0.u0', None, 'three-thumbs-at-once', 'vertical_demo', '2025-09-07 14:57:01.922927', '{}'); alias=default
-(0.004) COMMIT; args=None; alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'three-thumbs-at-once' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'three-thumbs-at-once.thumbs.d1.u0' AND "workbench_xblockstate"."tag" = 'thumbs' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('three-thumbs-at-once', 'parent', 'three-thumbs-at-once.thumbs.d1.u0', 'thumbs'); alias=default
-(0.004) UPDATE "workbench_xblockstate" SET "scope" = 'parent', "scope_id" = 'three-thumbs-at-once.thumbs.d1.u0', "user_id" = NULL, "scenario" = 'three-thumbs-at-once', "tag" = 'thumbs', "created" = '2025-09-03 05:44:13.764607', "state" = '{
-  "parent": "three-thumbs-at-once.vertical_demo.d0.u0"
-}' WHERE "workbench_xblockstate"."id" = 9860; args=('parent', 'three-thumbs-at-once.thumbs.d1.u0', 'three-thumbs-at-once', 'thumbs', '2025-09-03 05:44:13.764607', '{\n  "parent": "three-thumbs-at-once.vertical_demo.d0.u0"\n}', 9860); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'three-thumbs-at-once' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'three-thumbs-at-once.thumbs.d2.u0' AND "workbench_xblockstate"."tag" = 'thumbs' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('three-thumbs-at-once', 'parent', 'three-thumbs-at-once.thumbs.d2.u0', 'thumbs'); alias=default
-(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'parent', "scope_id" = 'three-thumbs-at-once.thumbs.d2.u0', "user_id" = NULL, "scenario" = 'three-thumbs-at-once', "tag" = 'thumbs', "created" = '2025-09-03 05:44:13.773377', "state" = '{
-  "parent": "three-thumbs-at-once.vertical_demo.d0.u0"
-}' WHERE "workbench_xblockstate"."id" = 9861; args=('parent', 'three-thumbs-at-once.thumbs.d2.u0', 'three-thumbs-at-once', 'thumbs', '2025-09-03 05:44:13.773377', '{\n  "parent": "three-thumbs-at-once.vertical_demo.d0.u0"\n}', 9861); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'three-thumbs-at-once' AND "workbench_xblockstate"."scope" = 'children' AND "workbench_xblockstate"."scope_id" = 'three-thumbs-at-once.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('three-thumbs-at-once', 'children', 'three-thumbs-at-once.vertical_demo.d0.u0', 'vertical_demo'); alias=default
-(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'children', "scope_id" = 'three-thumbs-at-once.vertical_demo.d0.u0', "user_id" = NULL, "scenario" = 'three-thumbs-at-once', "tag" = 'vertical_demo', "created" = '2025-09-07 14:57:01.922927', "state" = '{
-  "children": [
-    "three-thumbs-at-once.thumbs.d0.u0",
-    "three-thumbs-at-once.thumbs.d1.u0",
-    "three-thumbs-at-once.thumbs.d2.u0"
-  ]
-}' WHERE "workbench_xblockstate"."id" = 9993; args=('children', 'three-thumbs-at-once.vertical_demo.d0.u0', 'three-thumbs-at-once', 'vertical_demo', '2025-09-07 14:57:01.922927', '{\n  "children": [\n    "three-thumbs-at-once.thumbs.d0.u0",\n    "three-thumbs-at-once.thumbs.d1.u0",\n    "three-thumbs-at-once.thumbs.d2.u0"\n  ]\n}', 9993); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'three-thumbs-at-once' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'three-thumbs-at-once.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('three-thumbs-at-once', 'parent', 'three-thumbs-at-once.vertical_demo.d0.u0', 'vertical_demo'); alias=default
-(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'parent', "scope_id" = 'three-thumbs-at-once.vertical_demo.d0.u0', "user_id" = NULL, "scenario" = 'three-thumbs-at-once', "tag" = 'vertical_demo', "created" = '2025-09-03 05:44:13.786353', "state" = '{
-  "parent": null
-}' WHERE "workbench_xblockstate"."id" = 9862; args=('parent', 'three-thumbs-at-once.vertical_demo.d0.u0', 'three-thumbs-at-once', 'vertical_demo', '2025-09-03 05:44:13.786353', '{\n  "parent": null\n}', 9862); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0.u0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'usage', 'box-incline.vectordraw.d0.u0', 'vectordraw'); alias=default
-(0.005) UPDATE "workbench_xblockstate" SET "scope" = 'usage', "scope_id" = 'box-incline.vectordraw.d0.u0', "user_id" = NULL, "scenario" = 'box-incline', "tag" = 'vectordraw', "created" = '2025-09-03 05:44:13.796846', "state" = '{
-  "url_name": "vectordraw_example"
-}' WHERE "workbench_xblockstate"."id" = 9863; args=('usage', 'box-incline.vectordraw.d0.u0', 'box-incline', 'vectordraw', '2025-09-03 05:44:13.796846', '{\n  "url_name": "vectordraw_example"\n}', 9863); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
-(0.005) UPDATE "workbench_xblockstate" SET "scope" = 'definition', "scope_id" = 'box-incline.vectordraw.d0', "user_id" = NULL, "scenario" = 'box-incline', "tag" = 'vectordraw', "created" = '2025-09-03 05:44:13.805293', "state" = '{
-  "background_url": "https://github.com/open-craft/jsinput-vectordraw/raw/master/Notes_and_Examples/2_boxIncline_multiVector/box_on_incline.png",
-  "background_width": 20,
-  "bounding_box_size": 8,
-  "description": "<p>A box remains stationary on an inclined plane at an angle of 20 degrees with respect to the x-axis. Draw all appropriate vectors that define the force diagram for this system.</p><p><em>Be sure that the \"tail\" of each vector starts at the center of mass of the box.</em></p>",
-  "expected_result": "{\"N\":{\"angle\":110,\"angle_tolerance\":2,\"tail\":[-0.6,0.4],\"tail_tolerance\":0.5},\"g\":{\"angle\":270,\"angle_tolerance\":2,\"tail\":[-0.6,0.4],\"tail_tolerance\":0.5},\"f\":{\"angle\":20,\"angle_tolerance\":2,\"tail\":[-0.6,0.4],\"tail_tolerance\":0.5}}",
-  "height": 450,
-  "points": "[{\"name\":\"cm\",\"coords\":[-0.6,0.4],\"fixed\":false,\"description\":\"A simple point\"}]",
-  "vectors": "[{\"name\":\"N\",\"description\":\"Normal force - N\",\"tail\":[2,2],\"length\":4,\"angle\":45,\"render\":true},{\"name\":\"f\",\"description\":\"Friction - f\",\"coords\":[[-2,-5],[-1,-3]],\"render\":false},{\"name\":\"g\",\"description\":\"Gravity - g\",\"tail\":[0,1.5],\"length\":5,\"angle\":-75,\"render\":false}]",
-  "width": 550
-}' WHERE "workbench_xblockstate"."id" = 9864; args=('definition', 'box-incline.vectordraw.d0', 'box-incline', 'vectordraw', '2025-09-03 05:44:13.805293', '{\n  "background_url": "https://github.com/open-craft/jsinput-vectordraw/raw/master/Notes_and_Examples/2_boxIncline_multiVector/box_on_incline.png",\n  "background_width": 20,\n  "bounding_box_size": 8,\n  "description": "<p>A box remains stationary on an inclined plane at an angle of 20 degrees with respect to the x-axis. Draw all appropriate vectors that define the force diagram for this system.</p><p><em>Be sure that the \\"tail\\" of each vector starts at the center of mass of the box.</em></p>",\n  "expected_result": "{\\"N\\":{\\"angle\\":110,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5},\\"g\\":{\\"angle\\":270,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5},\\"f\\":{\\"angle\\":20,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5}}",\n  "height": 450,\n  "points": "[{\\"name\\":\\"cm\\",\\"coords\\":[-0.6,0.4],\\"fixed\\":false,\\"description\\":\\"A simple point\\"}]",\n  "vectors": "[{\\"name\\":\\"N\\",\\"description\\":\\"Normal force - N\\",\\"tail\\":[2,2],\\"length\\":4,\\"angle\\":45,\\"render\\":true},{\\"name\\":\\"f\\",\\"description\\":\\"Friction - f\\",\\"coords\\":[[-2,-5],[-1,-3]],\\"render\\":false},{\\"name\\":\\"g\\",\\"description\\":\\"Gravity - g\\",\\"tail\\":[0,1.5],\\"length\\":5,\\"angle\\":-75,\\"render\\":false}]",\n  "width": 550\n}', 9864); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
 (0.003) UPDATE "workbench_xblockstate" SET "scope" = 'definition', "scope_id" = 'box-incline.vectordraw.d0', "user_id" = NULL, "scenario" = 'box-incline', "tag" = 'vectordraw', "created" = '2025-09-03 05:44:13.805293', "state" = '{
   "background_url": "https://github.com/open-craft/jsinput-vectordraw/raw/master/Notes_and_Examples/2_boxIncline_multiVector/box_on_incline.png",
   "background_width": 20,
@@ -87,42 +35,6 @@
 }' WHERE "workbench_xblockstate"."id" = 9864; args=('definition', 'box-incline.vectordraw.d0', 'box-incline', 'vectordraw', '2025-09-03 05:44:13.805293', '{\n  "background_url": "https://github.com/open-craft/jsinput-vectordraw/raw/master/Notes_and_Examples/2_boxIncline_multiVector/box_on_incline.png",\n  "background_width": 20,\n  "bounding_box_size": 8,\n  "description": "<p>A box remains stationary on an inclined plane at an angle of 20 degrees with respect to the x-axis. Draw all appropriate vectors that define the force diagram for this system.</p><p><em>Be sure that the \\"tail\\" of each vector starts at the center of mass of the box.</em></p>",\n  "expected_result": "{\\"N\\":{\\"angle\\":110,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5},\\"g\\":{\\"angle\\":270,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5},\\"f\\":{\\"angle\\":20,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5}}",\n  "height": 450,\n  "points": "[{\\"name\\":\\"cm\\",\\"coords\\":[-0.6,0.4],\\"fixed\\":false,\\"description\\":\\"A simple point\\"}]",\n  "vectors": "[{\\"name\\":\\"N\\",\\"description\\":\\"Normal force - N\\",\\"tail\\":[2,2],\\"length\\":4,\\"angle\\":45,\\"render\\":true},{\\"name\\":\\"f\\",\\"description\\":\\"Friction - f\\",\\"coords\\":[[-2,-5],[-1,-3]],\\"render\\":false},{\\"name\\":\\"g\\",\\"description\\":\\"Gravity - g\\",\\"tail\\":[0,1.5],\\"length\\":5,\\"angle\\":-75,\\"render\\":false}]",\n  "width": 550\n}', 9864); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
 (0.003) UPDATE "workbench_xblockstate" SET "scope" = 'definition', "scope_id" = 'box-incline.vectordraw.d0', "user_id" = NULL, "scenario" = 'box-incline', "tag" = 'vectordraw', "created" = '2025-09-03 05:44:13.805293', "state" = '{
-  "background_url": "https://github.com/open-craft/jsinput-vectordraw/raw/master/Notes_and_Examples/2_boxIncline_multiVector/box_on_incline.png",
-  "background_width": 20,
-  "bounding_box_size": 8,
-  "description": "<p>A box remains stationary on an inclined plane at an angle of 20 degrees with respect to the x-axis. Draw all appropriate vectors that define the force diagram for this system.</p><p><em>Be sure that the \"tail\" of each vector starts at the center of mass of the box.</em></p>",
-  "expected_result": "{\"N\":{\"angle\":110,\"angle_tolerance\":2,\"tail\":[-0.6,0.4],\"tail_tolerance\":0.5},\"g\":{\"angle\":270,\"angle_tolerance\":2,\"tail\":[-0.6,0.4],\"tail_tolerance\":0.5},\"f\":{\"angle\":20,\"angle_tolerance\":2,\"tail\":[-0.6,0.4],\"tail_tolerance\":0.5}}",
-  "height": 450,
-  "points": "[{\"name\":\"cm\",\"coords\":[-0.6,0.4],\"fixed\":false,\"description\":\"A simple point\"}]",
-  "vectors": "[{\"name\":\"N\",\"description\":\"Normal force - N\",\"tail\":[2,2],\"length\":4,\"angle\":45,\"render\":true},{\"name\":\"f\",\"description\":\"Friction - f\",\"coords\":[[-2,-5],[-1,-3]],\"render\":false},{\"name\":\"g\",\"description\":\"Gravity - g\",\"tail\":[0,1.5],\"length\":5,\"angle\":-75,\"render\":false}]",
-  "width": 550
-}' WHERE "workbench_xblockstate"."id" = 9864; args=('definition', 'box-incline.vectordraw.d0', 'box-incline', 'vectordraw', '2025-09-03 05:44:13.805293', '{\n  "background_url": "https://github.com/open-craft/jsinput-vectordraw/raw/master/Notes_and_Examples/2_boxIncline_multiVector/box_on_incline.png",\n  "background_width": 20,\n  "bounding_box_size": 8,\n  "description": "<p>A box remains stationary on an inclined plane at an angle of 20 degrees with respect to the x-axis. Draw all appropriate vectors that define the force diagram for this system.</p><p><em>Be sure that the \\"tail\\" of each vector starts at the center of mass of the box.</em></p>",\n  "expected_result": "{\\"N\\":{\\"angle\\":110,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5},\\"g\\":{\\"angle\\":270,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5},\\"f\\":{\\"angle\\":20,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5}}",\n  "height": 450,\n  "points": "[{\\"name\\":\\"cm\\",\\"coords\\":[-0.6,0.4],\\"fixed\\":false,\\"description\\":\\"A simple point\\"}]",\n  "vectors": "[{\\"name\\":\\"N\\",\\"description\\":\\"Normal force - N\\",\\"tail\\":[2,2],\\"length\\":4,\\"angle\\":45,\\"render\\":true},{\\"name\\":\\"f\\",\\"description\\":\\"Friction - f\\",\\"coords\\":[[-2,-5],[-1,-3]],\\"render\\":false},{\\"name\\":\\"g\\",\\"description\\":\\"Gravity - g\\",\\"tail\\":[0,1.5],\\"length\\":5,\\"angle\\":-75,\\"render\\":false}]",\n  "width": 550\n}', 9864); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
-(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'definition', "scope_id" = 'box-incline.vectordraw.d0', "user_id" = NULL, "scenario" = 'box-incline', "tag" = 'vectordraw', "created" = '2025-09-03 05:44:13.805293', "state" = '{
-  "background_url": "https://github.com/open-craft/jsinput-vectordraw/raw/master/Notes_and_Examples/2_boxIncline_multiVector/box_on_incline.png",
-  "background_width": 20,
-  "bounding_box_size": 8,
-  "description": "<p>A box remains stationary on an inclined plane at an angle of 20 degrees with respect to the x-axis. Draw all appropriate vectors that define the force diagram for this system.</p><p><em>Be sure that the \"tail\" of each vector starts at the center of mass of the box.</em></p>",
-  "expected_result": "{\"N\":{\"angle\":110,\"angle_tolerance\":2,\"tail\":[-0.6,0.4],\"tail_tolerance\":0.5},\"g\":{\"angle\":270,\"angle_tolerance\":2,\"tail\":[-0.6,0.4],\"tail_tolerance\":0.5},\"f\":{\"angle\":20,\"angle_tolerance\":2,\"tail\":[-0.6,0.4],\"tail_tolerance\":0.5}}",
-  "height": 450,
-  "points": "[{\"name\":\"cm\",\"coords\":[-0.6,0.4],\"fixed\":false,\"description\":\"A simple point\"}]",
-  "vectors": "[{\"name\":\"N\",\"description\":\"Normal force - N\",\"tail\":[2,2],\"length\":4,\"angle\":45,\"render\":true},{\"name\":\"f\",\"description\":\"Friction - f\",\"coords\":[[-2,-5],[-1,-3]],\"render\":false},{\"name\":\"g\",\"description\":\"Gravity - g\",\"tail\":[0,1.5],\"length\":5,\"angle\":-75,\"render\":false}]",
-  "width": 550
-}' WHERE "workbench_xblockstate"."id" = 9864; args=('definition', 'box-incline.vectordraw.d0', 'box-incline', 'vectordraw', '2025-09-03 05:44:13.805293', '{\n  "background_url": "https://github.com/open-craft/jsinput-vectordraw/raw/master/Notes_and_Examples/2_boxIncline_multiVector/box_on_incline.png",\n  "background_width": 20,\n  "bounding_box_size": 8,\n  "description": "<p>A box remains stationary on an inclined plane at an angle of 20 degrees with respect to the x-axis. Draw all appropriate vectors that define the force diagram for this system.</p><p><em>Be sure that the \\"tail\\" of each vector starts at the center of mass of the box.</em></p>",\n  "expected_result": "{\\"N\\":{\\"angle\\":110,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5},\\"g\\":{\\"angle\\":270,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5},\\"f\\":{\\"angle\\":20,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5}}",\n  "height": 450,\n  "points": "[{\\"name\\":\\"cm\\",\\"coords\\":[-0.6,0.4],\\"fixed\\":false,\\"description\\":\\"A simple point\\"}]",\n  "vectors": "[{\\"name\\":\\"N\\",\\"description\\":\\"Normal force - N\\",\\"tail\\":[2,2],\\"length\\":4,\\"angle\\":45,\\"render\\":true},{\\"name\\":\\"f\\",\\"description\\":\\"Friction - f\\",\\"coords\\":[[-2,-5],[-1,-3]],\\"render\\":false},{\\"name\\":\\"g\\",\\"description\\":\\"Gravity - g\\",\\"tail\\":[0,1.5],\\"length\\":5,\\"angle\\":-75,\\"render\\":false}]",\n  "width": 550\n}', 9864); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
-(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'definition', "scope_id" = 'box-incline.vectordraw.d0', "user_id" = NULL, "scenario" = 'box-incline', "tag" = 'vectordraw', "created" = '2025-09-03 05:44:13.805293', "state" = '{
-  "background_url": "https://github.com/open-craft/jsinput-vectordraw/raw/master/Notes_and_Examples/2_boxIncline_multiVector/box_on_incline.png",
-  "background_width": 20,
-  "bounding_box_size": 8,
-  "description": "<p>A box remains stationary on an inclined plane at an angle of 20 degrees with respect to the x-axis. Draw all appropriate vectors that define the force diagram for this system.</p><p><em>Be sure that the \"tail\" of each vector starts at the center of mass of the box.</em></p>",
-  "expected_result": "{\"N\":{\"angle\":110,\"angle_tolerance\":2,\"tail\":[-0.6,0.4],\"tail_tolerance\":0.5},\"g\":{\"angle\":270,\"angle_tolerance\":2,\"tail\":[-0.6,0.4],\"tail_tolerance\":0.5},\"f\":{\"angle\":20,\"angle_tolerance\":2,\"tail\":[-0.6,0.4],\"tail_tolerance\":0.5}}",
-  "height": 450,
-  "points": "[{\"name\":\"cm\",\"coords\":[-0.6,0.4],\"fixed\":false,\"description\":\"A simple point\"}]",
-  "vectors": "[{\"name\":\"N\",\"description\":\"Normal force - N\",\"tail\":[2,2],\"length\":4,\"angle\":45,\"render\":true},{\"name\":\"f\",\"description\":\"Friction - f\",\"coords\":[[-2,-5],[-1,-3]],\"render\":false},{\"name\":\"g\",\"description\":\"Gravity - g\",\"tail\":[0,1.5],\"length\":5,\"angle\":-75,\"render\":false}]",
-  "width": 550
-}' WHERE "workbench_xblockstate"."id" = 9864; args=('definition', 'box-incline.vectordraw.d0', 'box-incline', 'vectordraw', '2025-09-03 05:44:13.805293', '{\n  "background_url": "https://github.com/open-craft/jsinput-vectordraw/raw/master/Notes_and_Examples/2_boxIncline_multiVector/box_on_incline.png",\n  "background_width": 20,\n  "bounding_box_size": 8,\n  "description": "<p>A box remains stationary on an inclined plane at an angle of 20 degrees with respect to the x-axis. Draw all appropriate vectors that define the force diagram for this system.</p><p><em>Be sure that the \\"tail\\" of each vector starts at the center of mass of the box.</em></p>",\n  "expected_result": "{\\"N\\":{\\"angle\\":110,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5},\\"g\\":{\\"angle\\":270,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5},\\"f\\":{\\"angle\\":20,\\"angle_tolerance\\":2,\\"tail\\":[-0.6,0.4],\\"tail_tolerance\\":0.5}}",\n  "height": 450,\n  "points": "[{\\"name\\":\\"cm\\",\\"coords\\":[-0.6,0.4],\\"fixed\\":false,\\"description\\":\\"A simple point\\"}]",\n  "vectors": "[{\\"name\\":\\"N\\",\\"description\\":\\"Normal force - N\\",\\"tail\\":[2,2],\\"length\\":4,\\"angle\\":45,\\"render\\":true},{\\"name\\":\\"f\\",\\"description\\":\\"Friction - f\\",\\"coords\\":[[-2,-5],[-1,-3]],\\"render\\":false},{\\"name\\":\\"g\\",\\"description\\":\\"Gravity - g\\",\\"tail\\":[0,1.5],\\"length\\":5,\\"angle\\":-75,\\"render\\":false}]",\n  "width": 550\n}', 9864); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'box-incline.vectordraw.d0' AND "workbench_xblockstate"."tag" = 'vectordraw' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'definition', 'box-incline.vectordraw.d0', 'vectordraw'); alias=default
-(0.005) UPDATE "workbench_xblockstate" SET "scope" = 'definition', "scope_id" = 'box-incline.vectordraw.d0', "user_id" = NULL, "scenario" = 'box-incline', "tag" = 'vectordraw', "created" = '2025-09-03 05:44:13.805293', "state" = '{
   "background_url": "https://github.com/open-craft/jsinput-vectordraw/raw/master/Notes_and_Examples/2_boxIncline_multiVector/box_on_incline.png",
   "background_width": 20,
   "bounding_box_size": 8,
@@ -151,22 +63,226 @@
 }' WHERE "workbench_xblockstate"."id" = 9865; args=('parent', 'box-incline.vectordraw.d0.u0', 'box-incline', 'vectordraw', '2025-09-03 05:44:13.853361', '{\n  "parent": "box-incline.vertical_demo.d0.u0"\n}', 9865); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'children' AND "workbench_xblockstate"."scope_id" = 'box-incline.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'children', 'box-incline.vertical_demo.d0.u0', 'vertical_demo'); alias=default
 (0.000) BEGIN; args=None; alias=default
-(0.000) INSERT INTO "workbench_xblockstate" ("scope", "scope_id", "user_id", "scenario", "tag", "created", "state") VALUES ('children', 'box-incline.vertical_demo.d0.u0', NULL, 'box-incline', 'vertical_demo', '2025-09-07 14:57:02.023531', '{}') RETURNING "workbench_xblockstate"."id"; args=('children', 'box-incline.vertical_demo.d0.u0', None, 'box-incline', 'vertical_demo', '2025-09-07 14:57:02.023531', '{}'); alias=default
+(0.000) INSERT INTO "workbench_xblockstate" ("scope", "scope_id", "user_id", "scenario", "tag", "created", "state") VALUES ('children', 'box-incline.vertical_demo.d0.u0', NULL, 'box-incline', 'vertical_demo', '2025-09-07 20:53:12.826672', '{}') RETURNING "workbench_xblockstate"."id"; args=('children', 'box-incline.vertical_demo.d0.u0', None, 'box-incline', 'vertical_demo', '2025-09-07 20:53:12.826672', '{}'); alias=default
 (0.003) COMMIT; args=None; alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'children' AND "workbench_xblockstate"."scope_id" = 'box-incline.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'children', 'box-incline.vertical_demo.d0.u0', 'vertical_demo'); alias=default
-(0.003) UPDATE "workbench_xblockstate" SET "scope" = 'children', "scope_id" = 'box-incline.vertical_demo.d0.u0', "user_id" = NULL, "scenario" = 'box-incline', "tag" = 'vertical_demo', "created" = '2025-09-07 14:57:02.023531', "state" = '{
+(0.004) UPDATE "workbench_xblockstate" SET "scope" = 'children', "scope_id" = 'box-incline.vertical_demo.d0.u0', "user_id" = NULL, "scenario" = 'box-incline', "tag" = 'vertical_demo', "created" = '2025-09-07 20:53:12.826672', "state" = '{
   "children": [
     "box-incline.vectordraw.d0.u0"
   ]
-}' WHERE "workbench_xblockstate"."id" = 9994; args=('children', 'box-incline.vertical_demo.d0.u0', 'box-incline', 'vertical_demo', '2025-09-07 14:57:02.023531', '{\n  "children": [\n    "box-incline.vectordraw.d0.u0"\n  ]\n}', 9994); alias=default
+}' WHERE "workbench_xblockstate"."id" = 10005; args=('children', 'box-incline.vertical_demo.d0.u0', 'box-incline', 'vertical_demo', '2025-09-07 20:53:12.826672', '{\n  "children": [\n    "box-incline.vectordraw.d0.u0"\n  ]\n}', 10005); alias=default
 (0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'box-incline' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'box-incline.vertical_demo.d0.u0' AND "workbench_xblockstate"."tag" = 'vertical_demo' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('box-incline', 'parent', 'box-incline.vertical_demo.d0.u0', 'vertical_demo'); alias=default
 (0.003) UPDATE "workbench_xblockstate" SET "scope" = 'parent', "scope_id" = 'box-incline.vertical_demo.d0.u0', "user_id" = NULL, "scenario" = 'box-incline', "tag" = 'vertical_demo', "created" = '2025-09-03 05:44:13.872233', "state" = '{
   "parent": null
 }' WHERE "workbench_xblockstate"."id" = 9867; args=('parent', 'box-incline.vertical_demo.d0.u0', 'box-incline', 'vertical_demo', '2025-09-03 05:44:13.872233', '{\n  "parent": null\n}', 9867); alias=default
 "GET / HTTP/1.1" 200 2348
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/auth/context_processors.py first seen with mtime 1757253446.1960745
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/template/context_processors.py first seen with mtime 1757253446.7860744
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/staticfiles/storage.py first seen with mtime 1757253446.6930745
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/templatetags/__init__.py first seen with mtime 1757253462.2610736
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/messages/context_processors.py first seen with mtime 1757253446.4860744
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/templatetags/i18n.py first seen with mtime 1757253462.2620735
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/scorable.py first seen with mtime 1757278348.591524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/lookup.py first seen with mtime 1757278348.319524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/parser.py first seen with mtime 1757278352.599524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/actionscript.py first seen with mtime 1757278346.474524
+File /workspaces/xblock_development/openedx-xblock-inline-dropdown/inline_text_and_dropdown/__init__.py first seen with mtime 1757277264.4985309
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/__init__.py first seen with mtime 1757278352.5985239
+File /workspaces/xblock_development/openedx-xblock-inline-dropdown/inline_text_and_dropdown/inline_text_and_dropdown.py first seen with mtime 1757277264.4985309
+File /workspaces/xblock_development/xblock-sdk/sample_xblocks/filethumbs/__init__.py first seen with mtime 1757277264.570531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/treewalkers/__init__.py first seen with mtime 1757278352.659524
+File /workspaces/xblock_development/xblock-sortable2/sortable/__init__.py first seen with mtime 1757277264.576531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/perl.py first seen with mtime 1757278346.505524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/webencodings/__init__.py first seen with mtime 1757278352.584524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_inputstream.py first seen with mtime 1757278352.649524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/_css_builtins.py first seen with mtime 1757278346.4665241
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/serializer.py first seen with mtime 1757278352.599524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/html5parser.py first seen with mtime 1757278352.652524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/treebuilders/__init__.py first seen with mtime 1757278352.6575239
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/__init__.py first seen with mtime 1757278348.600524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/serializer.py first seen with mtime 1757278352.652524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/cache.py first seen with mtime 1757278348.317524
+File /workspaces/xblock_development/xblock-vectordraw0/vectordraw/utils.py first seen with mtime 1757277264.580531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/_ast_util.py first seen with mtime 1757278348.317524
+File /workspaces/xblock_development/xblock-sdk/sample_xblocks/__init__.py first seen with mtime 1757277264.569531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/__init__.py first seen with mtime 1757278352.6475239
+File /usr/local/python/3.12.1/lib/python3.12/xml/sax/_exceptions.py first seen with mtime 1752148678.0
+File /usr/local/python/3.12.1/lib/python3.12/xml/sax/__init__.py first seen with mtime 1752148678.0
+File /workspaces/xblock_development/xblock-dragdrop2/drag_and_drop_v2/__init__.py first seen with mtime 1757277264.5195308
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/exceptions.py first seen with mtime 1757278348.318524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/_mapping.py first seen with mtime 1757278346.469524
+File /workspaces/xblock_development/xblock-myxblock-react/myxblock/myxblock.py first seen with mtime 1757277264.5525308
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/tokenizer.py first seen with mtime 1757278352.599524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/lexer.py first seen with mtime 1757278348.318524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/__init__.py first seen with mtime 1757278346.464524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/_lua_builtins.py first seen with mtime 1757278346.468524
+File /workspaces/xblock_development/xblock-vectordraw0/vectordraw/grader.py first seen with mtime 1757277264.579531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/codegen.py first seen with mtime 1757278348.317524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/auth/context_processors.py first seen with mtime 1757278333.7885242
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/iolang.py first seen with mtime 1757278346.493524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/unistring.py first seen with mtime 1757278346.460524
+File /workspaces/xblock_development/xblock-sdk/sample_xblocks/basic/problem.py first seen with mtime 1757277264.569531
+File /workspaces/xblock_development/xblock-sortable2/sortable/utils.py first seen with mtime 1757277264.5785308
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/styles/_mapping.py first seen with mtime 1757278346.525524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/d.py first seen with mtime 1757278346.482524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/ext/pygmentplugin.py first seen with mtime 1757278348.321524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/template.py first seen with mtime 1757278348.320524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/compat.py first seen with mtime 1757278348.318524
+File /usr/local/python/3.12.1/lib/python3.12/timeit.py first seen with mtime 1752148677.0
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/__init__.py first seen with mtime 1757278352.645524
+File /workspaces/xblock_development/xblock-sdk/sample_xblocks/thumbs/thumbs.py first seen with mtime 1757277264.5715308
+File /workspaces/xblock_development/xblock-sdk/sample_xblocks/basic/__init__.py first seen with mtime 1757277264.569531
+File /workspaces/xblock_development/xblock-sdk/sample_xblocks/thumbs/__init__.py first seen with mtime 1757277264.5715308
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/agile.py first seen with mtime 1757278346.474524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_tokenizer.py first seen with mtime 1757278352.649524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/scripting.py first seen with mtime 1757278346.5125241
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/ast.py first seen with mtime 1757278348.317524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/html.py first seen with mtime 1757278346.492524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/style.py first seen with mtime 1757278346.460524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/jvm.py first seen with mtime 1757278346.495524
+File /usr/local/python/3.12.1/lib/python3.12/xml/sax/saxutils.py first seen with mtime 1752148678.0
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/linkifier.py first seen with mtime 1757278352.646524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/six_shim.py first seen with mtime 1757278352.646524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblockutils/studio_editable.py first seen with mtime 1757278355.668524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/template/context_processors.py first seen with mtime 1757278334.345524
+File /usr/local/python/3.12.1/lib/python3.12/encodings/utf_16_le.py first seen with mtime 1752148677.0
+File /usr/local/python/3.12.1/lib/python3.12/xml/sax/xmlreader.py first seen with mtime 1752148678.0
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/settings.py first seen with mtime 1757278348.601524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblockutils/deprecation/__init__.py first seen with mtime 1757278355.668524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_utils.py first seen with mtime 1757278352.649524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/callbacks.py first seen with mtime 1757278352.645524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/messages/context_processors.py first seen with mtime 1757278334.076524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/pyparser.py first seen with mtime 1757278348.319524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/data.py first seen with mtime 1757278346.483524
+File /workspaces/xblock_development/xblock-mcqs/mcqs/mcqs.py first seen with mtime 1757277264.547531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/html5lib_shim.py first seen with mtime 1757278352.645524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/formatters/__init__.py first seen with mtime 1757278346.461524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/webmisc.py first seen with mtime 1757278346.523524
+File /workspaces/xblock_development/xblock-mcqs/mcqs/__init__.py first seen with mtime 1757277264.547531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/constants.py first seen with mtime 1757278352.651524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/pygen.py first seen with mtime 1757278348.319524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/javascript.py first seen with mtime 1757278346.494524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblockutils/resources.py first seen with mtime 1757278355.668524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/filters/__init__.py first seen with mtime 1757278352.653524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/styles/__init__.py first seen with mtime 1757278346.525524
+File /workspaces/xblock_development/xblock-react/react_xblock_2/__init__.py first seen with mtime 1757277264.5575309
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/formatters/html.py first seen with mtime 1757278346.462524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/lisp.py first seen with mtime 1757278346.497524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/fragment.py first seen with mtime 1757278348.590524
+File /workspaces/xblock_development/xblock-drawing-react/drawing/drawing.py first seen with mtime 1757278102.0195255
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblockutils/settings.py first seen with mtime 1757278355.668524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/token.py first seen with mtime 1757278346.460524
+File /workspaces/xblock_development/xblock-vectordraw0/vectordraw/__init__.py first seen with mtime 1757277264.579531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_trie/_base.py first seen with mtime 1757278352.653524
+File /workspaces/xblock_development/xblock-sdk/sample_xblocks/filethumbs/filethumbs.py first seen with mtime 1757277264.570531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/parse_shim.py first seen with mtime 1757278352.646524
+File /workspaces/xblock_development/xblock-sdk/sample_xblocks/basic/slider.py first seen with mtime 1757277264.569531
+File /usr/local/python/3.12.1/lib/python3.12/xml/sax/handler.py first seen with mtime 1752148678.0
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/bytes.py first seen with mtime 1757278352.5985239
+File /workspaces/xblock_development/openedx-xblock-inline-dropdown/inline_text_and_dropdown/xml_parser.py first seen with mtime 1757277264.4995308
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/webencodings/labels.py first seen with mtime 1757278352.584524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/png.py first seen with mtime 1757278346.196524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/styles/default.py first seen with mtime 1757278346.527524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/web.py first seen with mtime 1757278346.521524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/ruby.py first seen with mtime 1757278346.510524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/plugin.py first seen with mtime 1757278346.459524
+File /workspaces/xblock_development/xblock-myxblock-react/myxblock/__init__.py first seen with mtime 1757277264.5515308
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/parse.py first seen with mtime 1757278352.6475239
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/filter.py first seen with mtime 1757278346.458524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/__init__.py first seen with mtime 1757278348.316524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/factor.py first seen with mtime 1757278346.486524
+File /workspaces/xblock_development/xblock-sdk/workbench/blocks.py first seen with mtime 1757277264.572531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/filters/sanitizer.py first seen with mtime 1757278352.655524
+File /workspaces/xblock_development/xblock-react/react_xblock_2/react_xblock_2.py first seen with mtime 1757277264.5645308
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/util.py first seen with mtime 1757278348.320524
+File /workspaces/xblock_development/xblock-sdk/sample_xblocks/basic/view_counter.py first seen with mtime 1757277264.570531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/formatter.py first seen with mtime 1757278346.458524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/ast.py first seen with mtime 1757278352.5985239
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblockutils/__init__.py first seen with mtime 1757278355.6675239
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/staticfiles/storage.py first seen with mtime 1757278334.270524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/tcl.py first seen with mtime 1757278346.516524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/templatetags/__init__.py first seen with mtime 1757278348.602524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_trie/py.py first seen with mtime 1757278352.653524
+File /workspaces/xblock_development/xblock-sdk/sample_xblocks/basic/content.py first seen with mtime 1757277264.569531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/filters/base.py first seen with mtime 1757278352.654524
+File /workspaces/xblock_development/xblock-vectordraw0/vectordraw/vectordraw.py first seen with mtime 1757277264.5815308
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/regexopt.py first seen with mtime 1757278346.459524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/run_script.py first seen with mtime 1757278348.590524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_trie/__init__.py first seen with mtime 1757278352.653524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/resources.py first seen with mtime 1757278348.601524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/formatters/_mapping.py first seen with mtime 1757278346.461524
+File /workspaces/xblock_development/xblock-sortable2/sortable/sortable.py first seen with mtime 1757277264.5775309
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/css_sanitizer.py first seen with mtime 1757278352.645524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblockutils/deprecation/warn.py first seen with mtime 1757278355.668524
+File /workspaces/xblock_development/xblock-sdk/sample_xblocks/basic/structure.py first seen with mtime 1757277264.569531
+File /workspaces/xblock_development/xblock-sdk/workbench/services.py first seen with mtime 1757277264.572531
+File /usr/local/python/3.12.1/lib/python3.12/encodings/utf_16_be.py first seen with mtime 1752148677.0
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/__init__.py first seen with mtime 1757278346.457524
+File /workspaces/xblock_development/xblock-dragdrop2/drag_and_drop_v2/default_data.py first seen with mtime 1757277264.520531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/studio_editable.py first seen with mtime 1757278348.601524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/runtime.py first seen with mtime 1757278348.319524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/css.py first seen with mtime 1757278346.482524
+File /workspaces/xblock_development/xblock-dragdrop2/drag_and_drop_v2/utils.py first seen with mtime 1757277264.527531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/__init__.py first seen with mtime 1757278352.648524
+File /workspaces/xblock_development/xblock-dragdrop2/drag_and_drop_v2/compat.py first seen with mtime 1757277264.5195308
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/templatetags/i18n.py first seen with mtime 1757278348.603524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/modeline.py first seen with mtime 1757278346.459524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/parsetree.py first seen with mtime 1757278348.319524
+File /workspaces/xblock_development/xblock-drawing-react/drawing/__init__.py first seen with mtime 1757277264.533531
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/sanitizer.py first seen with mtime 1757278352.646524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/filters/__init__.py first seen with mtime 1757278346.461524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/ext/__init__.py first seen with mtime 1757278348.320524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/util.py first seen with mtime 1757278346.460524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/treebuilders/base.py first seen with mtime 1757278352.658524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/_scheme_builtins.py first seen with mtime 1757278346.471524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/filters.py first seen with mtime 1757278348.318524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/php.py first seen with mtime 1757278346.506524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexer.py first seen with mtime 1757278346.458524
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/python.py first seen with mtime 1757278346.508524
+File /workspaces/xblock_development/xblock-dragdrop2/drag_and_drop_v2/drag_and_drop_v2.py first seen with mtime 1757277264.520531
+"GET /static/workbench/css/workbench.css HTTP/1.1" 200 880
+Exception while resolving variable 'name' in template 'unknown'.
+Traceback (most recent call last):
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/views/static.py", line 40, in serve
+    raise Http404(_("“%(path)s” does not exist") % {"path": fullpath})
+django.http.response.Http404: “/workspaces/xblock_development/favicon.ico” does not exist
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/template/base.py", line 880, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'URLResolver' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/template/base.py", line 890, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'URLResolver' object has no attribute 'name'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/template/base.py", line 896, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'name'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/template/base.py", line 903, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [name] in <URLResolver <URLPattern list> (admin:admin) '^admin/'>
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 4562
+"GET /static/workbench/images/header-logo.png HTTP/1.1" 200 4716
+File /usr/local/python/3.12.1/lib/python3.12/encodings/unicode_escape.py first seen with mtime 1752148677.0
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'definition', 'drawingxblock-based-on-react.drawing_xblock.d0', 'drawing_xblock'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'definition', 'drawingxblock-based-on-react.drawing_xblock.d0', 'drawing_xblock'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'definition', 'drawingxblock-based-on-react.drawing_xblock.d0', 'drawing_xblock'); alias=default
+(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'definition' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'definition', 'drawingxblock-based-on-react.drawing_xblock.d0', 'drawing_xblock'); alias=default
