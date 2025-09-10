@@ -59311,19 +59311,34 @@
 	}
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
 	 */
 
 	const toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+	const toCamelCase = (string) => string.replace(
+	  /^([A-Z])|[\s-_]+(\w)/g,
+	  (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase()
+	);
+	const toPascalCase = (string) => {
+	  const camelCase = toCamelCase(string);
+	  return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+	};
 	const mergeClasses = (...classes) => classes.filter((className, index, array) => {
 	  return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
 	}).join(" ").trim();
+	const hasA11yProp = (props) => {
+	  for (const prop in props) {
+	    if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
+	      return true;
+	    }
+	  }
+	};
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59342,7 +59357,7 @@
 	};
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59359,29 +59374,28 @@
 	    children,
 	    iconNode,
 	    ...rest
-	  }, ref) => {
-	    return reactExports.createElement(
-	      "svg",
-	      {
-	        ref,
-	        ...defaultAttributes,
-	        width: size,
-	        height: size,
-	        stroke: color,
-	        strokeWidth: absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth,
-	        className: mergeClasses("lucide", className),
-	        ...rest
-	      },
-	      [
-	        ...iconNode.map(([tag, attrs]) => reactExports.createElement(tag, attrs)),
-	        ...Array.isArray(children) ? children : [children]
-	      ]
-	    );
-	  }
+	  }, ref) => reactExports.createElement(
+	    "svg",
+	    {
+	      ref,
+	      ...defaultAttributes,
+	      width: size,
+	      height: size,
+	      stroke: color,
+	      strokeWidth: absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth,
+	      className: mergeClasses("lucide", className),
+	      ...!children && !hasA11yProp(rest) && { "aria-hidden": "true" },
+	      ...rest
+	    },
+	    [
+	      ...iconNode.map(([tag, attrs]) => reactExports.createElement(tag, attrs)),
+	      ...Array.isArray(children) ? children : [children]
+	    ]
+	  )
 	);
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59393,16 +59407,20 @@
 	    ({ className, ...props }, ref) => reactExports.createElement(Icon, {
 	      ref,
 	      iconNode,
-	      className: mergeClasses(`lucide-${toKebabCase(iconName)}`, className),
+	      className: mergeClasses(
+	        `lucide-${toKebabCase(toPascalCase(iconName))}`,
+	        `lucide-${iconName}`,
+	        className
+	      ),
 	      ...props
 	    })
 	  );
-	  Component.displayName = `${iconName}`;
+	  Component.displayName = toPascalCase(iconName);
 	  return Component;
 	};
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59413,10 +59431,10 @@
 	  ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
 	  ["path", { d: "M7 16c.5-2 1.5-7 4-7 2 0 2 3 4 3 2.5 0 4.5-5 5-7", key: "lw07rv" }]
 	];
-	const ChartSpline = createLucideIcon("ChartSpline", __iconNode$b);
+	const ChartSpline = createLucideIcon("chart-spline", __iconNode$b);
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59424,10 +59442,10 @@
 
 
 	const __iconNode$a = [["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]];
-	const Circle = createLucideIcon("Circle", __iconNode$a);
+	const Circle = createLucideIcon("circle", __iconNode$a);
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59435,10 +59453,10 @@
 
 
 	const __iconNode$9 = [["circle", { cx: "12.1", cy: "12.1", r: "1", key: "18d7e5" }]];
-	const Dot = createLucideIcon("Dot", __iconNode$9);
+	const Dot = createLucideIcon("dot", __iconNode$9);
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59454,10 +59472,10 @@
 	    }
 	  ]
 	];
-	const Hexagon = createLucideIcon("Hexagon", __iconNode$8);
+	const Hexagon = createLucideIcon("hexagon", __iconNode$8);
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59473,10 +59491,10 @@
 	    }
 	  ]
 	];
-	const MousePointer2 = createLucideIcon("MousePointer2", __iconNode$7);
+	const MousePointer2 = createLucideIcon("mouse-pointer-2", __iconNode$7);
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59488,10 +59506,10 @@
 	  ["path", { d: "M13 5h6v6", key: "7voy1q" }],
 	  ["path", { d: "M19 5 5 19", key: "wwaj1z" }]
 	];
-	const MoveDiagonal = createLucideIcon("MoveDiagonal", __iconNode$6);
+	const MoveDiagonal = createLucideIcon("move-diagonal", __iconNode$6);
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59502,10 +59520,10 @@
 	  ["path", { d: "M13 5H19V11", key: "1n1gyv" }],
 	  ["path", { d: "M19 5L5 19", key: "72u4yj" }]
 	];
-	const MoveUpRight = createLucideIcon("MoveUpRight", __iconNode$5);
+	const MoveUpRight = createLucideIcon("move-up-right", __iconNode$5);
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59522,10 +59540,10 @@
 	  ],
 	  ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
 	];
-	const Pencil = createLucideIcon("Pencil", __iconNode$4);
+	const Pencil = createLucideIcon("pencil", __iconNode$4);
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59535,10 +59553,10 @@
 	const __iconNode$3 = [
 	  ["rect", { width: "20", height: "12", x: "2", y: "6", rx: "2", key: "9lu3g6" }]
 	];
-	const RectangleHorizontal = createLucideIcon("RectangleHorizontal", __iconNode$3);
+	const RectangleHorizontal = createLucideIcon("rectangle-horizontal", __iconNode$3);
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59546,10 +59564,10 @@
 
 
 	const __iconNode$2 = [["path", { d: "M22 2 2 22", key: "y4kqgn" }]];
-	const Slash = createLucideIcon("Slash", __iconNode$2);
+	const Slash = createLucideIcon("slash", __iconNode$2);
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59561,10 +59579,10 @@
 	  ["circle", { cx: "5", cy: "19", r: "2", key: "v8kfzx" }],
 	  ["path", { d: "M5 17A12 12 0 0 1 17 5", key: "1okkup" }]
 	];
-	const Spline = createLucideIcon("Spline", __iconNode$1);
+	const Spline = createLucideIcon("spline", __iconNode$1);
 
 	/**
-	 * @license lucide-react v0.477.0 - ISC
+	 * @license lucide-react v0.543.0 - ISC
 	 *
 	 * This source code is licensed under the ISC license.
 	 * See the LICENSE file in the root directory of this source tree.
@@ -59572,11 +59590,11 @@
 
 
 	const __iconNode = [
-	  ["polyline", { points: "4 7 4 4 20 4 20 7", key: "1nosan" }],
-	  ["line", { x1: "9", x2: "15", y1: "20", y2: "20", key: "swin9y" }],
-	  ["line", { x1: "12", x2: "12", y1: "4", y2: "20", key: "1tx1rr" }]
+	  ["path", { d: "M12 4v16", key: "1654pz" }],
+	  ["path", { d: "M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2", key: "e0r10z" }],
+	  ["path", { d: "M9 20h6", key: "s66wpe" }]
 	];
-	const Type = createLucideIcon("Type", __iconNode);
+	const Type = createLucideIcon("type", __iconNode);
 
 	var CoordIcon = "5e2af42263c8b291.svg";
 
@@ -59624,11 +59642,11 @@
 	    // Render the DrawingApp using initData from the XBlock
 	    const index = initData.index ?? 0;
 	    const AssessName = initData.AssessName ?? initData.question ?? 'quiz1';
-	    const canvasWidth = initData.canvasWidth ?? 500;
-	    const canvasHeight = initData.canvasHeight ?? 400;
+	    const canvasWidth = initData.canvasWidth ?? 400;
+	    const canvasHeight = initData.canvasHeight ?? 300;
 	    const nextButtonClicked = initData.nextButtonClicked ?? false;
-	    const bgnumber = initData.bgnumber ?? 0; // New prop for selecting the background
-	    return (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsx("div", { className: "block-info", children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, nextButtonClicked: nextButtonClicked, modes: modes, bgnumber: bgnumber }) })] }));
+	    const bgnumber = initData.bgnumber ?? 1; // New prop for selecting the background
+	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '200px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '200px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, nextButtonClicked: nextButtonClicked, modes: modes, bgnumber: bgnumber }) })] }));
 	};
 	function initStudentView(runtime, container, initData) {
 	    if ('jquery' in container)

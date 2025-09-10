@@ -56,16 +56,16 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   // Render the DrawingApp using initData from the XBlock
   const index = initData.index ?? 0
   const AssessName = initData.AssessName ?? initData.question ?? 'quiz1'
-  const canvasWidth = initData.canvasWidth ?? 500
-  const canvasHeight = initData.canvasHeight ?? 400
+  const canvasWidth = initData.canvasWidth ?? 400
+  const canvasHeight = initData.canvasHeight ?? 300
   const nextButtonClicked = initData.nextButtonClicked ?? false
   const bgnumber = initData.bgnumber ?? 1 // New prop for selecting the background
   return (
-    <>
-    <div className="block-info">
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }}>
+      <div className="block-info" style={{ flex: 1, marginRight: '24px', minWidth: '200px' }}>
         <p>{initData.question}</p>
-    </div>
-      <div className="drawing-container">
+      </div>
+      <div className="drawing-container" style={{ flex: 2, minWidth: '200px' }}>
         <DrawingApp
           index={index}
           AssessName={AssessName}
@@ -76,7 +76,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
           bgnumber={bgnumber} // Pass the bgnumber prop to DrawingApp
         />
       </div>
-    </>
+    </div>
   )
 }
 
