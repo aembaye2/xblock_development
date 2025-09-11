@@ -32,8 +32,15 @@ const StudentView: React.FC<Props> = ({ runtime, ...props }) => {
   // Handlers:
   const increment = React.useCallback(async () => {
     interface IncrementResponse { count: number; }
-    const newData = await runtime.postHandler<IncrementResponse>('increment_count');
-    setCount(newData.count);
+    const newData = await runtime.postHandler<IncrementResponse>('increment_count'); 
+    //Note that 'increment_count' is the function in the .py file decorated with @XBlock.json_handler; 
+    //here the function is run each time runtime.postHandler is called. In this particular case, the frontend
+    //doesn't send any data but the request that the increment_count function be run and its result is sent back to it
+    //If you are sending data to the backend, you can pass it as the second parameter of postHandler: ('increment_count', blabla).
+    //Also note that the return value of increment_count is automatically JSON-ified and sent back to the frontend.
+    //If you need to send an error message, raise a ValueError in the Python code, and it will be sent back to the frontend
+    //as a rejected Promise.
+    setCount(newData.count); //update the state with the new count returned by the backend function; and re-rendered in the JSX
   }, [runtime]);
 
   // Note: for more sophisticated fetch/cache/mutate behavior, use @tanstack/react-query to manage your data.
@@ -53,7 +60,7 @@ const StudentView: React.FC<Props> = ({ runtime, ...props }) => {
           values={{ count, bold: text => <span className="count">{text}</span> }}
         />
       </p>
-      <button className="btn btn-primary" onClick={increment}>+ <FormattedMessage defaultMessage="Increment" /></button>
+      <button className="btn btn-primary" onClick={increment}>+ <FormattedMessage defaultMessage="Increment2" /></button>
     </div>
 }
 
@@ -73,4 +80,5 @@ function initStudentView(runtime: XBlockRuntime, container: HTMLDivElement | JQu
 }
 
 // We need to add our init function to the global (window) namespace, without conflicts:
+// initReactXBlock8StudentView is the name chosen in the Python code when calling frag.initialize_js() 
 (globalThis as any).initReactXBlock8StudentView = initStudentView;

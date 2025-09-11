@@ -6,13 +6,13 @@ import styles from "./CanvasToolbar.module.css"
 
 // const bin = "/img/bin.png"; // it is in the public folder in nextjs app
 // const undo = "/img/undo.png"
-// const download = "/img/download.png"
+//const download = "/img/download.png"
 // //const download2 = "/img/circle-check-big.png";
 // const save = "/img/save.svg"
 
 import bin from "./img/bin.png"
 import undo from "./img/undo.png"
-//import download from "./img/download.png"
+import download from "./img/download.png"
 //const save = "/img/save.svg"
 
 interface SquareIconProps {
@@ -54,7 +54,7 @@ interface CanvasToolbarProps {
   canRedo: boolean
   downloadCallback: () => void
   //downloadCallback2: () => void
-  saveCallback: () => void
+  //saveCallback: () => void
   undoCallback: () => void
   redoCallback: () => void
   resetCallback: () => void
@@ -67,7 +67,7 @@ const CanvasToolbar = ({
   canRedo,
   downloadCallback,
   //downloadCallback2,
-  saveCallback,
+  //saveCallback,
   undoCallback,
   redoCallback,
   resetCallback,
@@ -75,13 +75,13 @@ const CanvasToolbar = ({
   const GAP_BETWEEN_ICONS = 4
   const ICON_SIZE = 24
   const iconElements = [
-    // {
-    //   imgUrl: download,
-    //   altText: "download",
-    //   invertX: false,
-    //   enabled: true,
-    //   clickCallback: downloadCallback,
-    // },
+    {
+      imgUrl: download,
+      altText: "download",
+      invertX: false,
+      enabled: true,
+      clickCallback: downloadCallback,
+    },
     // {
     //   imgUrl: download2,
     //   altText: "complete",

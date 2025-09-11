@@ -5815,10 +5815,17 @@
 	    // Handlers:
 	    const increment = React.useCallback(async () => {
 	        const newData = await runtime.postHandler('increment_count');
-	        setCount(newData.count);
+	        //Note that 'increment_count' is the function in the .py file decorated with @XBlock.json_handler; 
+	        //here the function is run each time runtime.postHandler is called. In this particular case, the frontend
+	        //doesn't send any data but the request that the increment_count function be run and its result is sent back to it
+	        //If you are sending data to the backend, you can pass it as the second parameter of postHandler: ('increment_count', blabla).
+	        //Also note that the return value of increment_count is automatically JSON-ified and sent back to the frontend.
+	        //If you need to send an error message, raise a ValueError in the Python code, and it will be sent back to the frontend
+	        //as a rejected Promise.
+	        setCount(newData.count); //update the state with the new count returned by the backend function; and re-rendered in the JSX
 	    }, [runtime]);
 	    // Note: for more sophisticated fetch/cache/mutate behavior, use @tanstack/react-query to manage your data.
-	    return jsxRuntimeExports.jsxs("div", { className: "react_xblock_2_block", children: [jsxRuntimeExports.jsx("h1", { children: "ReactXBlock8" }), jsxRuntimeExports.jsx("p", { children: jsxRuntimeExports.jsx(MemoizedFormattedMessage, { id: 'eYjOvr', defaultMessage: [{ type: 6, value: "count", options: { one: { value: [{ type: 0, value: "The button has been clicked " }, { type: 8, value: "bold", children: [{ type: 0, value: "1" }] }, { type: 0, value: " time." }] }, other: { value: [{ type: 0, value: "The button has been clicked " }, { type: 8, value: "bold", children: [{ type: 2, value: "count", style: null }] }, { type: 0, value: " times." }] } }, offset: 0, pluralType: "cardinal" }], values: { count, bold: text => jsxRuntimeExports.jsx("span", { className: "count", children: text }) } }) }), jsxRuntimeExports.jsxs("button", { className: "btn btn-primary", onClick: increment, children: ["+ ", jsxRuntimeExports.jsx(MemoizedFormattedMessage, { id: 'tQLRmz', defaultMessage: [{ type: 0, value: "Increment" }] })] })] });
+	    return jsxRuntimeExports.jsxs("div", { className: "react_xblock_2_block", children: [jsxRuntimeExports.jsx("h1", { children: "ReactXBlock8" }), jsxRuntimeExports.jsx("p", { children: jsxRuntimeExports.jsx(MemoizedFormattedMessage, { id: 'eYjOvr', defaultMessage: [{ type: 6, value: "count", options: { one: { value: [{ type: 0, value: "The button has been clicked " }, { type: 8, value: "bold", children: [{ type: 0, value: "1" }] }, { type: 0, value: " time." }] }, other: { value: [{ type: 0, value: "The button has been clicked " }, { type: 8, value: "bold", children: [{ type: 2, value: "count", style: null }] }, { type: 0, value: " times." }] } }, offset: 0, pluralType: "cardinal" }], values: { count, bold: text => jsxRuntimeExports.jsx("span", { className: "count", children: text }) } }) }), jsxRuntimeExports.jsxs("button", { className: "btn btn-primary", onClick: increment, children: ["+ ", jsxRuntimeExports.jsx(MemoizedFormattedMessage, { id: 'VhtPIE', defaultMessage: [{ type: 0, value: "Increment2" }] })] })] });
 	};
 	function initStudentView(runtime, container, initData) {
 	    if ('jquery' in container) {
@@ -5831,6 +5838,7 @@
 	    root.render(jsxRuntimeExports.jsx(IntlProvider, { messages: messages[languageCode], locale: languageCode, defaultLocale: "en", children: jsxRuntimeExports.jsx(StudentView, { runtime: new BoundRuntime(runtime, container), initialCount: initData.count }) }));
 	}
 	// We need to add our init function to the global (window) namespace, without conflicts:
+	// initReactXBlock8StudentView is the name chosen in the Python code when calling frag.initialize_js() 
 	globalThis.initReactXBlock8StudentView = initStudentView;
 
 })();

@@ -76,19 +76,19 @@ class ThumbsBlockBase:
 
         return {'up': self.upvotes, 'down': self.downvotes}
 
-    @staticmethod
-    def workbench_scenarios():
-        """A canned scenario for display in the workbench."""
-        return [
-            ("three thumbs at once",
-             """\
-                <vertical_demo>
-                    <thumbs/>
-                    <thumbs/>
-                    <thumbs/>
-                </vertical_demo>
-             """)
-        ]
+    # @staticmethod
+    # def workbench_scenarios():
+    #     """A canned scenario for display in the workbench."""
+    #     return [
+    #         ("three thumbs at once",
+    #          """\
+    #             <vertical_demo>
+    #                 <thumbs/>
+    #                 <thumbs/>
+    #                 <thumbs/>
+    #             </vertical_demo>
+    #          """)
+    #     ]
 
 
 class ThumbsBlock(ThumbsBlockBase, XBlock):

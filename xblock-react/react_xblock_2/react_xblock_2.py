@@ -19,7 +19,7 @@ class ReactXBlock8(XBlock):
 
     # TO-DO: delete count, and define your own fields.
     count = Integer(
-        default=0, scope=Scope.user_state,
+        default=0, scope=Scope.user_state, # user_state is vital to persist data per user when count is incremented
         help="A simple counter, to show something happening",
     )
 

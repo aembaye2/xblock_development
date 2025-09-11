@@ -37005,26 +37005,29 @@
 	var styles = {"enabled":"CanvasToolbar-module_enabled__3HGni","disabled":"CanvasToolbar-module_disabled__fBJKb","invertx":"CanvasToolbar-module_invertx__mXuAJ"};
 	styleInject(css_248z);
 
-	var img$1 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAhQAAAIUB4uz/wQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAHUSURBVEiJtda9ahRRFAfw3xHFJCabFEkawcYiYKMWVmohBHwFOwsfQLCxthOENHZqKxZG8DHSxcJC0Qcw7AqSNSoGci3mznp3nP0K8cBlZs7X/5z//RopJeMGlrGL1Bi7WJ4Uf9pk2cQVPMDPrJvHVra9GRc8BBARS7iKU4X6cn5+wvf8vljbIuJr4XuEdyml/YGmoGIdX/xLxayji/U2iu5iJXfwa1zbY2QOOznXE4YpuoE93D5m8lr2cLMN4BWu4TF+4HDGxIEOeng90DaW5BkVj/fyd6dhP4u5hq6Tnxdz7GZpL1eLlNIhvmEtq7Yj4mHhsoWng5Ir23b+rGO6Zc62fdAtnFewUdjOqyaylo3sMxJgqIMsvcJ5X8XrKFlCvwHQmwRQdjArwH5K6fc0AKvHAFjVoGcUwCwUdbKPHNNrOpw0RVN10MVCRCz8T4A6oI/FiIiTBKh5XFN1EDnRkETEnGrnH2sOSoC60rbqoR8R8zg3bQe102oB0DYPAwB/l/VkgJTSgeo+KDtoA6h1fSN2Me1nUV3JOj7iOT5k/csi5jNe4D2uj+og8lE7rIx4hjt4hIMRRZRyX7UYLqWUjoYsI35VLuCt6tKZ5h7ewa22XH8AgjMTispa6ucAAAAASUVORK5CYII=";
+	var img$2 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAhQAAAIUB4uz/wQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAHUSURBVEiJtda9ahRRFAfw3xHFJCabFEkawcYiYKMWVmohBHwFOwsfQLCxthOENHZqKxZG8DHSxcJC0Qcw7AqSNSoGci3mznp3nP0K8cBlZs7X/5z//RopJeMGlrGL1Bi7WJ4Uf9pk2cQVPMDPrJvHVra9GRc8BBARS7iKU4X6cn5+wvf8vljbIuJr4XuEdyml/YGmoGIdX/xLxayji/U2iu5iJXfwa1zbY2QOOznXE4YpuoE93D5m8lr2cLMN4BWu4TF+4HDGxIEOeng90DaW5BkVj/fyd6dhP4u5hq6Tnxdz7GZpL1eLlNIhvmEtq7Yj4mHhsoWng5Ir23b+rGO6Zc62fdAtnFewUdjOqyaylo3sMxJgqIMsvcJ5X8XrKFlCvwHQmwRQdjArwH5K6fc0AKvHAFjVoGcUwCwUdbKPHNNrOpw0RVN10MVCRCz8T4A6oI/FiIiTBKh5XFN1EDnRkETEnGrnH2sOSoC60rbqoR8R8zg3bQe102oB0DYPAwB/l/VkgJTSgeo+KDtoA6h1fSN2Me1nUV3JOj7iOT5k/csi5jNe4D2uj+og8lE7rIx4hjt4hIMRRZRyX7UYLqWUjoYsI35VLuCt6tKZ5h7ewa22XH8AgjMTispa6ucAAAAASUVORK5CYII=";
 
-	var img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAwwAAAMMBnc7+MwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEFSURBVEiJ7dSxLkRBFMbx31BIlkQlHoCap5BQLAXvQafV6DyLRLYSdkWv0dBQ0NAKkUhkj2bEzc3udW9xE5E9yVfNd85/5pyZSRGhzZhqtfoE8DcAKaVOqwD0mkBSSnNNAAmBAboR8V4qtoguVrNWMI9n3Gad4SQqHlRk9dHJvmns4qWwXqUrbESEspSMfazhekyhN9zhc8z6KWarAKN0jm0sI+WkmdyuPTyV/JdFSBXgATujjl3aYQf7+CjkXhTaPRYw+DbVETZLkMM6Leo3hGxhmHNfsVBnBk0hx4XcozqARpA8/GG+bQcJ6+rFTUQ81jGmlJYi4p6fa9da/IPvegL4Lb4A0uc9nRaYXwcAAAAASUVORK5CYII=";
+	var img$1 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAwwAAAMMBnc7+MwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEFSURBVEiJ7dSxLkRBFMbx31BIlkQlHoCap5BQLAXvQafV6DyLRLYSdkWv0dBQ0NAKkUhkj2bEzc3udW9xE5E9yVfNd85/5pyZSRGhzZhqtfoE8DcAKaVOqwD0mkBSSnNNAAmBAboR8V4qtoguVrNWMI9n3Gad4SQqHlRk9dHJvmns4qWwXqUrbESEspSMfazhekyhN9zhc8z6KWarAKN0jm0sI+WkmdyuPTyV/JdFSBXgATujjl3aYQf7+CjkXhTaPRYw+DbVETZLkMM6Leo3hGxhmHNfsVBnBk0hx4XcozqARpA8/GG+bQcJ6+rFTUQ81jGmlJYi4p6fa9da/IPvegL4Lb4A0uc9nRaYXwcAAAAASUVORK5CYII=";
+
+	var img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAsQAAALEBxi1JjQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEYSURBVEiJ7dS9SgNBFMXxX0y0NNpLqjQiKRRETON7aBMfwLfxDcRGC8HOTm21s7RIYZdniGiRO+6y5mNXVxD0wMBw58z532Fnh1+kFq5jNH8C0MFbjE7ZTUsVAEsz5rUBvqR/wB8CNLFeY+5aZH4ArjDCXsHYNv+vbWK1UNuNrMs8oGfyFGzmjDthvA9QUe1YG4U3aQvL2M4DpqkRHfZxU4C0o9aPxhpzcsDQ5I0ZFOpHGMfas+wtSvNxePIaxNpw0QngHIcR1M3Vu3jFcXhmqsw1vZCdJCmFny3a3CoBSBAm3TbKhlcBJEj6Vo9lN1UBwENF/yfAAVaqhhS0P614J7uCdY1bsh+kh1NsfLP7pBec4KmmvNl6B0BuQt0zCQ0xAAAAAElFTkSuQmCC";
 
 	const SquareIcon = ({ imgUrl, altText, invertX = false, size, enabled, clickCallback, }) => (jsxRuntimeExports.jsx("img", { src: imgUrl, className: `
     ${enabled ? styles.enabled : styles.disabled} ${invertX ? "" : styles.invertx}
     `, alt: altText, title: altText, height: `${size}px`, width: `${size}px`, onClick: clickCallback }));
 	const CanvasToolbar = ({ topPosition, leftPosition, canUndo, canRedo, downloadCallback, 
 	//downloadCallback2,
-	saveCallback, undoCallback, redoCallback, resetCallback, }) => {
+	//saveCallback,
+	undoCallback, redoCallback, resetCallback, }) => {
 	    const GAP_BETWEEN_ICONS = 4;
 	    const ICON_SIZE = 24;
 	    const iconElements = [
-	        // {
-	        //   imgUrl: download,
-	        //   altText: "download",
-	        //   invertX: false,
-	        //   enabled: true,
-	        //   clickCallback: downloadCallback,
-	        // },
+	        {
+	            imgUrl: img,
+	            altText: "download",
+	            invertX: false,
+	            enabled: true,
+	            clickCallback: downloadCallback,
+	        },
 	        // {
 	        //   imgUrl: download2,
 	        //   altText: "complete",
@@ -37040,21 +37043,21 @@
 	        //   clickCallback: saveCallback,
 	        // },
 	        {
-	            imgUrl: img,
+	            imgUrl: img$1,
 	            altText: "Undo",
 	            invertX: true,
 	            enabled: canUndo,
 	            clickCallback: canUndo ? undoCallback : () => { },
 	        },
 	        {
-	            imgUrl: img,
+	            imgUrl: img$1,
 	            altText: "Redo",
 	            invertX: false,
 	            enabled: canRedo,
 	            clickCallback: canRedo ? redoCallback : () => { },
 	        },
 	        {
-	            imgUrl: img$1,
+	            imgUrl: img$2,
 	            altText: "Reset canvas & history",
 	            invertX: false,
 	            enabled: true,
@@ -59061,9 +59064,8 @@
 	    //   canvas.renderAll();
 	}
 
-	//import { useCanvasStore } from "./useCanvasStore"
 	const backgroundlist = [customBackground2, customBackground3];
-	const DrawableCanvas = ({ AssessName, index, fillColor, strokeWidth, strokeColor, backgroundColor, backgroundImageURL, canvasWidth, canvasHeight, drawingMode, initialDrawing, displayToolbar, displayRadius, scaleFactors, nextButtonClicked, bgnumber, // Consume the bgnumber prop
+	const DrawableCanvas = ({ AssessName, index, fillColor, strokeWidth, strokeColor, backgroundImageURL, canvasWidth, canvasHeight, drawingMode, initialDrawing, displayToolbar, displayRadius, scaleFactors, nextButtonClicked, bgnumber, // Consume the bgnumber prop
 	 }) => {
 	    const canvasRef = reactExports.useRef(null);
 	    const backgroundCanvasRef = reactExports.useRef(null);
@@ -59160,43 +59162,55 @@
 	        canvasWidth,
 	        saveState,
 	    ]);
-	    reactExports.useEffect(() => {
-	        if (canvasInstance.current) {
-	            const savedDrawing = localStorage.getItem(`${AssessName}-canvasDrawing-${index}`);
-	            if (savedDrawing) {
-	                const parsedDrawing = JSON.parse(savedDrawing);
-	                if (canvasRef.current) {
-	                    // Clear the canvas before loading the saved drawing
-	                    //canvasInstance.current.clear()
-	                    // Ensure the canvas is properly loaded from L-Storage.
-	                    canvasInstance.current?.loadFromJSON(parsedDrawing, () => {
-	                        canvasInstance.current?.renderAll();
-	                    });
-	                    console.log(`Canvas data loaded from localStorage for index ${index}:`, savedDrawing);
-	                }
-	            }
-	        }
-	    }, [canvasInstance.current, index, AssessName]); // Load the drawing whenever the `index` and canvasInstance.current changes
-	    // Save the current drawing to L-Storage whenever the canvas state changes
-	    reactExports.useEffect(() => {
-	        console.log(`value of nextButtonClicked in DrawableCanvas.tsx is:' ${nextButtonClicked}`);
-	        //if (nextButtonClicked && canvasInstance.current) {
-	        if (canvasInstance.current) {
-	            const saveToLocalStorage = () => {
-	                const canvasData = canvasInstance.current
-	                    ? canvasInstance.current.toJSON()
-	                    : null;
-	                if (canvasData) {
-	                    localStorage.setItem(`${AssessName}-canvasDrawing-${index}`, JSON.stringify(canvasData));
-	                    console.log(`Canvasdrawing as .Json saved to localStorage for index ${AssessName}-${index}, in DrawableCanvas.tsx using useEffect.`);
-	                }
-	            };
-	            canvasInstance.current.on("object:added", saveToLocalStorage);
-	            return () => {
-	                canvasInstance.current?.off("object:added", saveToLocalStorage);
-	            };
-	        }
-	    }, [canvasInstance.current, index, AssessName]); // Monitor the index for changes
+	    // useEffect(() => {
+	    //   if (canvasInstance.current) {
+	    //     const savedDrawing = localStorage.getItem(
+	    //       `${AssessName}-canvasDrawing-${index}`
+	    //     )
+	    //     if (savedDrawing) {
+	    //       const parsedDrawing = JSON.parse(savedDrawing)
+	    //       if (canvasRef.current) {
+	    //         // Clear the canvas before loading the saved drawing
+	    //         //canvasInstance.current.clear()
+	    //         // Ensure the canvas is properly loaded from L-Storage.
+	    //         canvasInstance.current?.loadFromJSON(parsedDrawing, () => {
+	    //           canvasInstance.current?.renderAll()
+	    //         })
+	    //         console.log(
+	    //           `Canvas data loaded from localStorage for index ${index}:`,
+	    //           savedDrawing
+	    //         )
+	    //       }
+	    //     }
+	    //   }
+	    // }, [canvasInstance.current, index, AssessName]) // Load the drawing whenever the `index` and canvasInstance.current changes
+	    // // Save the current drawing to L-Storage whenever the canvas state changes
+	    // useEffect(() => {
+	    //   console.log(
+	    //     `value of nextButtonClicked in DrawableCanvas.tsx is:' ${nextButtonClicked}`
+	    //   )
+	    //   //if (nextButtonClicked && canvasInstance.current) {
+	    //   if (canvasInstance.current) {
+	    //     const saveToLocalStorage = () => {
+	    //       const canvasData = canvasInstance.current
+	    //         ? canvasInstance.current.toJSON()
+	    //         : null
+	    //       if (canvasData) {
+	    //         localStorage.setItem(
+	    //           `${AssessName}-canvasDrawing-${index}`,
+	    //           JSON.stringify(canvasData)
+	    //         )
+	    //         console.log(
+	    //           `Canvasdrawing as .Json saved to localStorage for index ${AssessName}-${index}, in DrawableCanvas.tsx using useEffect.`
+	    //         )
+	    //       }
+	    //     }
+	    //     canvasInstance.current.on("object:added", saveToLocalStorage)
+	    //     return () => {
+	    //       canvasInstance.current?.off("object:added", saveToLocalStorage)
+	    //     }
+	    //   }
+	    // }, [canvasInstance.current, index, AssessName]) // Monitor the index for changes
 	    const downloadCallback = () => {
 	        if (canvasInstance.current && backgroundCanvasInstance.current) {
 	            const tempCanvas = document.createElement("canvas");
@@ -59220,6 +59234,7 @@
 	            }
 	        }
 	    };
+	    //These are the items that the user sees
 	    return (jsxRuntimeExports.jsxs("div", { style: { position: "relative" }, children: [jsxRuntimeExports.jsx("div", { style: {
 	                    position: "absolute",
 	                    top: 0,
@@ -59227,10 +59242,10 @@
 	                    zIndex: 0,
 	                    backgroundColor: "rgba(248, 243, 243, 0.1)", //"rgba(255, 0, 0, 0.1)",
 	                }, children: jsxRuntimeExports.jsx("canvas", { id: `backgroundimage-canvas-${index}`, ref: backgroundCanvasRef, width: canvasWidth, height: canvasHeight }) }), jsxRuntimeExports.jsx("div", { style: {
-	                    position: "relative", //"absolute",
+	                    position: "absolute",
 	                    top: 0,
 	                    left: 0,
-	                    //zIndex: 1,
+	                    zIndex: 1,
 	                    border: "1px solid black",
 	                }, children: jsxRuntimeExports.jsx("canvas", { id: `canvas-${index}`, ref: canvasRef, width: canvasWidth, height: canvasHeight, className: "border border-lightgrey" }) }), jsxRuntimeExports.jsx("div", { style: {
 	                    display: "flex",
@@ -59238,12 +59253,16 @@
 	                }, children: displayToolbar && (jsxRuntimeExports.jsx(CanvasToolbar, { topPosition: 0, leftPosition: canvasWidth + 5, downloadCallback: downloadCallback, 
 	                    //downloadCallback2={downloadCallback4Json}
 	                    //downloadCallback3={logCanvasData}
-	                    saveCallback: () => { }, canUndo: canUndo, canRedo: canRedo, undoCallback: undo, redoCallback: redo, resetCallback: () => {
+	                    //saveCallback={() => {}} //{save2Storage}
+	                    canUndo: canUndo, canRedo: canRedo, undoCallback: undo, redoCallback: redo, resetCallback: () => {
 	                        //resetState(initialState);
 	                        const userConfirmed = window.confirm("Are you sure you want to clear the canvas? This action cannot be undone.");
 	                        if (userConfirmed) {
 	                            resetState(initialState);
-	                            //console.log("Canvas has been reset.");
+	                            console.log("Canvas has been reset.");
+	                        }
+	                        else {
+	                            console.log("Canvas reset canceled.");
 	                        }
 	                    } })) })] }));
 	};
@@ -59639,7 +59658,7 @@
 	};
 	const StudentView = ({ runtime, initData }) => {
 	    // Render the DrawingApp using initData from the XBlock
-	    const index = initData.index ?? 0;
+	    const index = initData.index ?? 1;
 	    const AssessName = initData.AssessName ?? initData.question ?? 'quiz1';
 	    const canvasWidth = initData.canvasWidth ?? 400;
 	    const canvasHeight = initData.canvasHeight ?? 300;

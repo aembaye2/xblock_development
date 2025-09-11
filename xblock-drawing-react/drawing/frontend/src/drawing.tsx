@@ -54,7 +54,7 @@ interface Props {
 
 const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ runtime, initData }) => {
   // Render the DrawingApp using initData from the XBlock
-  const index = initData.index ?? 0
+  const index = initData.index ?? 1
   const AssessName = initData.AssessName ?? initData.question ?? 'quiz1'
   const canvasWidth = initData.canvasWidth ?? 400
   const canvasHeight = initData.canvasHeight ?? 300

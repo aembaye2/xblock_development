@@ -140,16 +140,16 @@ class FileThumbsBlock(XBlock):
 
         return {'up': self.upvotes, 'down': self.downvotes}
 
-    @staticmethod
-    def workbench_scenarios():
-        """A canned scenario for display in the workbench."""
-        return [
-            ("filethumbs",
-             """\
-                <vertical_demo>
-                    <filethumbs/>
-                    <filethumbs/>
-                    <filethumbs/>
-                </vertical_demo>
-             """)
-        ]
+    # @staticmethod
+    # def workbench_scenarios():
+    #     """A canned scenario for display in the workbench."""
+    #     return [
+    #         ("filethumbs",
+    #          """\
+    #             <vertical_demo>
+    #                 <filethumbs/>
+    #                 <filethumbs/>
+    #                 <filethumbs/>
+    #             </vertical_demo>
+    #          """)
+    #     ]
