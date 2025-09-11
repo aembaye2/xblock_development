@@ -1,5 +1,6 @@
 
 # Virtual environments
+node_modules/
 xblock-env/
 venv/
 env/

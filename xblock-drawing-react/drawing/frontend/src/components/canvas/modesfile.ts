@@ -13,9 +13,9 @@ import {
   MousePointer2,
 } from "lucide-react"
 
-import CoordIcon from "./coordicon.svg" // Import the SVG file as a React component
+//import CoordIcon from "./coordicon.svg" // Import the SVG file as a React component
 
-//import CoordIcon from "./CoordComp" // Import the SVG file as a React component
+import CoordIcon from "./CoordComp" // Import the SVG file as a React component
 
 export const modes: any = [
   { mode: "point", icon: Dot, description: "Draw a point" },

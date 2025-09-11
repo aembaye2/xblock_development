@@ -59307,7 +59307,7 @@
 	                            display: "flex",
 	                            alignItems: "center",
 	                            marginBottom: "10px",
-	                        }, children: [jsxRuntimeExports.jsx(DrawingModeSelector, { drawingMode: drawingMode, setDrawingMode: setDrawingMode, modes: modes }), jsxRuntimeExports.jsxs("div", { style: { marginLeft: "10px" }, children: [jsxRuntimeExports.jsx("label", { htmlFor: "strokeColor", children: "Stroke Color: " }), jsxRuntimeExports.jsx("input", { type: "color", id: "strokeColor", value: strokeColor, onChange: (e) => setStrokeColor(e.target.value) })] }), jsxRuntimeExports.jsxs("div", { style: { marginLeft: "10px" }, children: [jsxRuntimeExports.jsx("label", { htmlFor: "strokeWidth", children: "Stroke Width: " }), jsxRuntimeExports.jsx("input", { type: "range", id: "strokeWidth", value: strokeWidth, min: "1", max: "5", onChange: (e) => setStrokeWidth(Number(e.target.value)), style: { width: "75px" } }), jsxRuntimeExports.jsx("span", { children: strokeWidth })] })] }), jsxRuntimeExports.jsx(DrawableCanvas, { ...canvasProps })] }) }) }));
+	                        }, children: [jsxRuntimeExports.jsx(DrawingModeSelector, { drawingMode: drawingMode, setDrawingMode: setDrawingMode, modes: modes }), jsxRuntimeExports.jsxs("div", { style: { marginLeft: "10px" }, children: [jsxRuntimeExports.jsx("label", { htmlFor: "strokeColor", children: "Color: " }), jsxRuntimeExports.jsx("input", { type: "color", id: "strokeColor", value: strokeColor, onChange: (e) => setStrokeColor(e.target.value) })] })] }), jsxRuntimeExports.jsx(DrawableCanvas, { ...canvasProps })] }) }) }));
 	}
 
 	/**
@@ -59596,9 +59596,8 @@
 	];
 	const Type = createLucideIcon("type", __iconNode);
 
-	var CoordIcon = "5e2af42263c8b291.svg";
+	const CoordIcon = ({ size = 100, color = "black", ballColor = "red", ...props }) => (jsxRuntimeExports.jsxs("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 100 100", width: size, height: size, ...props, children: [jsxRuntimeExports.jsx("line", { x1: "0", y1: "20", x2: "65", y2: "20", stroke: color, strokeWidth: "4", strokeDasharray: "4,4", strokeLinecap: "round" }), jsxRuntimeExports.jsx("line", { x1: "70", y1: "25", x2: "70", y2: "90", stroke: color, strokeWidth: "4", strokeDasharray: "4,4", strokeLinecap: "round" }), jsxRuntimeExports.jsx("circle", { cx: "70", cy: "20", r: "5", fill: ballColor, stroke: "darkred", strokeWidth: "1" })] }));
 
-	//import CoordIcon from "./CoordComp" // Import the SVG file as a React component
 	const modes = [
 	    { mode: "point", icon: Dot, description: "Draw a point" },
 	    { mode: "line", icon: Slash, description: "Draw a line" },
@@ -59646,7 +59645,7 @@
 	    const canvasHeight = initData.canvasHeight ?? 300;
 	    const nextButtonClicked = initData.nextButtonClicked ?? false;
 	    const bgnumber = initData.bgnumber ?? 1; // New prop for selecting the background
-	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '200px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '200px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, nextButtonClicked: nextButtonClicked, modes: modes, bgnumber: bgnumber }) })] }));
+	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '80%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '200px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, nextButtonClicked: nextButtonClicked, modes: modes, bgnumber: bgnumber }) })] }));
 	};
 	function initStudentView(runtime, container, initData) {
 	    if ('jquery' in container)

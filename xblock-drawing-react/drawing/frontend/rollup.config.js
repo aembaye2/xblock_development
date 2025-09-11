@@ -1,5 +1,6 @@
 import typescript from '@rollup/plugin-typescript';
 import url from '@rollup/plugin-url';
+import svgr from '@svgr/rollup';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import replace from '@rollup/plugin-replace';
@@ -18,6 +19,8 @@ export default {
   plugins: [
     postcss(),
     json(),
+  // Transform SVG imports into React components when imported as modules
+  svgr(),
     url({
       include: ['**/*.svg'],
       limit: 0, // Always copy SVG files

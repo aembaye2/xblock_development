@@ -61,11 +61,11 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   const nextButtonClicked = initData.nextButtonClicked ?? false
   const bgnumber = initData.bgnumber ?? 1 // New prop for selecting the background
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '80%' }}>
       <div className="block-info" style={{ flex: 1, marginRight: '24px', minWidth: '200px' }}>
         <p>{initData.question}</p>
       </div>
-      <div className="drawing-container" style={{ flex: 2, minWidth: '200px' }}>
+      <div className="drawing-container" style={{ flex: 2, minWidth: '400px' }}>
         <DrawingApp
           index={index}
           AssessName={AssessName}

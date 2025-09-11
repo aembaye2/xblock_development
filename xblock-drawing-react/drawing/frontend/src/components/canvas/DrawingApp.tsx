@@ -78,7 +78,7 @@ export function DrawingApp({
               modes={modes} // Pass the modes to the DrawingModeSelector
             />
             <div style={{ marginLeft: "10px" }}>
-              <label htmlFor="strokeColor">Stroke Color: </label>
+              <label htmlFor="strokeColor">Color: </label>
               <input
                 type="color"
                 id="strokeColor"
@@ -86,8 +86,8 @@ export function DrawingApp({
                 onChange={(e) => setStrokeColor(e.target.value)}
               />
             </div>
-            <div style={{ marginLeft: "10px" }}>
-              <label htmlFor="strokeWidth">Stroke Width: </label>
+            {/* <div style={{ marginLeft: "10px" }}>
+              <label htmlFor="strokeWidth">Width: </label>
               <input
                 type="range"
                 id="strokeWidth"
@@ -95,10 +95,10 @@ export function DrawingApp({
                 min="1"
                 max="5"
                 onChange={(e) => setStrokeWidth(Number(e.target.value))}
-                style={{ width: "75px" }}
+                style={{ width: "50px" }}
               />
               <span>{strokeWidth}</span>
-            </div>
+            </div> */}
           </div>
           <DrawableCanvas {...canvasProps} />
         </CanvasStateProvider>
