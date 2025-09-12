@@ -60,19 +60,19 @@ else
     echo "  ⚠️  Warning: xblock-drawing directory not found"
 fi
 
-if [ -d "xblock-vectordraw2" ]; then
-    echo "  - Installing xblock-vectordraw2..."
-    pip install -e ./xblock-vectordraw2
-else
-    echo "  ⚠️  Warning: xblock-vectordraw2 directory not found"
-fi
-
-# if [ -d "xblock-vectordraw0" ]; then
-#     echo "  - Installing xblock-vectordraw0..."
-#     pip install -e ./xblock-vectordraw0
+# if [ -d "xblock-vectordraw2" ]; then
+#     echo "  - Installing xblock-vectordraw2..."
+#     pip install -e ./xblock-vectordraw2
 # else
-#     echo "  ⚠️  Warning: xblock-vectordraw0 directory not found"
+#     echo "  ⚠️  Warning: xblock-vectordraw2 directory not found"
 # fi
+
+if [ -d "xblock-vectordraw3" ]; then
+    echo "  - Installing xblock-vectordraw3..."
+    pip install -e ./xblock-vectordraw3
+else
+    echo "  ⚠️  Warning: xblock-vectordraw3 directory not found"
+fi
 
 if [ -d "xblock-mcqs" ]; then
     echo "  - Installing xblock-mcqs..."
