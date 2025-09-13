@@ -1,21 +1,6 @@
 (function () {
 	'use strict';
 
-	function _mergeNamespaces(n, m) {
-		m.forEach(function (e) {
-			e && typeof e !== 'string' && !Array.isArray(e) && Object.keys(e).forEach(function (k) {
-				if (k !== 'default' && !(k in n)) {
-					var d = Object.getOwnPropertyDescriptor(e, k);
-					Object.defineProperty(n, k, d.get ? d : {
-						enumerable: true,
-						get: function () { return e[k]; }
-					});
-				}
-			});
-		});
-		return Object.freeze(n);
-	}
-
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 	function getDefaultExportFromCjs (x) {
@@ -55,7 +40,7 @@
 
 	var reactJsxRuntime_production_min = {};
 
-	var react$1 = {exports: {}};
+	var react = {exports: {}};
 
 	var react_production_min = {};
 
@@ -94,19 +79,17 @@
 		return react_production_min;
 	}
 
-	{
-	  react$1.exports = requireReact_production_min();
+	var hasRequiredReact;
+
+	function requireReact () {
+		if (hasRequiredReact) return react.exports;
+		hasRequiredReact = 1;
+
+		{
+		  react.exports = requireReact_production_min();
+		}
+		return react.exports;
 	}
-
-	var reactExports = react$1.exports;
-	var React = /*@__PURE__*/getDefaultExportFromCjs(reactExports);
-
-	var react = /*#__PURE__*/_mergeNamespaces({
-		__proto__: null,
-		default: React
-	}, [reactExports]);
-
-	var require$$0 = /*@__PURE__*/getAugmentedNamespace(react);
 
 	/**
 	 * @license React
@@ -123,7 +106,7 @@
 	function requireReactJsxRuntime_production_min () {
 		if (hasRequiredReactJsxRuntime_production_min) return reactJsxRuntime_production_min;
 		hasRequiredReactJsxRuntime_production_min = 1;
-	var f=require$$0,k=Symbol.for("react.element"),l=Symbol.for("react.fragment"),m=Object.prototype.hasOwnProperty,n=f.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,p={key:true,ref:true,__self:true,__source:true};
+	var f=requireReact(),k=Symbol.for("react.element"),l=Symbol.for("react.fragment"),m=Object.prototype.hasOwnProperty,n=f.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,p={key:true,ref:true,__self:true,__source:true};
 		function q(c,a,g){var b,d={},e=null,h=null;void 0!==g&&(e=""+g);void 0!==a.key&&(e=""+a.key);void 0!==a.ref&&(h=a.ref);for(b in a)m.call(a,b)&&!p.hasOwnProperty(b)&&(d[b]=a[b]);if(c&&c.defaultProps)for(b in a=c.defaultProps,a) void 0===d[b]&&(d[b]=a[b]);return {$$typeof:k,type:c,key:e,ref:h,props:d,_owner:n.current}}reactJsxRuntime_production_min.Fragment=l;reactJsxRuntime_production_min.jsx=q;reactJsxRuntime_production_min.jsxs=q;
 		return reactJsxRuntime_production_min;
 	}
@@ -209,7 +192,7 @@
 	function requireReactDom_production_min () {
 		if (hasRequiredReactDom_production_min) return reactDom_production_min;
 		hasRequiredReactDom_production_min = 1;
-	var aa=require$$0,ca=requireScheduler();function p(a){for(var b="https://reactjs.org/docs/error-decoder.html?invariant="+a,c=1;c<arguments.length;c++)b+="&args[]="+encodeURIComponent(arguments[c]);return "Minified React error #"+a+"; visit "+b+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings."}var da=new Set,ea={};function fa(a,b){ha(a,b);ha(a+"Capture",b);}
+	var aa=requireReact(),ca=requireScheduler();function p(a){for(var b="https://reactjs.org/docs/error-decoder.html?invariant="+a,c=1;c<arguments.length;c++)b+="&args[]="+encodeURIComponent(arguments[c]);return "Minified React error #"+a+"; visit "+b+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings."}var da=new Set,ea={};function fa(a,b){ha(a,b);ha(a+"Capture",b);}
 		function ha(a,b){ea[a]=b;for(a=0;a<b.length;a++)da.add(b[a]);}
 		var ia=!("undefined"===typeof window||"undefined"===typeof window.document||"undefined"===typeof window.document.createElement),ja=Object.prototype.hasOwnProperty,ka=/^[:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD][:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\-.0-9\u00B7\u0300-\u036F\u203F-\u2040]*$/,la=
 		{},ma={};function oa(a){if(ja.call(ma,a))return  true;if(ja.call(la,a))return  false;if(ka.test(a))return ma[a]=true;la[a]=true;return  false}function pa(a,b,c,d){if(null!==c&&0===c.type)return  false;switch(typeof b){case "function":case "symbol":return  true;case "boolean":if(d)return  false;if(null!==c)return !c.acceptsBooleans;a=a.toLowerCase().slice(0,5);return "data-"!==a&&"aria-"!==a;default:return  false}}
@@ -639,6 +622,9 @@
 	    var e = new Error(message);
 	    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 	};
+
+	var reactExports = requireReact();
+	var React = /*@__PURE__*/getDefaultExportFromCjs(reactExports);
 
 	//
 	// Main
@@ -59629,7 +59615,7 @@
 	];
 	const Type = createLucideIcon("type", __iconNode);
 
-	var img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEumlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI1LTA5LTEzPC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPjY2N2EwNTI4LTliZjctNDk1ZS04MzRjLWVmZDI5OTA4MDVhYzwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5VbnRpdGxlZCBkZXNpZ24gLSAxPC9yZGY6bGk+CiAgIDwvcmRmOkFsdD4KICA8L2RjOnRpdGxlPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpwZGY9J2h0dHA6Ly9ucy5hZG9iZS5jb20vcGRmLzEuMy8nPgogIDxwZGY6QXV0aG9yPkFiZWwgRW1iYXllPC9wZGY6QXV0aG9yPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczp4bXA9J2h0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8nPgogIDx4bXA6Q3JlYXRvclRvb2w+Q2FudmEgKFJlbmRlcmVyKSBkb2M9REFHeTByb0FuOGcgdXNlcj1VQUdSUDJzdUZObyBicmFuZD1CQUdSUDgzaEVjSSB0ZW1wbGF0ZT08L3htcDpDcmVhdG9yVG9vbD4KIDwvcmRmOkRlc2NyaXB0aW9uPgo8L3JkZjpSREY+CjwveDp4bXBtZXRhPgo8P3hwYWNrZXQgZW5kPSdyJz8+YmCslAAAApZJREFUeJzt2bFKI1EYhuFvltXBOxDRDILegIW9YG0hghAQIxIrL0SsbESwCYLBRkRtBa9AvACx03tItBmLYXcRdjLnJMPmW/I+kEb+ORN8ifGcSfI8zwUbP8b9BvAdQcwQxAxBzBDEDEHMEMQMQcwQxAxBYvR6Urcr7e1JjYaUJMUry4qfdbvSx8dIt0g4Ogl0fy8dHkpvb4PnFhelkxNpY2Oo2xCkyuendHAgXVzEXbe7K52fS9PTUZcRpEqrFR/jl3a7iBKBIINcXko7O6Ot0e1KzWbweO1BkiQJmgu97djW6/elpSXp/T1ovtT8vPT6KqVp0Dj/ZZW5uho9hlSscX0dPE6QMre39a11dxc8SpAyz8/1rfX0FDzKd0jZemk68ibvtzSV+v2gUT4hZghSZna2vrXm5oJHCVJmZaW+tVZXg0cJUmZrq761Is61+FIvW6/fl5aXqw8TqzQa0svL+DaGeZ4HvezXS1Pp6GiYX8F3x8fBMST+ZA3WbEr7+8Nf325L29tRlxCkytlZceIbq9WSTk+jLyNIlakpqdMpjj8WFqrns6yY7XSKayNx/B6j15NubqSHB+nx8c8XfpZJa2vS+rq0uSnNzAx9C4KY4U+WGYKYIYgZgpj5Oe438D+p+xjnb/iEmCGIGYKYIYgZgpghiBmCmCGIGYKYYace4V88qeATYoYgZghihiBmCGKGIGYIYoYgZghihp16BJ6pTyCCmCGIGYKYIYgZgpghiBmCmCGIGXbqEXimPoEIYoYgZghihiBmCGKGIGYIYoYgZtipR+CZ+gQiiBmCmCGIGYKYIYgZgpghiBmCmGGnHoFn6hOIIGYIYoYgZghihiBmCGKGIGYIYoYgZghihiBmCGKGIGa+AP8D/TAfiIeXAAAAAElFTkSuQmCC";
+	var img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEumlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI1LTA5LTEzPC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPjg3ZWMxNGM3LTMzMjAtNGJmOS04MGM2LTFjOTI2M2ViNTc3MDwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5VbnRpdGxlZCBkZXNpZ24gLSAxPC9yZGY6bGk+CiAgIDwvcmRmOkFsdD4KICA8L2RjOnRpdGxlPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlv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";
 
 	const modes = [
 	    { mode: "point", icon: Dot, description: "Draw a point" },
