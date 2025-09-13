@@ -15,7 +15,8 @@ import {
 
 //import CoordIcon from "./coordicon.svg" // Import the SVG file as a React component
 
-import CoordIcon from "./CoordComp" // Import the SVG file as a React component
+//import CoordIcon from "./CoordComp" // Import the SVG file as a React component
+import coordicon from "./coordicon.png"
 
 export const modes: any = [
   { mode: "point", icon: Dot, description: "Draw a point" },
@@ -36,7 +37,7 @@ export const modes: any = [
   { mode: "freedraw", icon: Pencil, description: "Free draw" },
   {
     mode: "coordinate",
-    icon: CoordIcon, //process.env.PUBLIC_URL + "./coordicon.svg",
+    icon: coordicon, //process.env.PUBLIC_URL + "./coordicon.svg",
     description: "Draw coordinates",
   },
   { mode: "curve", icon: Spline, description: "Draw a curve" },

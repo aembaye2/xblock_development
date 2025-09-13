@@ -1,6 +1,21 @@
 (function () {
 	'use strict';
 
+	function _mergeNamespaces(n, m) {
+		m.forEach(function (e) {
+			e && typeof e !== 'string' && !Array.isArray(e) && Object.keys(e).forEach(function (k) {
+				if (k !== 'default' && !(k in n)) {
+					var d = Object.getOwnPropertyDescriptor(e, k);
+					Object.defineProperty(n, k, d.get ? d : {
+						enumerable: true,
+						get: function () { return e[k]; }
+					});
+				}
+			});
+		});
+		return Object.freeze(n);
+	}
+
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 	function getDefaultExportFromCjs (x) {
@@ -40,7 +55,7 @@
 
 	var reactJsxRuntime_production_min = {};
 
-	var react = {exports: {}};
+	var react$1 = {exports: {}};
 
 	var react_production_min = {};
 
@@ -79,17 +94,19 @@
 		return react_production_min;
 	}
 
-	var hasRequiredReact;
-
-	function requireReact () {
-		if (hasRequiredReact) return react.exports;
-		hasRequiredReact = 1;
-
-		{
-		  react.exports = requireReact_production_min();
-		}
-		return react.exports;
+	{
+	  react$1.exports = requireReact_production_min();
 	}
+
+	var reactExports = react$1.exports;
+	var React = /*@__PURE__*/getDefaultExportFromCjs(reactExports);
+
+	var react = /*#__PURE__*/_mergeNamespaces({
+		__proto__: null,
+		default: React
+	}, [reactExports]);
+
+	var require$$0 = /*@__PURE__*/getAugmentedNamespace(react);
 
 	/**
 	 * @license React
@@ -106,7 +123,7 @@
 	function requireReactJsxRuntime_production_min () {
 		if (hasRequiredReactJsxRuntime_production_min) return reactJsxRuntime_production_min;
 		hasRequiredReactJsxRuntime_production_min = 1;
-	var f=requireReact(),k=Symbol.for("react.element"),l=Symbol.for("react.fragment"),m=Object.prototype.hasOwnProperty,n=f.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,p={key:true,ref:true,__self:true,__source:true};
+	var f=require$$0,k=Symbol.for("react.element"),l=Symbol.for("react.fragment"),m=Object.prototype.hasOwnProperty,n=f.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,p={key:true,ref:true,__self:true,__source:true};
 		function q(c,a,g){var b,d={},e=null,h=null;void 0!==g&&(e=""+g);void 0!==a.key&&(e=""+a.key);void 0!==a.ref&&(h=a.ref);for(b in a)m.call(a,b)&&!p.hasOwnProperty(b)&&(d[b]=a[b]);if(c&&c.defaultProps)for(b in a=c.defaultProps,a) void 0===d[b]&&(d[b]=a[b]);return {$$typeof:k,type:c,key:e,ref:h,props:d,_owner:n.current}}reactJsxRuntime_production_min.Fragment=l;reactJsxRuntime_production_min.jsx=q;reactJsxRuntime_production_min.jsxs=q;
 		return reactJsxRuntime_production_min;
 	}
@@ -192,7 +209,7 @@
 	function requireReactDom_production_min () {
 		if (hasRequiredReactDom_production_min) return reactDom_production_min;
 		hasRequiredReactDom_production_min = 1;
-	var aa=requireReact(),ca=requireScheduler();function p(a){for(var b="https://reactjs.org/docs/error-decoder.html?invariant="+a,c=1;c<arguments.length;c++)b+="&args[]="+encodeURIComponent(arguments[c]);return "Minified React error #"+a+"; visit "+b+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings."}var da=new Set,ea={};function fa(a,b){ha(a,b);ha(a+"Capture",b);}
+	var aa=require$$0,ca=requireScheduler();function p(a){for(var b="https://reactjs.org/docs/error-decoder.html?invariant="+a,c=1;c<arguments.length;c++)b+="&args[]="+encodeURIComponent(arguments[c]);return "Minified React error #"+a+"; visit "+b+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings."}var da=new Set,ea={};function fa(a,b){ha(a,b);ha(a+"Capture",b);}
 		function ha(a,b){ea[a]=b;for(a=0;a<b.length;a++)da.add(b[a]);}
 		var ia=!("undefined"===typeof window||"undefined"===typeof window.document||"undefined"===typeof window.document.createElement),ja=Object.prototype.hasOwnProperty,ka=/^[:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD][:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\-.0-9\u00B7\u0300-\u036F\u203F-\u2040]*$/,la=
 		{},ma={};function oa(a){if(ja.call(ma,a))return  true;if(ja.call(la,a))return  false;if(ka.test(a))return ma[a]=true;la[a]=true;return  false}function pa(a,b,c,d){if(null!==c&&0===c.type)return  false;switch(typeof b){case "function":case "symbol":return  true;case "boolean":if(d)return  false;if(null!==c)return !c.acceptsBooleans;a=a.toLowerCase().slice(0,5);return "data-"!==a&&"aria-"!==a;default:return  false}}
@@ -622,9 +639,6 @@
 	    var e = new Error(message);
 	    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 	};
-
-	var reactExports = requireReact();
-	var React = /*@__PURE__*/getDefaultExportFromCjs(reactExports);
 
 	//
 	// Main
@@ -37005,11 +37019,11 @@
 	var styles = {"enabled":"CanvasToolbar-module_enabled__3HGni","disabled":"CanvasToolbar-module_disabled__fBJKb","invertx":"CanvasToolbar-module_invertx__mXuAJ"};
 	styleInject(css_248z);
 
-	var img$2 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAhQAAAIUB4uz/wQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAHUSURBVEiJtda9ahRRFAfw3xHFJCabFEkawcYiYKMWVmohBHwFOwsfQLCxthOENHZqKxZG8DHSxcJC0Qcw7AqSNSoGci3mznp3nP0K8cBlZs7X/5z//RopJeMGlrGL1Bi7WJ4Uf9pk2cQVPMDPrJvHVra9GRc8BBARS7iKU4X6cn5+wvf8vljbIuJr4XuEdyml/YGmoGIdX/xLxayji/U2iu5iJXfwa1zbY2QOOznXE4YpuoE93D5m8lr2cLMN4BWu4TF+4HDGxIEOeng90DaW5BkVj/fyd6dhP4u5hq6Tnxdz7GZpL1eLlNIhvmEtq7Yj4mHhsoWng5Ir23b+rGO6Zc62fdAtnFewUdjOqyaylo3sMxJgqIMsvcJ5X8XrKFlCvwHQmwRQdjArwH5K6fc0AKvHAFjVoGcUwCwUdbKPHNNrOpw0RVN10MVCRCz8T4A6oI/FiIiTBKh5XFN1EDnRkETEnGrnH2sOSoC60rbqoR8R8zg3bQe102oB0DYPAwB/l/VkgJTSgeo+KDtoA6h1fSN2Me1nUV3JOj7iOT5k/csi5jNe4D2uj+og8lE7rIx4hjt4hIMRRZRyX7UYLqWUjoYsI35VLuCt6tKZ5h7ewa22XH8AgjMTispa6ucAAAAASUVORK5CYII=";
+	var img$3 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAhQAAAIUB4uz/wQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAHUSURBVEiJtda9ahRRFAfw3xHFJCabFEkawcYiYKMWVmohBHwFOwsfQLCxthOENHZqKxZG8DHSxcJC0Qcw7AqSNSoGci3mznp3nP0K8cBlZs7X/5z//RopJeMGlrGL1Bi7WJ4Uf9pk2cQVPMDPrJvHVra9GRc8BBARS7iKU4X6cn5+wvf8vljbIuJr4XuEdyml/YGmoGIdX/xLxayji/U2iu5iJXfwa1zbY2QOOznXE4YpuoE93D5m8lr2cLMN4BWu4TF+4HDGxIEOeng90DaW5BkVj/fyd6dhP4u5hq6Tnxdz7GZpL1eLlNIhvmEtq7Yj4mHhsoWng5Ir23b+rGO6Zc62fdAtnFewUdjOqyaylo3sMxJgqIMsvcJ5X8XrKFlCvwHQmwRQdjArwH5K6fc0AKvHAFjVoGcUwCwUdbKPHNNrOpw0RVN10MVCRCz8T4A6oI/FiIiTBKh5XFN1EDnRkETEnGrnH2sOSoC60rbqoR8R8zg3bQe102oB0DYPAwB/l/VkgJTSgeo+KDtoA6h1fSN2Me1nUV3JOj7iOT5k/csi5jNe4D2uj+og8lE7rIx4hjt4hIMRRZRyX7UYLqWUjoYsI35VLuCt6tKZ5h7ewa22XH8AgjMTispa6ucAAAAASUVORK5CYII=";
 
-	var img$1 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAwwAAAMMBnc7+MwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEFSURBVEiJ7dSxLkRBFMbx31BIlkQlHoCap5BQLAXvQafV6DyLRLYSdkWv0dBQ0NAKkUhkj2bEzc3udW9xE5E9yVfNd85/5pyZSRGhzZhqtfoE8DcAKaVOqwD0mkBSSnNNAAmBAboR8V4qtoguVrNWMI9n3Gad4SQqHlRk9dHJvmns4qWwXqUrbESEspSMfazhekyhN9zhc8z6KWarAKN0jm0sI+WkmdyuPTyV/JdFSBXgATujjl3aYQf7+CjkXhTaPRYw+DbVETZLkMM6Leo3hGxhmHNfsVBnBk0hx4XcozqARpA8/GG+bQcJ6+rFTUQ81jGmlJYi4p6fa9da/IPvegL4Lb4A0uc9nRaYXwcAAAAASUVORK5CYII=";
+	var img$2 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAwwAAAMMBnc7+MwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEFSURBVEiJ7dSxLkRBFMbx31BIlkQlHoCap5BQLAXvQafV6DyLRLYSdkWv0dBQ0NAKkUhkj2bEzc3udW9xE5E9yVfNd85/5pyZSRGhzZhqtfoE8DcAKaVOqwD0mkBSSnNNAAmBAboR8V4qtoguVrNWMI9n3Gad4SQqHlRk9dHJvmns4qWwXqUrbESEspSMfazhekyhN9zhc8z6KWarAKN0jm0sI+WkmdyuPTyV/JdFSBXgATujjl3aYQf7+CjkXhTaPRYw+DbVETZLkMM6Leo3hGxhmHNfsVBnBk0hx4XcozqARpA8/GG+bQcJ6+rFTUQ81jGmlJYi4p6fa9da/IPvegL4Lb4A0uc9nRaYXwcAAAAASUVORK5CYII=";
 
-	var img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAsQAAALEBxi1JjQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEYSURBVEiJ7dS9SgNBFMXxX0y0NNpLqjQiKRRETON7aBMfwLfxDcRGC8HOTm21s7RIYZdniGiRO+6y5mNXVxD0wMBw58z532Fnh1+kFq5jNH8C0MFbjE7ZTUsVAEsz5rUBvqR/wB8CNLFeY+5aZH4ArjDCXsHYNv+vbWK1UNuNrMs8oGfyFGzmjDthvA9QUe1YG4U3aQvL2M4DpqkRHfZxU4C0o9aPxhpzcsDQ5I0ZFOpHGMfas+wtSvNxePIaxNpw0QngHIcR1M3Vu3jFcXhmqsw1vZCdJCmFny3a3CoBSBAm3TbKhlcBJEj6Vo9lN1UBwENF/yfAAVaqhhS0P614J7uCdY1bsh+kh1NsfLP7pBec4KmmvNl6B0BuQt0zCQ0xAAAAAElFTkSuQmCC";
+	var img$1 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAsQAAALEBxi1JjQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEYSURBVEiJ7dS9SgNBFMXxX0y0NNpLqjQiKRRETON7aBMfwLfxDcRGC8HOTm21s7RIYZdniGiRO+6y5mNXVxD0wMBw58z532Fnh1+kFq5jNH8C0MFbjE7ZTUsVAEsz5rUBvqR/wB8CNLFeY+5aZH4ArjDCXsHYNv+vbWK1UNuNrMs8oGfyFGzmjDthvA9QUe1YG4U3aQvL2M4DpqkRHfZxU4C0o9aPxhpzcsDQ5I0ZFOpHGMfas+wtSvNxePIaxNpw0QngHIcR1M3Vu3jFcXhmqsw1vZCdJCmFny3a3CoBSBAm3TbKhlcBJEj6Vo9lN1UBwENF/yfAAVaqhhS0P614J7uCdY1bsh+kh1NsfLP7pBec4KmmvNl6B0BuQt0zCQ0xAAAAAElFTkSuQmCC";
 
 	const SquareIcon = ({ imgUrl, altText, invertX = false, size, enabled, clickCallback, }) => (jsxRuntimeExports.jsx("img", { src: imgUrl, className: `
     ${enabled ? styles.enabled : styles.disabled} ${invertX ? "" : styles.invertx}
@@ -37022,7 +37036,7 @@
 	    const ICON_SIZE = 24;
 	    const iconElements = [
 	        {
-	            imgUrl: img,
+	            imgUrl: img$1,
 	            altText: "download",
 	            invertX: false,
 	            enabled: true,
@@ -37043,21 +37057,21 @@
 	        //   clickCallback: saveCallback,
 	        // },
 	        {
-	            imgUrl: img$1,
+	            imgUrl: img$2,
 	            altText: "Undo",
 	            invertX: true,
 	            enabled: canUndo,
 	            clickCallback: canUndo ? undoCallback : () => { },
 	        },
 	        {
-	            imgUrl: img$1,
+	            imgUrl: img$2,
 	            altText: "Redo",
 	            invertX: false,
 	            enabled: canRedo,
 	            clickCallback: canRedo ? redoCallback : () => { },
 	        },
 	        {
-	            imgUrl: img$2,
+	            imgUrl: img$3,
 	            altText: "Reset canvas & history",
 	            invertX: false,
 	            enabled: true,
@@ -59615,7 +59629,7 @@
 	];
 	const Type = createLucideIcon("type", __iconNode);
 
-	const CoordIcon = ({ size = 100, color = "black", ballColor = "red", ...props }) => (jsxRuntimeExports.jsxs("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 100 100", width: size, height: size, ...props, children: [jsxRuntimeExports.jsx("line", { x1: "0", y1: "20", x2: "65", y2: "20", stroke: color, strokeWidth: "4", strokeDasharray: "4,4", strokeLinecap: "round" }), jsxRuntimeExports.jsx("line", { x1: "70", y1: "25", x2: "70", y2: "90", stroke: color, strokeWidth: "4", strokeDasharray: "4,4", strokeLinecap: "round" }), jsxRuntimeExports.jsx("circle", { cx: "70", cy: "20", r: "5", fill: ballColor, stroke: "darkred", strokeWidth: "1" })] }));
+	var img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEumlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI1LTA5LTEzPC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPjY2N2EwNTI4LTliZjctNDk1ZS04MzRjLWVmZDI5OTA4MDVhYzwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5VbnRpdGxlZCBkZXNpZ24gLSAxPC9yZGY6bGk+CiAgIDwvcmRmOkFsdD4KICA8L2RjOnRpdGxlPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpwZGY9J2h0dHA6Ly9ucy5hZG9iZS5jb20vcGRmLzEuMy8nPgogIDxwZGY6QXV0aG9yPkFiZWwgRW1iYXllPC9wZGY6QXV0aG9yPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczp4bXA9J2h0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8nPgogIDx4bXA6Q3JlYXRvclRvb2w+Q2FudmEgKFJlbmRlcmVyKSBkb2M9REFHeTByb0FuOGcgdXNlcj1VQUdSUDJzdUZObyBicmFuZD1CQUdSUDgzaEVjSSB0ZW1wbGF0ZT08L3htcDpDcmVhdG9yVG9vbD4KIDwvcmRmOkRlc2NyaXB0aW9uPgo8L3JkZjpSREY+CjwveDp4bXBtZXRhPgo8P3hwYWNrZXQgZW5kPSdyJz8+YmCslAAAApZJREFUeJzt2bFKI1EYhuFvltXBOxDRDILegIW9YG0hghAQIxIrL0SsbESwCYLBRkRtBa9AvACx03tItBmLYXcRdjLnJMPmW/I+kEb+ORN8ifGcSfI8zwUbP8b9BvAdQcwQxAxBzBDEDEHMEMQMQcwQxAxBYvR6Urcr7e1JjYaUJMUry4qfdbvSx8dIt0g4Ogl0fy8dHkpvb4PnFhelkxNpY2Oo2xCkyuendHAgXVzEXbe7K52fS9PTUZcRpEqrFR/jl3a7iBKBIINcXko7O6Ot0e1KzWbweO1BkiQJmgu97djW6/elpSXp/T1ovtT8vPT6KqVp0Dj/ZZW5uho9hlSscX0dPE6QMre39a11dxc8SpAyz8/1rfX0FDzKd0jZemk68ibvtzSV+v2gUT4hZghSZna2vrXm5oJHCVJmZaW+tVZXg0cJUmZrq761Is61+FIvW6/fl5aXqw8TqzQa0svL+DaGeZ4HvezXS1Pp6GiYX8F3x8fBMST+ZA3WbEr7+8Nf325L29tRlxCkytlZceIbq9WSTk+jLyNIlakpqdMpjj8WFqrns6yY7XSKayNx/B6j15NubqSHB+nx8c8XfpZJa2vS+rq0uSnNzAx9C4KY4U+WGYKYIYgZgpj5Oe438D+p+xjnb/iEmCGIGYKYIYgZgpghiBmCmCGIGYKYYace4V88qeATYoYgZghihiBmCGKGIGYIYoYgZghihp16BJ6pTyCCmCGIGYKYIYgZgpghiBmCmCGIGXbqEXimPoEIYoYgZghihiBmCGKGIGYIYoYgZtipR+CZ+gQiiBmCmCGIGYKYIYgZgpghiBmCmGGnHoFn6hOIIGYIYoYgZghihiBmCGKGIGYIYoYgZghihiBmCGKGIGa+AP8D/TAfiIeXAAAAAElFTkSuQmCC";
 
 	const modes = [
 	    { mode: "point", icon: Dot, description: "Draw a point" },
@@ -59636,7 +59650,7 @@
 	    { mode: "freedraw", icon: Pencil, description: "Free draw" },
 	    {
 	        mode: "coordinate",
-	        icon: CoordIcon, //process.env.PUBLIC_URL + "./coordicon.svg",
+	        icon: img, //process.env.PUBLIC_URL + "./coordicon.svg",
 	        description: "Draw coordinates",
 	    },
 	    { mode: "curve", icon: Spline, description: "Draw a curve" },
