@@ -177,7 +177,7 @@ const DrawableCanvas = ({
     canvasWidth,
     saveState,
   ])
-
+  ////Load the drawing whenever the `index` and canvasInstance.current changes
   // useEffect(() => {
   //   if (canvasInstance.current) {
   //     const savedDrawing = localStorage.getItem(
@@ -202,35 +202,30 @@ const DrawableCanvas = ({
   //   }
   // }, [canvasInstance.current, index, AssessName]) // Load the drawing whenever the `index` and canvasInstance.current changes
 
-  // // Save the current drawing to L-Storage whenever the canvas state changes
-  // useEffect(() => {
-  //   console.log(
-  //     `value of nextButtonClicked in DrawableCanvas.tsx is:' ${nextButtonClicked}`
-  //   )
-  //   //if (nextButtonClicked && canvasInstance.current) {
-  //   if (canvasInstance.current) {
-  //     const saveToLocalStorage = () => {
-  //       const canvasData = canvasInstance.current
-  //         ? canvasInstance.current.toJSON()
-  //         : null
-  //       if (canvasData) {
-  //         localStorage.setItem(
-  //           `${AssessName}-canvasDrawing-${index}`,
-  //           JSON.stringify(canvasData)
-  //         )
-  //         console.log(
-  //           `Canvasdrawing as .Json saved to localStorage for index ${AssessName}-${index}, in DrawableCanvas.tsx using useEffect.`
-  //         )
-  //       }
-  //     }
-
-  //     canvasInstance.current.on("object:added", saveToLocalStorage)
-
-  //     return () => {
-  //       canvasInstance.current?.off("object:added", saveToLocalStorage)
-  //     }
-  //   }
-  // }, [canvasInstance.current, index, AssessName]) // Monitor the index for changes
+  // Save the current drawing to L-Storage when nextButtonClicked becomes true
+  useEffect(() => {
+    if (!nextButtonClicked) return
+    if (!canvasInstance.current) {
+      console.warn('DrawableCanvas: nextButtonClicked set but canvasInstance not ready')
+      return
+    }
+    try {
+      const canvasData = canvasInstance.current.toJSON()
+      if (canvasData) {
+        localStorage.setItem(
+          `${AssessName}-canvasDrawing-${index}`,
+          JSON.stringify(canvasData)
+        )
+        // small log for debugging
+        console.log(
+          `Canvas JSON saved to localStorage for ${AssessName}-${index}`
+        )
+      }
+    } catch (err) {
+      console.error('Error saving canvas JSON to localStorage', err)
+    }
+    // no cleanup needed; parent component resets the flag if desired
+  }, [nextButtonClicked, index, AssessName])
 
   const downloadCallback = () => {
     if (canvasInstance.current && backgroundCanvasInstance.current) {

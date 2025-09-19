@@ -125,6 +125,9 @@
 
 	var jsxRuntimeExports = requireJsxRuntime();
 
+	var reactExports = requireReact();
+	var React = /*@__PURE__*/getDefaultExportFromCjs(reactExports);
+
 	var client = {};
 
 	var reactDom = {exports: {}};
@@ -622,9 +625,6 @@
 	    var e = new Error(message);
 	    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 	};
-
-	var reactExports = requireReact();
-	var React = /*@__PURE__*/getDefaultExportFromCjs(reactExports);
 
 	//
 	// Main
@@ -59162,6 +59162,7 @@
 	        canvasWidth,
 	        saveState,
 	    ]);
+	    ////Load the drawing whenever the `index` and canvasInstance.current changes
 	    // useEffect(() => {
 	    //   if (canvasInstance.current) {
 	    //     const savedDrawing = localStorage.getItem(
@@ -59184,33 +59185,27 @@
 	    //     }
 	    //   }
 	    // }, [canvasInstance.current, index, AssessName]) // Load the drawing whenever the `index` and canvasInstance.current changes
-	    // // Save the current drawing to L-Storage whenever the canvas state changes
-	    // useEffect(() => {
-	    //   console.log(
-	    //     `value of nextButtonClicked in DrawableCanvas.tsx is:' ${nextButtonClicked}`
-	    //   )
-	    //   //if (nextButtonClicked && canvasInstance.current) {
-	    //   if (canvasInstance.current) {
-	    //     const saveToLocalStorage = () => {
-	    //       const canvasData = canvasInstance.current
-	    //         ? canvasInstance.current.toJSON()
-	    //         : null
-	    //       if (canvasData) {
-	    //         localStorage.setItem(
-	    //           `${AssessName}-canvasDrawing-${index}`,
-	    //           JSON.stringify(canvasData)
-	    //         )
-	    //         console.log(
-	    //           `Canvasdrawing as .Json saved to localStorage for index ${AssessName}-${index}, in DrawableCanvas.tsx using useEffect.`
-	    //         )
-	    //       }
-	    //     }
-	    //     canvasInstance.current.on("object:added", saveToLocalStorage)
-	    //     return () => {
-	    //       canvasInstance.current?.off("object:added", saveToLocalStorage)
-	    //     }
-	    //   }
-	    // }, [canvasInstance.current, index, AssessName]) // Monitor the index for changes
+	    // Save the current drawing to L-Storage when nextButtonClicked becomes true
+	    reactExports.useEffect(() => {
+	        if (!nextButtonClicked)
+	            return;
+	        if (!canvasInstance.current) {
+	            console.warn('DrawableCanvas: nextButtonClicked set but canvasInstance not ready');
+	            return;
+	        }
+	        try {
+	            const canvasData = canvasInstance.current.toJSON();
+	            if (canvasData) {
+	                localStorage.setItem(`${AssessName}-canvasDrawing-${index}`, JSON.stringify(canvasData));
+	                // small log for debugging
+	                console.log(`Canvas JSON saved to localStorage for ${AssessName}-${index}`);
+	            }
+	        }
+	        catch (err) {
+	            console.error('Error saving canvas JSON to localStorage', err);
+	        }
+	        // no cleanup needed; parent component resets the flag if desired
+	    }, [nextButtonClicked, index, AssessName]);
 	    const downloadCallback = () => {
 	        if (canvasInstance.current && backgroundCanvasInstance.current) {
 	            const tempCanvas = document.createElement("canvas");
@@ -59662,9 +59657,78 @@
 	    const AssessName = initData.AssessName ?? initData.question ?? 'quiz1';
 	    const canvasWidth = initData.canvasWidth ?? 400;
 	    const canvasHeight = initData.canvasHeight ?? 300;
-	    const nextButtonClicked = initData.nextButtonClicked ?? false;
+	    // local UI state to trigger saving the canvas JSON to localStorage
+	    const [nextButtonClicked, setNextButtonClicked] = reactExports.useState(initData.nextButtonClicked ?? false);
+	    const [savedJson, setSavedJson] = reactExports.useState(null);
 	    const bgnumber = initData.bgnumber ?? 1; // New prop for selecting the background
-	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, nextButtonClicked: nextButtonClicked, modes: modes, bgnumber: bgnumber }) })] }), jsxRuntimeExports.jsx("div", { className: "block-info2", style: { marginTop: '100px', minWidth: '300px' }, children: "Hello underworld! Hello underworld! Hello underworld! Hello underworld! Hello underworld!" })] }));
+	    // Render the save button and its behavior
+	    const renderSaveButton = () => {
+	        return (jsxRuntimeExports.jsx("div", { style: { marginTop: '8px' }, children: jsxRuntimeExports.jsx("button", { type: "button", onClick: () => {
+	                    // Toggle nextButtonClicked to trigger the save effect in DrawableCanvas
+	                    setNextButtonClicked(true);
+	                    // small timeout to allow DrawableCanvas to react and save to localStorage
+	                    setTimeout(() => {
+	                        const key = `${AssessName}-canvasDrawing-${index}`;
+	                        const raw = localStorage.getItem(key);
+	                        if (raw) {
+	                            try {
+	                                const parsed = JSON.parse(raw);
+	                                setSavedJson(parsed);
+	                            }
+	                            catch (e) {
+	                                setSavedJson(raw);
+	                            }
+	                        }
+	                        else {
+	                            setSavedJson(null);
+	                        }
+	                        // reset the trigger
+	                        setNextButtonClicked(false);
+	                    }, 200);
+	                }, children: "Save canvas to localStorage and show JSON" }) }));
+	    };
+	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, nextButtonClicked: nextButtonClicked, modes: modes, bgnumber: bgnumber }) })] }), renderSaveButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Saved canvas JSON (DataFrame view)" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto' }, children: jsxRuntimeExports.jsx(DataFrameView, { data: savedJson }) })] })] }));
+	};
+	// Render JSON as a horizontal dataframe/table
+	const DataFrameView = ({ data }) => {
+	    if (!data) {
+	        return jsxRuntimeExports.jsx("div", { children: "No saved canvas JSON yet. Click the button to trigger saving." });
+	    }
+	    // If fabric canvas JSON, look for objects array
+	    let rows = [];
+	    if (Array.isArray(data)) {
+	        rows = data;
+	    }
+	    else if (data && Array.isArray(data.objects)) {
+	        rows = data.objects;
+	    }
+	    else if (typeof data === 'object') {
+	        // Single object -> show its keys as columns (one row)
+	        rows = [data];
+	    }
+	    else {
+	        // Fallback: display primitive value
+	        return jsxRuntimeExports.jsx("pre", { children: String(data) });
+	    }
+	    // Collect all column keys across rows
+	    const columnsSet = new Set();
+	    rows.forEach((r) => {
+	        if (r && typeof r === 'object') {
+	            Object.keys(r).forEach((k) => columnsSet.add(k));
+	        }
+	    });
+	    const columns = Array.from(columnsSet);
+	    return (jsxRuntimeExports.jsxs("table", { style: { borderCollapse: 'collapse', width: '100%' }, children: [jsxRuntimeExports.jsx("thead", { children: jsxRuntimeExports.jsx("tr", { children: columns.map((col) => (jsxRuntimeExports.jsx("th", { style: { border: '1px solid #ddd', padding: '6px', background: '#f0f0f0', textAlign: 'left' }, children: col }, col))) }) }), jsxRuntimeExports.jsx("tbody", { children: rows.map((row, i) => (jsxRuntimeExports.jsx("tr", { children: columns.map((col) => {
+	                        const val = row ? row[col] : undefined;
+	                        let display = '';
+	                        if (val === undefined)
+	                            display = '';
+	                        else if (typeof val === 'object')
+	                            display = JSON.stringify(val);
+	                        else
+	                            display = String(val);
+	                        return (jsxRuntimeExports.jsx("td", { style: { border: '1px solid #eee', padding: '6px', verticalAlign: 'top' }, children: display }, col));
+	                    }) }, i))) })] }));
 	};
 	function initStudentView(runtime, container, initData) {
 	    if ('jquery' in container)

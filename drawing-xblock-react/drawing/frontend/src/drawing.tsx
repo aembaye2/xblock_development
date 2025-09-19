@@ -7,7 +7,7 @@
 // npm run build       or      npm run watch                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { IntlProvider } from 'react-intl';
 import { BoundRuntime, type JQueryWrappedDiv, type XBlockRuntime } from './xblock-utils';
@@ -58,8 +58,45 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   const AssessName = initData.AssessName ?? initData.question ?? 'quiz1'
   const canvasWidth = initData.canvasWidth ?? 400
   const canvasHeight = initData.canvasHeight ?? 300
-  const nextButtonClicked = initData.nextButtonClicked ?? false
+  // local UI state to trigger saving the canvas JSON to localStorage
+  const [nextButtonClicked, setNextButtonClicked] = useState<boolean>(initData.nextButtonClicked ?? false)
+  const [savedJson, setSavedJson] = useState<any>(null)
   const bgnumber = initData.bgnumber ?? 1 // New prop for selecting the background
+  
+  // Render the save button and its behavior
+  const renderSaveButton = () => {
+    return (
+      <div style={{ marginTop: '8px' }}>
+        <button
+          type="button"
+          onClick={() => {
+            // Toggle nextButtonClicked to trigger the save effect in DrawableCanvas
+            setNextButtonClicked(true)
+            // small timeout to allow DrawableCanvas to react and save to localStorage
+            setTimeout(() => {
+              const key = `${AssessName}-canvasDrawing-${index}`
+              const raw = localStorage.getItem(key)
+              if (raw) {
+                try {
+                  const parsed = JSON.parse(raw)
+                  setSavedJson(parsed)
+                } catch (e) {
+                  setSavedJson(raw)
+                }
+              } else {
+                setSavedJson(null)
+              }
+              // reset the trigger
+              setNextButtonClicked(false)
+            }, 200)
+          }}
+        >
+          Save canvas to localStorage and show JSON
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }}>
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }}>
@@ -78,10 +115,72 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
           />
         </div>
       </div>
-      <div className="block-info2" style={{marginTop: '100px', minWidth: '300px' }}>
-        Hello underworld! Hello underworld! Hello underworld! Hello underworld! Hello underworld!
+      {renderSaveButton()}
+      <div className="block-info2" style={{marginTop: '24px', minWidth: '300px', width: '100%' }}>
+        <h4>Saved canvas JSON (DataFrame view)</h4>
+        <div style={{ overflowX: 'auto' }}>
+          <DataFrameView data={savedJson} />
+        </div>
       </div>
     </div>
+  )
+}
+
+// Render JSON as a horizontal dataframe/table
+const DataFrameView: React.FC<{ data: any }> = ({ data }) => {
+  if (!data) {
+    return <div>No saved canvas JSON yet. Click the button to trigger saving.</div>
+  }
+
+  // If fabric canvas JSON, look for objects array
+  let rows: any[] = []
+  if (Array.isArray(data)) {
+    rows = data
+  } else if (data && Array.isArray(data.objects)) {
+    rows = data.objects
+  } else if (typeof data === 'object') {
+    // Single object -> show its keys as columns (one row)
+    rows = [data]
+  } else {
+    // Fallback: display primitive value
+    return <pre>{String(data)}</pre>
+  }
+
+  // Collect all column keys across rows
+  const columnsSet = new Set<string>()
+  rows.forEach((r) => {
+    if (r && typeof r === 'object') {
+      Object.keys(r).forEach((k) => columnsSet.add(k))
+    }
+  })
+  const columns = Array.from(columnsSet)
+
+  return (
+    <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          {columns.map((col) => (
+            <th key={col} style={{ border: '1px solid #ddd', padding: '6px', background: '#f0f0f0', textAlign: 'left' }}>{col}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, i) => (
+          <tr key={i}>
+            {columns.map((col) => {
+              const val = row ? row[col] : undefined
+              let display = ''
+              if (val === undefined) display = ''
+              else if (typeof val === 'object') display = JSON.stringify(val)
+              else display = String(val)
+              return (
+                <td key={col} style={{ border: '1px solid #eee', padding: '6px', verticalAlign: 'top' }}>{display}</td>
+              )
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   )
 }
 
