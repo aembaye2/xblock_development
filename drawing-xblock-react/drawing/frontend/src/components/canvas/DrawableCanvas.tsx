@@ -261,7 +261,7 @@ const DrawableCanvas = ({
 
   //These are the items that the user sees
   return (
-    <div style={{ position: "relative" }}>
+        <div style={{ position: "relative" }}>
       <div
         style={{
           position: "absolute",
@@ -327,7 +327,7 @@ const DrawableCanvas = ({
             }}
           />
         )}
-      </div>
+      </div>     
     </div>
   )
 }
