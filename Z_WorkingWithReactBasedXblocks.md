@@ -9,7 +9,7 @@ npm install
 npm run watch
 
 
-cd drawing-xblock-react/drawing/frontend/
+cd drawing-xblock-react/drawing/frontend/ && npm install --legacy-peer-deps && npm run watch
 npm install --legacy-peer-deps
 npm run watch
 

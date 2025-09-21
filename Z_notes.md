@@ -2,10 +2,11 @@
 
 # create and activate venv and install the xblocks as packages into the venv
 
-./setup_env.sh 
+./setup_env.sh && source xblock-env/bin/activate && python xblock-sdk/manage.py runserver 
 
-source xblock-env/bin/activate && python xblock-sdk/manage.py runserver 
+source xblock-env/bin/activate 
 
+python xblock-sdk/manage.py runserver
 # After this, each time you want to run the server:
 
 python xblock-sdk/manage.py runserver 
