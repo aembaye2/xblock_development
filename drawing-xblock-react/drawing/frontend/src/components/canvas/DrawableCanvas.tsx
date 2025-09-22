@@ -29,7 +29,7 @@ export interface ComponentArgs {
   displayToolbar: boolean
   displayRadius: number
   scaleFactors: number[]
-  nextButtonClicked: boolean
+  submitButtonClicked: boolean
   bgnumber: number // New prop for selecting the background
 }
 
@@ -47,7 +47,7 @@ const DrawableCanvas = ({
   displayToolbar,
   displayRadius,
   scaleFactors,
-  nextButtonClicked,
+  submitButtonClicked,
   bgnumber, // Consume the bgnumber prop
 }: ComponentArgs) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -202,11 +202,11 @@ const DrawableCanvas = ({
   //   }
   // }, [canvasInstance.current, index, AssessName]) // Load the drawing whenever the `index` and canvasInstance.current changes
 
-  // Save the current drawing to L-Storage when nextButtonClicked becomes true
+  // Save the current drawing to L-Storage when submitButtonClicked becomes true
   useEffect(() => {
-    if (!nextButtonClicked) return
+  if (!submitButtonClicked) return
     if (!canvasInstance.current) {
-      console.warn('DrawableCanvas: nextButtonClicked set but canvasInstance not ready')
+  console.warn('DrawableCanvas: submitButtonClicked set but canvasInstance not ready')
       return
     }
     try {
@@ -225,7 +225,7 @@ const DrawableCanvas = ({
       console.error('Error saving canvas JSON to localStorage', err)
     }
     // no cleanup needed; parent component resets the flag if desired
-  }, [nextButtonClicked, index, AssessName])
+  }, [submitButtonClicked, index, AssessName])
 
   const downloadCallback = () => {
     if (canvasInstance.current && backgroundCanvasInstance.current) {

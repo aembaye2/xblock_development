@@ -1,7 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-// Remember: changes in this file will only take effect when you run          //
-// npm run build       or      npm run watch                                  //
-////////////////////////////////////////////////////////////////////////////////
+
 ////////////////////////////////////////////////////////////////////////////////
 // Remember: changes in this file will only take effect when you run          //
 // npm run build       or      npm run watch                                  //
@@ -38,7 +35,7 @@ interface InitData {
   AssessName?: string;
   canvasWidth?: number;
   canvasHeight?: number;
-  nextButtonClicked?: boolean;
+  submitButtonClicked?: boolean;
   bgnumber?: number; // New prop for selecting the background
 }
 
@@ -59,43 +56,50 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   const canvasWidth = initData.canvasWidth ?? 400
   const canvasHeight = initData.canvasHeight ?? 300
   // local UI state to trigger saving the canvas JSON to localStorage
-  const [nextButtonClicked, setNextButtonClicked] = useState<boolean>(initData.nextButtonClicked ?? false)
-  const [savedJson, setSavedJson] = useState<any>(null)
+  const [submitButtonClicked, setSubmitButtonClicked] = useState<boolean>(initData.submitButtonClicked ?? false)
+  const [summaryMsg, setSummaryMsg] = useState<string>("");
   const bgnumber = initData.bgnumber ?? 1 // New prop for selecting the background
   
-  // Render the save button and its behavior
-  const renderSaveButton = () => {
+  // Render the Submit button and its behavior
+  const renderSubmitButton = () => {
     return (
       <div style={{ marginTop: '8px' }}>
         <button
           type="button"
-          onClick={() => {
-            // Toggle nextButtonClicked to trigger the save effect in DrawableCanvas
-            setNextButtonClicked(true)
-            // small timeout to allow DrawableCanvas to react and save to localStorage
-            setTimeout(() => {
-              const key = `${AssessName}-canvasDrawing-${index}`
-              const raw = localStorage.getItem(key)
+          onClick={async () => {
+            setSubmitButtonClicked(true);
+            setTimeout(async () => {
+              const key = `${AssessName}-canvasDrawing-${index}`;
+              const raw = localStorage.getItem(key);
+              let parsed = null;
               if (raw) {
                 try {
-                  const parsed = JSON.parse(raw)
-                  setSavedJson(parsed)
+                  parsed = JSON.parse(raw);
                 } catch (e) {
-                  setSavedJson(raw)
+                  parsed = raw;
+                }
+              }
+              // Send to backend via the XBlock runtime and display backend summary
+              if (parsed) {
+                try {
+                  const result = await runtime.postHandler('send_drawing_json', { drawing: parsed });
+                  setSummaryMsg(result.summary || "No summary returned.");
+                } catch (err) {
+                  console.error('send_drawing_json error', err);
+                  setSummaryMsg("Error sending drawing to backend.");
                 }
               } else {
-                setSavedJson(null)
+                setSummaryMsg("No drawing data found.");
               }
-              // reset the trigger
-              setNextButtonClicked(false)
-            }, 200)
+              setSubmitButtonClicked(false);
+            }, 200);
           }}
         >
-          Save canvas to localStorage and show JSON
+          Submit
         </button>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }}>
@@ -109,88 +113,28 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
             AssessName={AssessName}
             canvasWidth={canvasWidth}
             canvasHeight={canvasHeight}
-            nextButtonClicked={nextButtonClicked}
+            submitButtonClicked={submitButtonClicked}
             modes={modes}
-            bgnumber={bgnumber} 
+            bgnumber={bgnumber}
           />
         </div>
       </div>
-      {renderSaveButton()}
+      {renderSubmitButton()}
       <div className="block-info2" style={{marginTop: '24px', minWidth: '300px', width: '100%' }}>
-        <h4>Saved canvas JSON (DataFrame view)</h4>
-        <div style={{ overflowX: 'auto' }}>
-          <DataFrameView data={savedJson} />
+        <h4>Drawing Summary</h4>
+        <div style={{ overflowX: 'auto', color: 'green', fontWeight: 'bold' }}>
+          {summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer."}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-// Render JSON as a horizontal dataframe/table
-const DataFrameView: React.FC<{ data: any }> = ({ data }) => {
-  if (!data) {
-    return <div>No saved canvas JSON yet. Click the button to trigger saving.</div>
-  }
-
-  // If fabric canvas JSON, look for objects array
-  let rows: any[] = []
-  if (Array.isArray(data)) {
-    rows = data
-  } else if (data && Array.isArray(data.objects)) {
-    rows = data.objects
-  } else if (typeof data === 'object') {
-    // Single object -> show its keys as columns (one row)
-    rows = [data]
-  } else {
-    // Fallback: display primitive value
-    return <pre>{String(data)}</pre>
-  }
-
-  // Collect all column keys across rows
-  const columnsSet = new Set<string>()
-  rows.forEach((r) => {
-    if (r && typeof r === 'object') {
-      Object.keys(r).forEach((k) => columnsSet.add(k))
-    }
-  })
-  const columns = Array.from(columnsSet)
-
-  return (
-    <table style={{ borderCollapse: 'collapse', width: '100%' }}>
-      <thead>
-        <tr>
-          {columns.map((col) => (
-            <th key={col} style={{ border: '1px solid #ddd', padding: '6px', background: '#f0f0f0', textAlign: 'left' }}>{col}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row, i) => (
-          <tr key={i}>
-            {columns.map((col) => {
-              const val = row ? row[col] : undefined
-              let display = ''
-              if (val === undefined) display = ''
-              else if (typeof val === 'object') display = JSON.stringify(val)
-              else display = String(val)
-              return (
-                <td key={col} style={{ border: '1px solid #eee', padding: '6px', verticalAlign: 'top' }}>{display}</td>
-              )
-            })}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )
-}
-
+// Loader for XBlock React view
 function initStudentView(runtime: XBlockRuntime, container: HTMLDivElement | JQueryWrappedDiv, initData: InitData) {
   if ('jquery' in container) container = container[0];
   const languageCode = document.body.parentElement!.lang;
   const root = ReactDOM.createRoot(container!);
-  // Debug: confirm init was called and container is correct
-  // eslint-disable-next-line no-console
-  console.log('initDrawingXBlockStudentView called. container=', container, 'initData=', initData);
   root.render(
     <IntlProvider messages={(messages as any)[languageCode]} locale={languageCode} defaultLocale="en">
       <StudentView

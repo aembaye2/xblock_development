@@ -12,6 +12,21 @@ resource_loader = ResourceLoader(__name__)
 
 
 class DrawingXBlock(ScorableXBlockMixin, XBlock):
+    @XBlock.json_handler
+    def send_drawing_json(self, data, suffix=''):
+        """
+        Receives drawing JSON from frontend and delegates processing to
+        drawing_handlers.process_drawing_json for easier extension.
+        """
+        from .drawing_handlers import process_drawing_json
+
+        drawing = data.get('drawing')
+        if not drawing:
+            return {"result": "error", "message": "No drawing data received."}
+
+        summary = process_drawing_json(drawing)
+        return {"result": "success", "summary": summary}
+    
     """
     TO-DO: document what your XBlock does.
     """

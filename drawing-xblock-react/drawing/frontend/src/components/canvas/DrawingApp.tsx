@@ -8,7 +8,7 @@ export interface DrawingAppProps {
   index: number
   canvasWidth: number
   canvasHeight: number
-  nextButtonClicked: boolean
+  submitButtonClicked: boolean
   bgnumber: number // New prop for selecting the background
   modes: { mode: string; icon: React.ElementType; description: string }[] // Add the modes prop
 }
@@ -18,7 +18,7 @@ export function DrawingApp({
   AssessName,
   canvasWidth,
   canvasHeight,
-  nextButtonClicked,
+  submitButtonClicked,
   bgnumber, // Consume the bgnumber prop
   modes, // Destructure the modes prop
 }: DrawingAppProps) {
@@ -57,7 +57,7 @@ export function DrawingApp({
     displayToolbar: true,
     displayRadius: 3,
     scaleFactors: scaleFactors,
-    nextButtonClicked: nextButtonClicked,
+    submitButtonClicked: submitButtonClicked,
     bgnumber: bgnumber, // Pass the bgnumber prop to DrawableCanvas
   }
 

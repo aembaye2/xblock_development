@@ -59065,7 +59065,7 @@
 	}
 
 	const backgroundlist = [customBackground2, customBackground3];
-	const DrawableCanvas = ({ AssessName, index, fillColor, strokeWidth, strokeColor, backgroundImageURL, canvasWidth, canvasHeight, drawingMode, initialDrawing, displayToolbar, displayRadius, scaleFactors, nextButtonClicked, bgnumber, // Consume the bgnumber prop
+	const DrawableCanvas = ({ AssessName, index, fillColor, strokeWidth, strokeColor, backgroundImageURL, canvasWidth, canvasHeight, drawingMode, initialDrawing, displayToolbar, displayRadius, scaleFactors, submitButtonClicked, bgnumber, // Consume the bgnumber prop
 	 }) => {
 	    const canvasRef = reactExports.useRef(null);
 	    const backgroundCanvasRef = reactExports.useRef(null);
@@ -59185,12 +59185,12 @@
 	    //     }
 	    //   }
 	    // }, [canvasInstance.current, index, AssessName]) // Load the drawing whenever the `index` and canvasInstance.current changes
-	    // Save the current drawing to L-Storage when nextButtonClicked becomes true
+	    // Save the current drawing to L-Storage when submitButtonClicked becomes true
 	    reactExports.useEffect(() => {
-	        if (!nextButtonClicked)
+	        if (!submitButtonClicked)
 	            return;
 	        if (!canvasInstance.current) {
-	            console.warn('DrawableCanvas: nextButtonClicked set but canvasInstance not ready');
+	            console.warn('DrawableCanvas: submitButtonClicked set but canvasInstance not ready');
 	            return;
 	        }
 	        try {
@@ -59205,7 +59205,7 @@
 	            console.error('Error saving canvas JSON to localStorage', err);
 	        }
 	        // no cleanup needed; parent component resets the flag if desired
-	    }, [nextButtonClicked, index, AssessName]);
+	    }, [submitButtonClicked, index, AssessName]);
 	    const downloadCallback = () => {
 	        if (canvasInstance.current && backgroundCanvasInstance.current) {
 	            const tempCanvas = document.createElement("canvas");
@@ -59279,7 +59279,7 @@
 	                }, children: typeof icon === "string" ? (jsxRuntimeExports.jsx("img", { src: icon, alt: mode, style: { width: "24px", height: "24px" } })) : (React.createElement(icon, { style: { width: "24px", height: "24px" } })) }, mode))) }) }));
 	};
 
-	function DrawingApp({ index, AssessName, canvasWidth, canvasHeight, nextButtonClicked, bgnumber, // Consume the bgnumber prop
+	function DrawingApp({ index, AssessName, canvasWidth, canvasHeight, submitButtonClicked, bgnumber, // Consume the bgnumber prop
 	modes, // Destructure the modes prop
 	 }) {
 	    const [drawingMode, setDrawingMode] = reactExports.useState(modes[0].mode); // Use the first mode as the initial state
@@ -59314,7 +59314,7 @@
 	        displayToolbar: true,
 	        displayRadius: 3,
 	        scaleFactors: scaleFactors,
-	        nextButtonClicked: nextButtonClicked,
+	        submitButtonClicked: submitButtonClicked,
 	        bgnumber: bgnumber, // Pass the bgnumber prop to DrawableCanvas
 	    };
 	    return (jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: jsxRuntimeExports.jsx("div", { children: jsxRuntimeExports.jsxs(CanvasStateProvider, { children: [jsxRuntimeExports.jsxs("div", { style: {
@@ -59658,86 +59658,51 @@
 	    const canvasWidth = initData.canvasWidth ?? 400;
 	    const canvasHeight = initData.canvasHeight ?? 300;
 	    // local UI state to trigger saving the canvas JSON to localStorage
-	    const [nextButtonClicked, setNextButtonClicked] = reactExports.useState(initData.nextButtonClicked ?? false);
-	    const [savedJson, setSavedJson] = reactExports.useState(null);
+	    const [submitButtonClicked, setSubmitButtonClicked] = reactExports.useState(initData.submitButtonClicked ?? false);
+	    const [summaryMsg, setSummaryMsg] = reactExports.useState("");
 	    const bgnumber = initData.bgnumber ?? 1; // New prop for selecting the background
-	    // Render the save button and its behavior
-	    const renderSaveButton = () => {
-	        return (jsxRuntimeExports.jsx("div", { style: { marginTop: '8px' }, children: jsxRuntimeExports.jsx("button", { type: "button", onClick: () => {
-	                    // Toggle nextButtonClicked to trigger the save effect in DrawableCanvas
-	                    setNextButtonClicked(true);
-	                    // small timeout to allow DrawableCanvas to react and save to localStorage
-	                    setTimeout(() => {
+	    // Render the Submit button and its behavior
+	    const renderSubmitButton = () => {
+	        return (jsxRuntimeExports.jsx("div", { style: { marginTop: '8px' }, children: jsxRuntimeExports.jsx("button", { type: "button", onClick: async () => {
+	                    setSubmitButtonClicked(true);
+	                    setTimeout(async () => {
 	                        const key = `${AssessName}-canvasDrawing-${index}`;
 	                        const raw = localStorage.getItem(key);
+	                        let parsed = null;
 	                        if (raw) {
 	                            try {
-	                                const parsed = JSON.parse(raw);
-	                                setSavedJson(parsed);
+	                                parsed = JSON.parse(raw);
 	                            }
 	                            catch (e) {
-	                                setSavedJson(raw);
+	                                parsed = raw;
+	                            }
+	                        }
+	                        // Send to backend via the XBlock runtime and display backend summary
+	                        if (parsed) {
+	                            try {
+	                                const result = await runtime.postHandler('send_drawing_json', { drawing: parsed });
+	                                setSummaryMsg(result.summary || "No summary returned.");
+	                            }
+	                            catch (err) {
+	                                console.error('send_drawing_json error', err);
+	                                setSummaryMsg("Error sending drawing to backend.");
 	                            }
 	                        }
 	                        else {
-	                            setSavedJson(null);
+	                            setSummaryMsg("No drawing data found.");
 	                        }
-	                        // reset the trigger
-	                        setNextButtonClicked(false);
+	                        setSubmitButtonClicked(false);
 	                    }, 200);
-	                }, children: "Save canvas to localStorage and show JSON" }) }));
+	                }, children: "Submit" }) }));
 	    };
-	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, nextButtonClicked: nextButtonClicked, modes: modes, bgnumber: bgnumber }) })] }), renderSaveButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Saved canvas JSON (DataFrame view)" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto' }, children: jsxRuntimeExports.jsx(DataFrameView, { data: savedJson }) })] })] }));
+	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, submitButtonClicked: submitButtonClicked, modes: modes, bgnumber: bgnumber }) })] }), renderSubmitButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Drawing Summary" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto', color: 'green', fontWeight: 'bold' }, children: summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer." })] })] }));
 	};
-	// Render JSON as a horizontal dataframe/table
-	const DataFrameView = ({ data }) => {
-	    if (!data) {
-	        return jsxRuntimeExports.jsx("div", { children: "No saved canvas JSON yet. Click the button to trigger saving." });
-	    }
-	    // If fabric canvas JSON, look for objects array
-	    let rows = [];
-	    if (Array.isArray(data)) {
-	        rows = data;
-	    }
-	    else if (data && Array.isArray(data.objects)) {
-	        rows = data.objects;
-	    }
-	    else if (typeof data === 'object') {
-	        // Single object -> show its keys as columns (one row)
-	        rows = [data];
-	    }
-	    else {
-	        // Fallback: display primitive value
-	        return jsxRuntimeExports.jsx("pre", { children: String(data) });
-	    }
-	    // Collect all column keys across rows
-	    const columnsSet = new Set();
-	    rows.forEach((r) => {
-	        if (r && typeof r === 'object') {
-	            Object.keys(r).forEach((k) => columnsSet.add(k));
-	        }
-	    });
-	    const columns = Array.from(columnsSet);
-	    return (jsxRuntimeExports.jsxs("table", { style: { borderCollapse: 'collapse', width: '100%' }, children: [jsxRuntimeExports.jsx("thead", { children: jsxRuntimeExports.jsx("tr", { children: columns.map((col) => (jsxRuntimeExports.jsx("th", { style: { border: '1px solid #ddd', padding: '6px', background: '#f0f0f0', textAlign: 'left' }, children: col }, col))) }) }), jsxRuntimeExports.jsx("tbody", { children: rows.map((row, i) => (jsxRuntimeExports.jsx("tr", { children: columns.map((col) => {
-	                        const val = row ? row[col] : undefined;
-	                        let display = '';
-	                        if (val === undefined)
-	                            display = '';
-	                        else if (typeof val === 'object')
-	                            display = JSON.stringify(val);
-	                        else
-	                            display = String(val);
-	                        return (jsxRuntimeExports.jsx("td", { style: { border: '1px solid #eee', padding: '6px', verticalAlign: 'top' }, children: display }, col));
-	                    }) }, i))) })] }));
-	};
+	// Loader for XBlock React view
 	function initStudentView(runtime, container, initData) {
 	    if ('jquery' in container)
 	        container = container[0];
 	    const languageCode = document.body.parentElement.lang;
 	    const root = ReactDOM.createRoot(container);
-	    // Debug: confirm init was called and container is correct
-	    // eslint-disable-next-line no-console
-	    console.log('initDrawingXBlockStudentView called. container=', container, 'initData=', initData);
 	    root.render(jsxRuntimeExports.jsx(IntlProvider, { messages: messages[languageCode], locale: languageCode, defaultLocale: "en", children: jsxRuntimeExports.jsx(StudentView, { runtime: new BoundRuntime(runtime, container), initData: initData }) }));
 	}
 	globalThis.initDrawingXBlockStudentView = initStudentView;
