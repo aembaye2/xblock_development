@@ -113,6 +113,7 @@ class SingleArrowHeadTool extends FabricTool {
         evented: false,
       }
     )
+    this.singlearrow.type = 'singlearrowhead'  // Override the type to 'singlearrowhead' instead of 'group'
     // Add custom property to identify the tool
     this.singlearrow.toObject = (function (toObject) {
       return function (this: fabric.Object) {

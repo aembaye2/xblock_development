@@ -131,6 +131,7 @@ class CurveTool extends FabricTool {
       selectable: false,
       evented: false,
     })
+    this.finalCurve.type = 'curve'  // Override the type to 'curve' instead of 'path'
 
     if (this.finalCurve.width !== 0 && this.finalCurve.height !== 0) {
       canvas.add(this.finalCurve)

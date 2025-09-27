@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "@rollup/plugin-url": "^8.0.2"
-  }
-}

@@ -8,6 +8,7 @@ export interface DrawingAppProps {
   index: number
   canvasWidth: number
   canvasHeight: number
+  scaleFactors: number[]
   submitButtonClicked: boolean
   bgnumber: number // New prop for selecting the background
   modes: { mode: string; icon: React.ElementType; description: string }[] // Add the modes prop
@@ -18,6 +19,7 @@ export function DrawingApp({
   AssessName,
   canvasWidth,
   canvasHeight,
+  scaleFactors,
   submitButtonClicked,
   bgnumber, // Consume the bgnumber prop
   modes, // Destructure the modes prop
@@ -26,21 +28,21 @@ export function DrawingApp({
   const [strokeColor, setStrokeColor] = useState("#000000")
   const [strokeWidth, setStrokeWidth] = useState(2)
 
-  const xlim = 100 // absolute in pixels
-  const ylim = 100 // absolute in pixels
-  const bottom_margin = 75 // absolute in pixels
-  const left_margin = 84
-  const top_margin = 25
-  const right_margin = 35
-  const scaleFactors = [
-    xlim,
-    ylim,
-    bottom_margin,
-    left_margin,
-    top_margin,
-    right_margin,
+  // const xlim = 1000 // absolute in pixels
+  // const ylim = 2000 // absolute in pixels
+  // const bottom_margin = 75 // absolute in pixels
+  // const left_margin = 84
+  // const top_margin = 25
+  // const right_margin = 35
+  // const scaleFactors = [
+  //   xlim,
+  //   ylim,
+  //   bottom_margin,
+  //   left_margin,
+  //   top_margin,
+  //   right_margin,
     
-  ]
+  // ]
 
   const canvasProps: ComponentArgs = {
     AssessName: AssessName,

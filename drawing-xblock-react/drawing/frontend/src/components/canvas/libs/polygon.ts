@@ -167,6 +167,7 @@ class PolygonTool extends FabricTool {
       selectable: false,
       evented: false,
     })
+    this.currentPath.type = 'polygon'  // Override the type to 'polygon' instead of 'path'
     canvas.add(this.currentPath)
     this._pathString = "M "
     this.isMouseDown = false

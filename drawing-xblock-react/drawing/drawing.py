@@ -18,13 +18,23 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         Receives drawing JSON from frontend and delegates processing to
         drawing_handlers.process_drawing_json for easier extension.
         """
-        from .drawing_handlers import process_drawing_json
-
         drawing = data.get('drawing')
         if not drawing:
             return {"result": "error", "message": "No drawing data received."}
 
-        summary = process_drawing_json(drawing)
+        # Get values from XBlock fields
+        scaleFactors = self.scaleFactors
+        canvasWidth = self.canvasWidth
+        canvasHeight = self.canvasHeight
+
+        # Debug: print received data
+        print(f"Using XBlock fields: scaleFactors={scaleFactors}, canvasWidth={canvasWidth}, canvasHeight={canvasHeight}")
+
+        ### Add this line to print the JSON to server logs
+        #print(drawing)  # Outputs the drawing JSON to the server console/logs
+
+        from .drawing_handlers import process_drawing_json
+        summary = process_drawing_json(drawing, scaleFactors, canvasWidth, canvasHeight)
         return {"result": "success", "summary": summary}
     
     """
@@ -97,6 +107,28 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         default=0,
     )
 
+    # Canvas settings
+    canvasWidth = Integer(
+        display_name="Canvas Width",
+        scope=Scope.settings,
+        default=800,
+        help="Width of the drawing canvas",
+    )
+
+    canvasHeight = Integer(
+        display_name="Canvas Height",
+        scope=Scope.settings,
+        default=600,
+        help="Height of the drawing canvas",
+    )
+
+    scaleFactors = List(
+        display_name="Scale Factors",
+        scope=Scope.settings,
+        default=[1000, 2000, 75, 84, 25, 35],
+        help="Scale factors for coordinate transformation: [xmax, ymax, bottom_margin, left_margin, top_margin, right_margin]",
+    )
+
     @property
     def remaining_attempts(self):
         """Remaining number of attempts"""
@@ -125,6 +157,13 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         default=400,
         scope=Scope.settings,
         help="Canvas height in pixels",
+    )
+
+    scaleFactors = List(
+        #scaleFactors = [xlim, ylim, bottom_margin, left_margin, top_margin, right_margin]
+        default=[100, 200, 75, 84, 25, 35],
+        scope=Scope.settings,
+        help="Scale factors for the canvas",
     )
 
     nextButtonClicked = Boolean(

@@ -54544,6 +54544,7 @@
 	            selectable: false,
 	            evented: false,
 	        });
+	        this.singlearrow.type = 'singlearrowhead'; // Override the type to 'singlearrowhead' instead of 'group'
 	        // Add custom property to identify the tool
 	        this.singlearrow.toObject = (function (toObject) {
 	            return function () {
@@ -54675,6 +54676,7 @@
 	            selectable: false,
 	            evented: false,
 	        });
+	        this.doublearrow.type = 'doublearrowhead'; // Override the type to 'doublearrowhead' instead of 'group'
 	        canvas.add(this.doublearrow);
 	        canvas.renderAll();
 	    }
@@ -54789,7 +54791,6 @@
 	    horizontalLine = null;
 	    verticalLine = null;
 	    coordinateCircle = null;
-	    //coordinatesText: fabric.Text | null = null
 	    coordinatesTextX = null;
 	    coordinatesTextY = null;
 	    tempHorizontalLine = null;
@@ -54828,7 +54829,6 @@
 	            this.isMouseDown = true;
 	            let canvas = this._canvas;
 	            let pointer = canvas.getPointer(o.e);
-	            //this.updateLinesAndCircle(pointer.x, pointer.y)
 	            this.drawLinesAndCoordinates(pointer.x, pointer.y);
 	        }
 	    }
@@ -54836,16 +54836,13 @@
 	        let canvas = this._canvas;
 	        let pointer = canvas.getPointer(o.e);
 	        if (!this.isMouseDown) {
-	            this.drawTemporaryLinesAndCoordinates(pointer.x, pointer.y);
+	            this.drawTemporaryLinesAndCoordinates(pointer.x, pointer.y, o);
 	        }
 	    }
 	    onMouseUp(o) {
 	        if (o.e.button === 0) {
 	            this.isMouseDown = false;
-	            //let canvas = this._canvas
-	            //let pointer = canvas.getPointer(o.e)
 	            this.clearTemporaryObjects();
-	            //this.drawLinesAndCoordinates(pointer.x, pointer.y)
 	        }
 	    }
 	    onMouseOut() {
@@ -54883,7 +54880,8 @@
 	        });
 	        // converted coordinates
 	        // scaleFactors = [xmax, ymax, bottom_margin, left_margin, top_margin, right_margin]
-	        let xx = ((x - this.scaleFactors[3]) /
+	        let xx = // x coordinate based on pixel of the canvas, while xx is the converted x coordinate based on labels adopted
+	         ((x - this.scaleFactors[3]) /
 	            (canvasWidth - this.scaleFactors[3] - this.scaleFactors[5])) *
 	            this.scaleFactors[0];
 	        let yy = this.scaleFactors[1] -
@@ -54916,10 +54914,11 @@
 	            selectable: false,
 	            evented: false,
 	        });
+	        this.coordinates_group.type = 'coordinate'; // Override the type to 'coordinate' instead of 'group'
 	        canvas.add(this.coordinates_group);
 	        canvas.renderAll();
 	    }
-	    drawTemporaryLinesAndCoordinates(x, y) {
+	    drawTemporaryLinesAndCoordinates(x, y, o) {
 	        let canvas = this._canvas;
 	        let strokeWidth = this.strokeWidth;
 	        let strokeColor = "rgba(51, 0, 20, 0.5)";
@@ -54932,7 +54931,7 @@
 	            strokeWidth: strokeWidth,
 	            selectable: false,
 	            evented: false,
-	            strokeDashArray: [10, 5],
+	            strokeDashArray: [10, 5], //dashed line
 	        });
 	        this.tempVerticalLine = new fabricExports.fabric.Line([x, y, x, 0.85 * canvasHeight], {
 	            stroke: strokeColor,
@@ -54977,6 +54976,7 @@
 	            selectable: false,
 	            evented: false,
 	        });
+	        this.tempCoordinates_group.type = 'coordinate'; // Override the type to 'coordinate' instead of 'group'
 	        canvas.add(this.tempCoordinates_group);
 	        canvas.renderAll();
 	    }
@@ -58181,6 +58181,7 @@
 	            selectable: false,
 	            evented: false,
 	        });
+	        this.finalCurve.type = 'curve'; // Override the type to 'curve' instead of 'path'
 	        if (this.finalCurve.width !== 0 && this.finalCurve.height !== 0) {
 	            canvas.add(this.finalCurve);
 	            //canvas.renderAll()
@@ -58309,6 +58310,7 @@
 	            selectable: false,
 	            evented: false,
 	        });
+	        this.finalCurve.type = 'curve4pts'; // Override the type to 'curve4pts' instead of 'path'
 	        if (this.finalCurve.width !== 0 && this.finalCurve.height !== 0) {
 	            canvas.add(this.finalCurve);
 	            //canvas.renderAll()
@@ -58329,7 +58331,15 @@
 	        this._canvas.isDrawingMode = true;
 	        this._canvas.freeDrawingBrush.width = strokeWidth;
 	        this._canvas.freeDrawingBrush.color = strokeColor;
-	        return () => { };
+	        // Override the type of free-drawn paths to 'freedraw'
+	        this._canvas.on('path:created', (e) => {
+	            if (e.path) {
+	                e.path.type = 'freedraw';
+	            }
+	        });
+	        return () => {
+	            this._canvas.off('path:created');
+	        };
 	    }
 	}
 
@@ -58443,6 +58453,7 @@
 	            evented: false,
 	            radius: this.displayRadius,
 	        });
+	        this.currentCircle.type = 'point'; // Override the type to 'point' instead of 'circle'
 	        if (_clicked === 0) {
 	            canvas.add(this.currentCircle);
 	        }
@@ -58613,6 +58624,7 @@
 	            selectable: false,
 	            evented: false,
 	        });
+	        this.currentPath.type = 'polygon'; // Override the type to 'polygon' instead of 'path'
 	        canvas.add(this.currentPath);
 	        this._pathString = "M ";
 	        this.isMouseDown = false;
@@ -58774,153 +58786,7 @@
 	};
 
 	//// other drawing:
-	function customBackground2(canvasWidth, canvasHeight, scaleFactors) {
-	    const objects = [];
-	    const rect = new fabricExports.fabric.Rect({
-	        //scaleFactors = [xlim, ylim, bottom_margin, left_margin, top_margin, right_margin]
-	        left: scaleFactors[3], //0.12 * canvasWidth, // Adjusted from 0.1 to 0.12
-	        top: scaleFactors[4], //0.05 * canvasHeight
-	        fill: "transparent",
-	        stroke: "black",
-	        width: canvasWidth - scaleFactors[3] - scaleFactors[5], //0.83 * canvasWidth, // Adjusted width to maintain the same right edge
-	        height: canvasHeight - scaleFactors[2] - scaleFactors[4], // 0.8 * canvasHeight,
-	        selectable: false,
-	        evented: false,
-	        hasControls: false,
-	        lockMovementX: true,
-	        lockMovementY: true,
-	        lockRotation: true,
-	    });
-	    objects.push(rect);
-	    const rectLeft = scaleFactors[3];
-	    const rectTop = scaleFactors[4];
-	    const rectWidth = canvasWidth - scaleFactors[3] - scaleFactors[5]; // Adjusted width to maintain the same right edge
-	    const rectHeight = canvasHeight - scaleFactors[2] - scaleFactors[4];
-	    //// Add tick marks, numbers, and lines to the left side
-	    for (let i = 0; i <= 10; i++) {
-	        const y = rectTop + (i * rectHeight) / 10;
-	        const tick = new fabricExports.fabric.Line([rectLeft - 5, y, rectLeft, y], {
-	            stroke: "black",
-	            selectable: false,
-	            evented: false,
-	            hasControls: false,
-	            lockMovementX: true,
-	            lockMovementY: true,
-	            lockRotation: true,
-	        });
-	        new fabricExports.fabric.Text((scaleFactors[1] - (i * scaleFactors[1]) / 10).toString(), {
-	            left: rectLeft - 35,
-	            top: y - 10,
-	            fontSize: 20,
-	            fill: "black",
-	            selectable: false,
-	            evented: false,
-	            hasControls: false,
-	            lockMovementX: true,
-	            lockMovementY: true,
-	            lockRotation: true,
-	        });
-	        const hLine = new fabricExports.fabric.Line([rectLeft, y, rectLeft + rectWidth, y], {
-	            stroke: "lightgray",
-	            selectable: false,
-	            evented: false,
-	            hasControls: false,
-	            lockMovementX: true,
-	            lockMovementY: true,
-	            lockRotation: true,
-	        });
-	        //objects.push(tick, text, hLine);
-	        objects.push(tick, hLine);
-	    }
-	    // Add tick marks, numbers, and lines to the bottom side
-	    for (let i = 0; i <= 10; i++) {
-	        const x = rectLeft + (i * rectWidth) / 10;
-	        const tick = new fabricExports.fabric.Line([x, rectTop + rectHeight, x, rectTop + rectHeight + 5], {
-	            stroke: "black",
-	            selectable: false,
-	            evented: false,
-	            hasControls: false,
-	            lockMovementX: true,
-	            lockMovementY: true,
-	            lockRotation: true,
-	        });
-	        new fabricExports.fabric.Text(((i * scaleFactors[0]) / 10).toString(), {
-	            left: x - 7,
-	            top: rectTop + rectHeight + 10,
-	            fontSize: 20,
-	            fill: "black",
-	            selectable: false,
-	            evented: false,
-	            hasControls: false,
-	        });
-	        const vLine = new fabricExports.fabric.Line([x, rectTop, x, rectTop + rectHeight], {
-	            stroke: "lightgray",
-	            selectable: false,
-	            evented: false,
-	            hasControls: false,
-	            lockMovementX: true,
-	            lockMovementY: true,
-	            lockRotation: true,
-	        });
-	        //objects.push(tick, text, vLine);
-	        objects.push(tick, vLine);
-	    }
-	    //// Add x-axis title
-	    //   const xAxisTitle = new fabric.Text("Quantity, Q", {
-	    //     left: rectLeft + rectWidth / 2,
-	    //     top: rectTop + rectHeight + 40,
-	    //     fontSize: 24,
-	    //     fontStyle: "italic", // Set text to italics
-	    //     fill: "black",
-	    //     originX: "center",
-	    //     selectable: false,
-	    //     evented: false,
-	    //     hasControls: false,
-	    //     lockMovementX: true,
-	    //     lockMovementY: true,
-	    //     lockRotation: true,
-	    //   });
-	    //   objects.push(xAxisTitle);
-	    //// Add y-axis title
-	    //   const yAxisTitle = new fabric.Text("Price, P", {
-	    //     left: rectLeft - 65, // Adjusted for more space
-	    //     top: rectTop + rectHeight / 2,
-	    //     fontSize: 24,
-	    //     fontStyle: "italic", // Set text to italics
-	    //     fill: "black",
-	    //     originX: "center",
-	    //     originY: "center",
-	    //     angle: -90,
-	    //     selectable: false,
-	    //     evented: false,
-	    //     hasControls: false,
-	    //     lockMovementX: true,
-	    //     lockMovementY: true,
-	    //     lockRotation: true,
-	    //   });
-	    // objects.push(yAxisTitle);
-	    //// Move the first element (rect) to the last position (when rectangle is drawn first, it is overlapped by others)
-	    const firstElement = objects.shift();
-	    objects.push(firstElement);
-	    // Change the color of the rectangle
-	    if (firstElement instanceof fabricExports.fabric.Rect) {
-	        firstElement.set({ fill: "" }); // Change 'blue' to any color you want
-	    }
-	    const filteredObjects = objects.filter((obj) => obj !== undefined);
-	    const group = new fabricExports.fabric.Group(filteredObjects, {
-	        selectable: false,
-	        evented: false,
-	        hasControls: false,
-	        lockMovementX: true,
-	        lockMovementY: true,
-	        lockRotation: true,
-	    });
-	    return group;
-	    //   canvas.add(group);
-	    //   canvas.renderAll();
-	}
-	//// other drawing:
-	function customBackground3(canvasWidth, canvasHeight, scaleFactors) {
+	function customBackground0(canvasWidth, canvasHeight, scaleFactors) {
 	    const objects = [];
 	    const rect = new fabricExports.fabric.Rect({
 	        //scaleFactors = [xlim, ylim, bottom_margin, left_margin, top_margin, right_margin]
@@ -59009,40 +58875,185 @@
 	        });
 	        objects.push(tick, text, vLine);
 	    }
+	    // Add x-axis title
+	    const xAxisTitle = new fabricExports.fabric.Text("Quantity, Q", {
+	        left: rectLeft + rectWidth / 2,
+	        top: rectTop + rectHeight + 40,
+	        fontSize: 24,
+	        fontStyle: "italic", // Set text to italics
+	        fill: "black",
+	        originX: "center",
+	        selectable: false,
+	        evented: false,
+	        hasControls: false,
+	        lockMovementX: true,
+	        lockMovementY: true,
+	        lockRotation: true,
+	    });
+	    objects.push(xAxisTitle);
+	    // Add y-axis title
+	    const yAxisTitle = new fabricExports.fabric.Text("Price, P", {
+	        left: rectLeft - 65, // Adjusted for more space
+	        top: rectTop + rectHeight / 2,
+	        fontSize: 24,
+	        fontStyle: "italic", // Set text to italics
+	        fill: "black",
+	        originX: "center",
+	        originY: "center",
+	        angle: -90,
+	        selectable: false,
+	        evented: false,
+	        hasControls: false,
+	        lockMovementX: true,
+	        lockMovementY: true,
+	        lockRotation: true,
+	    });
+	    objects.push(yAxisTitle);
+	    //// Move the first element (rect) to the last position (when rectangle is drawn first, it is overlapped by others)
+	    const firstElement = objects.shift();
+	    objects.push(firstElement);
+	    // Change the color of the rectangle
+	    if (firstElement instanceof fabricExports.fabric.Rect) {
+	        firstElement.set({ fill: "" }); // Change 'blue' to any color you want
+	    }
+	    const filteredObjects = objects.filter((obj) => obj !== undefined);
+	    const group = new fabricExports.fabric.Group(filteredObjects, {
+	        selectable: false,
+	        evented: false,
+	        hasControls: false,
+	        lockMovementX: true,
+	        lockMovementY: true,
+	        lockRotation: true,
+	    });
+	    return group;
+	    //   canvas.add(group);
+	    //   canvas.renderAll();
+	}
+	//// other drawing:
+	function customBackground1(canvasWidth, canvasHeight, scaleFactors) {
+	    const objects = [];
+	    const rect = new fabricExports.fabric.Rect({
+	        //scaleFactors = [xlim, ylim, bottom_margin, left_margin, top_margin, right_margin]
+	        left: scaleFactors[3], //0.12 * canvasWidth, // Adjusted from 0.1 to 0.12
+	        top: scaleFactors[4], //0.05 * canvasHeight
+	        fill: "transparent",
+	        stroke: "black",
+	        width: canvasWidth - scaleFactors[3] - scaleFactors[5], //0.83 * canvasWidth, // Adjusted width to maintain the same right edge
+	        height: canvasHeight - scaleFactors[2] - scaleFactors[4], // 0.8 * canvasHeight,
+	        selectable: false,
+	        evented: false,
+	        hasControls: false,
+	        lockMovementX: true,
+	        lockMovementY: true,
+	        lockRotation: true,
+	    });
+	    objects.push(rect);
+	    const rectLeft = scaleFactors[3];
+	    const rectTop = scaleFactors[4];
+	    const rectWidth = canvasWidth - scaleFactors[3] - scaleFactors[5]; // Adjusted width to maintain the same right edge
+	    const rectHeight = canvasHeight - scaleFactors[2] - scaleFactors[4];
+	    //// Add tick marks, numbers, and lines to the left side
+	    for (let i = 0; i <= 10; i++) {
+	        const y = rectTop + (i * rectHeight) / 10;
+	        const tick = new fabricExports.fabric.Line([rectLeft - 5, y, rectLeft, y], {
+	            stroke: "black",
+	            selectable: false,
+	            evented: false,
+	            hasControls: false,
+	            lockMovementX: true,
+	            lockMovementY: true,
+	            lockRotation: true,
+	        });
+	        const text = new fabricExports.fabric.Text((scaleFactors[1] - (i * scaleFactors[1]) / 10).toString(), {
+	            left: rectLeft - 35,
+	            top: y - 10,
+	            fontSize: 20,
+	            fill: "black",
+	            selectable: false,
+	            evented: false,
+	            hasControls: false,
+	            lockMovementX: true,
+	            lockMovementY: true,
+	            lockRotation: true,
+	        });
+	        const hLine = new fabricExports.fabric.Line([rectLeft, y, rectLeft + rectWidth, y], {
+	            stroke: "lightgray",
+	            selectable: false,
+	            evented: false,
+	            hasControls: false,
+	            lockMovementX: true,
+	            lockMovementY: true,
+	            lockRotation: true,
+	        });
+	        objects.push(tick, text, hLine);
+	    }
+	    // Add tick marks, numbers, and lines to the bottom side
+	    for (let i = 0; i <= 10; i++) {
+	        const x = rectLeft + (i * rectWidth) / 10;
+	        const tick = new fabricExports.fabric.Line([x, rectTop + rectHeight, x, rectTop + rectHeight + 5], {
+	            stroke: "black",
+	            selectable: false,
+	            evented: false,
+	            hasControls: false,
+	            lockMovementX: true,
+	            lockMovementY: true,
+	            lockRotation: true,
+	        });
+	        const text = new fabricExports.fabric.Text(((i * scaleFactors[0]) / 10).toString(), {
+	            left: x - 7,
+	            top: rectTop + rectHeight + 10,
+	            fontSize: 20,
+	            fill: "black",
+	            selectable: false,
+	            evented: false,
+	            hasControls: false,
+	        });
+	        const vLine = new fabricExports.fabric.Line([x, rectTop, x, rectTop + rectHeight], {
+	            stroke: "lightgray",
+	            selectable: false,
+	            evented: false,
+	            hasControls: false,
+	            lockMovementX: true,
+	            lockMovementY: true,
+	            lockRotation: true,
+	        });
+	        //objects.push(tick, text, vLine)
+	        objects.push(tick, text, vLine);
+	    }
 	    //// Add x-axis title
-	    //   const xAxisTitle = new fabric.Text("Quantity, Q", {
-	    //     left: rectLeft + rectWidth / 2,
-	    //     top: rectTop + rectHeight + 40,
-	    //     fontSize: 24,
-	    //     fontStyle: "italic", // Set text to italics
-	    //     fill: "black",
-	    //     originX: "center",
-	    //     selectable: false,
-	    //     evented: false,
-	    //     hasControls: false,
-	    //     lockMovementX: true,
-	    //     lockMovementY: true,
-	    //     lockRotation: true,
-	    //   });
-	    //   objects.push(xAxisTitle);
-	    //// Add y-axis title
-	    //   const yAxisTitle = new fabric.Text("Price, P", {
-	    //     left: rectLeft - 65, // Adjusted for more space
-	    //     top: rectTop + rectHeight / 2,
-	    //     fontSize: 24,
-	    //     fontStyle: "italic", // Set text to italics
-	    //     fill: "black",
-	    //     originX: "center",
-	    //     originY: "center",
-	    //     angle: -90,
-	    //     selectable: false,
-	    //     evented: false,
-	    //     hasControls: false,
-	    //     lockMovementX: true,
-	    //     lockMovementY: true,
-	    //     lockRotation: true,
-	    //   });
-	    // objects.push(yAxisTitle);
+	    const xAxisTitle = new fabricExports.fabric.Text("Quantity, Q", {
+	        left: rectLeft + rectWidth / 2,
+	        top: rectTop + rectHeight + 40,
+	        fontSize: 24,
+	        fontStyle: "italic", // Set text to italics
+	        fill: "black",
+	        originX: "center",
+	        selectable: false,
+	        evented: false,
+	        hasControls: false,
+	        lockMovementX: true,
+	        lockMovementY: true,
+	        lockRotation: true,
+	    });
+	    objects.push(xAxisTitle);
+	    // Add y-axis title
+	    const yAxisTitle = new fabricExports.fabric.Text("Price, P", {
+	        left: rectLeft - 65, // Adjusted for more space
+	        top: rectTop + rectHeight / 2,
+	        fontSize: 24,
+	        fontStyle: "italic", // Set text to italics
+	        fill: "black",
+	        originX: "center",
+	        originY: "center",
+	        angle: -90,
+	        selectable: false,
+	        evented: false,
+	        hasControls: false,
+	        lockMovementX: true,
+	        lockMovementY: true,
+	        lockRotation: true,
+	    });
+	    objects.push(yAxisTitle);
 	    //// Move the first element (rect) to the last position (when rectangle is drawn first, it is overlapped by others)
 	    const firstElement = objects.shift();
 	    objects.push(firstElement);
@@ -59064,7 +59075,7 @@
 	    //   canvas.renderAll();
 	}
 
-	const backgroundlist = [customBackground2, customBackground3];
+	const backgroundlist = [customBackground0, customBackground1];
 	const DrawableCanvas = ({ AssessName, index, fillColor, strokeWidth, strokeColor, backgroundImageURL, canvasWidth, canvasHeight, drawingMode, initialDrawing, displayToolbar, displayRadius, scaleFactors, submitButtonClicked, bgnumber, // Consume the bgnumber prop
 	 }) => {
 	    const canvasRef = reactExports.useRef(null);
@@ -59072,7 +59083,7 @@
 	    const canvasInstance = reactExports.useRef(null);
 	    const backgroundCanvasInstance = reactExports.useRef(null);
 	    const { canvasState: { action: { shouldReloadCanvas }, currentState, initialState, }, saveState, undo, redo, canUndo, canRedo, resetState, } = useCanvasState();
-	    const customBackground = backgroundlist[bgnumber];
+	    const customBackground = backgroundlist[bgnumber]; // Select background function based on bgnumber
 	    reactExports.useEffect(() => {
 	        if (canvasRef.current) {
 	            canvasInstance.current = new fabricExports.fabric.Canvas(canvasRef.current, {
@@ -59185,7 +59196,7 @@
 	    //     }
 	    //   }
 	    // }, [canvasInstance.current, index, AssessName]) // Load the drawing whenever the `index` and canvasInstance.current changes
-	    // Save the current drawing to L-Storage when submitButtonClicked becomes true
+	    // Save the current drawing to local-storage when submitButtonClicked becomes true
 	    reactExports.useEffect(() => {
 	        if (!submitButtonClicked)
 	            return;
@@ -59279,26 +59290,26 @@
 	                }, children: typeof icon === "string" ? (jsxRuntimeExports.jsx("img", { src: icon, alt: mode, style: { width: "24px", height: "24px" } })) : (React.createElement(icon, { style: { width: "24px", height: "24px" } })) }, mode))) }) }));
 	};
 
-	function DrawingApp({ index, AssessName, canvasWidth, canvasHeight, submitButtonClicked, bgnumber, // Consume the bgnumber prop
+	function DrawingApp({ index, AssessName, canvasWidth, canvasHeight, scaleFactors, submitButtonClicked, bgnumber, // Consume the bgnumber prop
 	modes, // Destructure the modes prop
 	 }) {
 	    const [drawingMode, setDrawingMode] = reactExports.useState(modes[0].mode); // Use the first mode as the initial state
 	    const [strokeColor, setStrokeColor] = reactExports.useState("#000000");
 	    const [strokeWidth, setStrokeWidth] = reactExports.useState(2);
-	    const xlim = 100; // absolute in pixels
-	    const ylim = 100; // absolute in pixels
-	    const bottom_margin = 75; // absolute in pixels
-	    const left_margin = 84;
-	    const top_margin = 25;
-	    const right_margin = 35;
-	    const scaleFactors = [
-	        xlim,
-	        ylim,
-	        bottom_margin,
-	        left_margin,
-	        top_margin,
-	        right_margin,
-	    ];
+	    // const xlim = 1000 // absolute in pixels
+	    // const ylim = 2000 // absolute in pixels
+	    // const bottom_margin = 75 // absolute in pixels
+	    // const left_margin = 84
+	    // const top_margin = 25
+	    // const right_margin = 35
+	    // const scaleFactors = [
+	    //   xlim,
+	    //   ylim,
+	    //   bottom_margin,
+	    //   left_margin,
+	    //   top_margin,
+	    //   right_margin,
+	    // ]
 	    const canvasProps = {
 	        AssessName: AssessName,
 	        index: index,
@@ -59655,12 +59666,13 @@
 	    // Render the DrawingApp using initData from the XBlock
 	    const index = initData.index ?? 1;
 	    const AssessName = initData.AssessName ?? initData.question ?? 'quiz1';
-	    const canvasWidth = initData.canvasWidth ?? 400;
-	    const canvasHeight = initData.canvasHeight ?? 300;
+	    const canvasWidth = initData.canvasWidth ?? 500;
+	    const canvasHeight = initData.canvasHeight ?? 400;
+	    const scaleFactors = initData.scaleFactors ?? [100, 200, 75, 84, 25, 35]; // default scaleFactor
 	    // local UI state to trigger saving the canvas JSON to localStorage
 	    const [submitButtonClicked, setSubmitButtonClicked] = reactExports.useState(initData.submitButtonClicked ?? false);
 	    const [summaryMsg, setSummaryMsg] = reactExports.useState("");
-	    const bgnumber = initData.bgnumber ?? 1; // New prop for selecting the background
+	    const bgnumber = initData.bgnumber ?? 0; // New prop for selecting the background
 	    // Render the Submit button and its behavior
 	    const renderSubmitButton = () => {
 	        return (jsxRuntimeExports.jsx("div", { style: { marginTop: '8px' }, children: jsxRuntimeExports.jsx("button", { type: "button", onClick: async () => {
@@ -59695,7 +59707,7 @@
 	                    }, 200);
 	                }, children: "Submit" }) }));
 	    };
-	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, submitButtonClicked: submitButtonClicked, modes: modes, bgnumber: bgnumber }) })] }), renderSubmitButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Drawing Summary" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto', color: 'green', fontWeight: 'bold' }, children: summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer." })] })] }));
+	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, scaleFactors: scaleFactors, submitButtonClicked: submitButtonClicked, modes: modes, bgnumber: bgnumber }) })] }), renderSubmitButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Drawing Summary" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto', color: 'green', fontWeight: 'bold' }, children: summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer." })] })] }));
 	};
 	// Loader for XBlock React view
 	function initStudentView(runtime, container, initData) {

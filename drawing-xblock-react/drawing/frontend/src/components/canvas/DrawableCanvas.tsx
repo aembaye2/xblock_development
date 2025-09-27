@@ -10,9 +10,9 @@ import { tools, FabricTool } from "./libs"
 //   //downloadCallback4Json,
 //   //logCanvasData,
 // } from "./helpers"
-import { customBackground2, customBackground3 } from "./constants"
+import { customBackground0, customBackground1 } from "./AxesLabels"
 
-const backgroundlist: any = [customBackground2, customBackground3]
+const backgroundlist: any = [customBackground0, customBackground1]
 
 export interface ComponentArgs {
   AssessName: string
@@ -69,7 +69,7 @@ const DrawableCanvas = ({
     resetState,
   } = useCanvasState()
 
-  const customBackground = backgroundlist[bgnumber]
+  const customBackground = backgroundlist[bgnumber] // Select background function based on bgnumber
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -202,7 +202,7 @@ const DrawableCanvas = ({
   //   }
   // }, [canvasInstance.current, index, AssessName]) // Load the drawing whenever the `index` and canvasInstance.current changes
 
-  // Save the current drawing to L-Storage when submitButtonClicked becomes true
+  // Save the current drawing to local-storage when submitButtonClicked becomes true
   useEffect(() => {
   if (!submitButtonClicked) return
     if (!canvasInstance.current) {

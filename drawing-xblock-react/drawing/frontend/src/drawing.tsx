@@ -35,6 +35,7 @@ interface InitData {
   AssessName?: string;
   canvasWidth?: number;
   canvasHeight?: number;
+  scaleFactors?: number[];
   submitButtonClicked?: boolean;
   bgnumber?: number; // New prop for selecting the background
 }
@@ -42,7 +43,7 @@ interface InitData {
 interface Props {
   runtime: BoundRuntime;
   question: string;
-  options: string[];
+  options: string[]
   correct: number;
   user_answer?: number;
   attempts?: number;
@@ -53,12 +54,13 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   // Render the DrawingApp using initData from the XBlock
   const index = initData.index ?? 1
   const AssessName = initData.AssessName ?? initData.question ?? 'quiz1'
-  const canvasWidth = initData.canvasWidth ?? 400
-  const canvasHeight = initData.canvasHeight ?? 300
+  const canvasWidth = initData.canvasWidth ?? 500
+  const canvasHeight = initData.canvasHeight ?? 400
+  const scaleFactors= initData.scaleFactors ?? [100, 200, 75, 84, 25, 35] // default scaleFactor
   // local UI state to trigger saving the canvas JSON to localStorage
   const [submitButtonClicked, setSubmitButtonClicked] = useState<boolean>(initData.submitButtonClicked ?? false)
   const [summaryMsg, setSummaryMsg] = useState<string>("");
-  const bgnumber = initData.bgnumber ?? 1 // New prop for selecting the background
+  const bgnumber = initData.bgnumber ?? 0 // New prop for selecting the background
   
   // Render the Submit button and its behavior
   const renderSubmitButton = () => {
@@ -113,6 +115,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
             AssessName={AssessName}
             canvasWidth={canvasWidth}
             canvasHeight={canvasHeight}
+            scaleFactors={scaleFactors}
             submitButtonClicked={submitButtonClicked}
             modes={modes}
             bgnumber={bgnumber}
