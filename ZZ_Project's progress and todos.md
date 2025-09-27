@@ -6,9 +6,11 @@ Main part of this is done such as sending the .json drawing to the backend, and 
 
 What is left according their importance
 
-1. master translating pixel coordinates to the coordinate labels which are basically labels at those pixel coordinates. This will be helpful to manipulate coordinates not interms of pixels but coordinates the user can understand
+1. Also use props to make drawing tools or other action icons on the canvas visible or not visible. This will help to easily deploy only the necessary tools for each question.
 
-2. Also use props to make drawing tools or other action icons on the canvas visible or not visible. This will help to easily deploy only the necessary tools for each question.
+2. Including initial drawing such as intial supply and demand, or consumer optimal point should be done
+
+master translating pixel coordinates to the coordinate labels which are basically labels at those pixel coordinates. This will be helpful to manipulate coordinates not interms of pixels but coordinates the user can understand ----> done for line but should be extended to other shapes
 
 Done!!! Also each drawing tool and hence object must have its .json data reflect unique type, so that you can easily identify it when grading
 
