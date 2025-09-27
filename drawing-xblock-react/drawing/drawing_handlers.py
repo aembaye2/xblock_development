@@ -27,14 +27,14 @@ def process_drawing_json(drawing: Any, scaleFactors: list = None, canvasWidth: f
     for obj in objects:
         otype = obj.get('type') or obj.get('objectType') or obj.get('shape') or 'unknown'
         if otype == 'line':
-            x1 = obj.get('x1')
-            y1 = obj.get('y1')
-            x2 = obj.get('x2')
-            y2 = obj.get('y2')
+            x1 = obj.get('x1')+obj.get('left')
+            y1 = obj.get('y1')+obj.get('top')
+            x2 = obj.get('x2')+obj.get('left')
+            y2 = obj.get('y2')+obj.get('top')
             if scaleFactors and canvasWidth and canvasHeight:
                 xx1, yy1 = pixel_to_scaled(x1, y1, scaleFactors, canvasWidth, canvasHeight)
                 xx2, yy2 = pixel_to_scaled(x2, y2, scaleFactors, canvasWidth, canvasHeight)
-                messages.append(f"You drew a line with raw coordinates ({x1}, {y1}) to ({x2}, {y2}) and transformed coordinates ({xx1:.0f}, {yy1:.0f}) to ({xx2:.0f}, {yy2:.0f})")
+                messages.append(f"You drew a line with raw coordinates ({x1:.0f}, {y1:.0f}) to ({x2:.0f}, {y2:.0f}) and transformed coordinates ({xx1:.0f}, {yy1:.0f}) to ({xx2:.0f}, {yy2:.0f})")
             else:
                 messages.append(f"You drew a line from ({x1}, {y1}) to ({x2}, {y2})")
         else:
