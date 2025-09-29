@@ -1,189 +1,46 @@
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'parent', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'parent' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'parent', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock', 'student_1'); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock', 'student_1'); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" = 'student_1') LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock', 'student_1'); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
-"GET /scenario/drawing_xblock.0/ HTTP/1.1" 200 4567
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/messages/storage/cookie.py first seen with mtime 1758916109.6043472
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/__init__.py first seen with mtime 1758916128.6903458
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/__init__.py first seen with mtime 1758916125.268346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/messages/storage/fallback.py first seen with mtime 1758916109.6043472
-File /workspaces/xblock_development/xblock-dragdrop2/drag_and_drop_v2/drag_and_drop_v2.py first seen with mtime 1758915775.3573709
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/lisp.py first seen with mtime 1758916122.2933462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/messages/context_processors.py first seen with mtime 1758916109.603347
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/formatter.py first seen with mtime 1758916122.2553463
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_trie/_base.py first seen with mtime 1758916128.6963458
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/agile.py first seen with mtime 1758916122.2703462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/_ast_util.py first seen with mtime 1758916124.9253461
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/templatetags/__init__.py first seen with mtime 1759104852.646442
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/bytes.py first seen with mtime 1759104867.475442
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/filters/__init__.py first seen with mtime 1759104867.538442
 File /usr/local/python/3.12.1/lib/python3.12/xml/sax/saxutils.py first seen with mtime 1752148678.0
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/template.py first seen with mtime 1758916124.928346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/formatters/html.py first seen with mtime 1758916122.2583463
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/factor.py first seen with mtime 1758916122.2823462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/ast.py first seen with mtime 1758916124.926346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/webencodings/__init__.py first seen with mtime 1758916128.6363459
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/style.py first seen with mtime 1758916122.2563462
-File /workspaces/xblock_development/xblock-sdk/sample_xblocks/basic/structure.py first seen with mtime 1758915775.3913708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/lexer.py first seen with mtime 1758916124.927346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/treebuilders/__init__.py first seen with mtime 1758916128.6983457
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/constants.py first seen with mtime 1758916128.6953456
-File /workspaces/xblock_development/xblock-sortable2/sortable/__init__.py first seen with mtime 1758915775.399371
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/auth/context_processors.py first seen with mtime 1758916109.3163471
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/parsetree.py first seen with mtime 1758916124.927346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/html.py first seen with mtime 1758916122.2883463
-File /workspaces/xblock_development/xblock-myxblock-react/myxblock/myxblock.py first seen with mtime 1758915775.372371
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/scripting.py first seen with mtime 1758916122.3103461
-File /workspaces/xblock_development/xblock-dragdrop2/drag_and_drop_v2/default_data.py first seen with mtime 1758915775.3573709
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblockutils/__init__.py first seen with mtime 1758916131.7253456
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/ext/__init__.py first seen with mtime 1758916124.929346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/css_sanitizer.py first seen with mtime 1758916128.6913457
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/ext/pygmentplugin.py first seen with mtime 1758916124.931346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/treebuilders/base.py first seen with mtime 1758916128.6993458
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/formatters/_mapping.py first seen with mtime 1758916122.2583463
-File /workspaces/xblock_development/xblock-sdk/sample_xblocks/basic/view_counter.py first seen with mtime 1758915775.3913708
-File /workspaces/xblock_development/xblock-sdk/sample_xblocks/__init__.py first seen with mtime 1758915775.3903708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/serializer.py first seen with mtime 1758916128.6533458
-File /workspaces/xblock_development/xblock-vectordraw3/vectordraw/grader.py first seen with mtime 1758915775.405371
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/serializer.py first seen with mtime 1758916128.6953456
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/templatetags/__init__.py first seen with mtime 1758916125.270346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/html5parser.py first seen with mtime 1758916128.6953456
-File /workspaces/xblock_development/drawing-xblock-react/drawing/drawing.py first seen with mtime 1758951590.9181738
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/compat.py first seen with mtime 1758916124.926346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/web.py first seen with mtime 1758916122.3193462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblockutils/deprecation/__init__.py first seen with mtime 1758916131.7263455
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/javascript.py first seen with mtime 1758916122.2903461
-File /workspaces/xblock_development/xblock-mcqs/mcqs/__init__.py first seen with mtime 1758915775.3673708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/_scheme_builtins.py first seen with mtime 1758916122.2673461
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/filter.py first seen with mtime 1758916122.2553463
-File /usr/local/python/3.12.1/lib/python3.12/xml/sax/__init__.py first seen with mtime 1752148678.0
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/parser.py first seen with mtime 1758916128.6523457
-File /usr/local/python/3.12.1/lib/python3.12/timeit.py first seen with mtime 1752148677.0
-File /usr/local/python/3.12.1/lib/python3.12/xml/sax/handler.py first seen with mtime 1752148678.0
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/png.py first seen with mtime 1758916121.9633462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/parse.py first seen with mtime 1758916128.6923459
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/pygen.py first seen with mtime 1758916124.928346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/_css_builtins.py first seen with mtime 1758916122.2623463
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/parse_shim.py first seen with mtime 1758916128.6913457
-File /workspaces/xblock_development/xblock-vectordraw3/vectordraw/utils.py first seen with mtime 1758915775.4063709
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/plugin.py first seen with mtime 1758916122.2553463
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/ast.py first seen with mtime 1758916128.6513457
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/__init__.py first seen with mtime 1758916128.6923459
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/unistring.py first seen with mtime 1758916122.2573462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/lookup.py first seen with mtime 1758916124.927346
-File /workspaces/xblock_development/xblock-react/react_xblock_2/__init__.py first seen with mtime 1758915775.3773708
-File /workspaces/xblock_development/xblock-sortable2/sortable/utils.py first seen with mtime 1758915775.4003708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/filters.py first seen with mtime 1758916124.927346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/webmisc.py first seen with mtime 1758916122.320346
-File /workspaces/xblock_development/xblock-sdk/sample_xblocks/basic/slider.py first seen with mtime 1758915775.3913708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/data.py first seen with mtime 1758916122.2783463
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/filters/sanitizer.py first seen with mtime 1758916128.6973457
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_inputstream.py first seen with mtime 1758916128.6943457
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/six_shim.py first seen with mtime 1758916128.6923459
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_trie/__init__.py first seen with mtime 1758916128.6963458
-File /workspaces/xblock_development/drawing-xblock-react/drawing/__init__.py first seen with mtime 1758915775.2883708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/python.py first seen with mtime 1758916122.3053463
-File /workspaces/xblock_development/xblock-dragdrop2/drag_and_drop_v2/__init__.py first seen with mtime 1758915775.356371
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblockutils/deprecation/warn.py first seen with mtime 1758916131.7273455
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/codegen.py first seen with mtime 1758916124.926346
-File /workspaces/xblock_development/xblock-sdk/sample_xblocks/basic/__init__.py first seen with mtime 1758915775.3903708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/token.py first seen with mtime 1758916122.2563462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/sessions/serializers.py first seen with mtime 1758916109.711347
-File /workspaces/xblock_development/xblock-react/react_xblock_2/react_xblock_2.py first seen with mtime 1758915775.385371
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/fragment.py first seen with mtime 1758916125.255346
-File /usr/local/python/3.12.1/lib/python3.12/encodings/utf_16_be.py first seen with mtime 1752148677.0
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/__init__.py first seen with mtime 1758916124.9253461
-File /workspaces/xblock_development/openedx-xblock-inline-dropdown/inline_text_and_dropdown/inline_text_and_dropdown.py first seen with mtime 1758915775.336371
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/html5lib_shim.py first seen with mtime 1758916128.6913457
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/iolang.py first seen with mtime 1758916122.2893462
-File /workspaces/xblock_development/xblock-myxblock-react/myxblock/__init__.py first seen with mtime 1758915775.3703709
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/exceptions.py first seen with mtime 1758916124.927346
-File /workspaces/xblock_development/xblock-sdk/sample_xblocks/filethumbs/filethumbs.py first seen with mtime 1758915775.3913708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/regexopt.py first seen with mtime 1758916122.2563462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblockutils/resources.py first seen with mtime 1758916131.7263455
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/_lua_builtins.py first seen with mtime 1758916122.2643461
-File /workspaces/xblock_development/openedx-xblock-inline-dropdown/inline_text_and_dropdown/xml_parser.py first seen with mtime 1758915775.3383708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_utils.py first seen with mtime 1758916128.6943457
-File /usr/local/python/3.12.1/lib/python3.12/encodings/utf_16_le.py first seen with mtime 1752148677.0
-File /workspaces/xblock_development/xblock-sdk/sample_xblocks/basic/content.py first seen with mtime 1758915775.3903708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/filters/__init__.py first seen with mtime 1758916122.2573462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/sanitizer.py first seen with mtime 1758916128.6923459
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/php.py first seen with mtime 1758916122.3033462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/tokenizer.py first seen with mtime 1758916128.6533458
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/jvm.py first seen with mtime 1758916122.2913463
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/webencodings/labels.py first seen with mtime 1758916128.6373458
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/styles/_mapping.py first seen with mtime 1758916122.3223462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/styles/default.py first seen with mtime 1758916122.3243463
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/_mapping.py first seen with mtime 1758916122.2653463
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/perl.py first seen with mtime 1758916122.3033462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/staticfiles/storage.py first seen with mtime 1758916109.8123472
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/d.py first seen with mtime 1758916122.2783463
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/linkifier.py first seen with mtime 1758916128.6913457
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/messages/storage/session.py first seen with mtime 1758916109.6053472
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/formatters/__init__.py first seen with mtime 1758916122.2583463
-File /workspaces/xblock_development/xblock-dragdrop2/drag_and_drop_v2/utils.py first seen with mtime 1758915775.363371
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexer.py first seen with mtime 1758916122.2553463
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/__init__.py first seen with mtime 1758916122.261346
-File /usr/local/python/3.12.1/lib/python3.12/xml/sax/xmlreader.py first seen with mtime 1752148678.0
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/templatetags/i18n.py first seen with mtime 1758916125.270346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/__init__.py first seen with mtime 1758916128.6513457
-File /workspaces/xblock_development/xblock-vectordraw3/vectordraw/vectordraw.py first seen with mtime 1758915775.4063709
-File /workspaces/xblock_development/xblock-sdk/sample_xblocks/thumbs/__init__.py first seen with mtime 1758915775.392371
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblockutils/settings.py first seen with mtime 1758916131.7263455
-File /workspaces/xblock_development/openedx-xblock-inline-dropdown/inline_text_and_dropdown/__init__.py first seen with mtime 1758915775.336371
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_trie/py.py first seen with mtime 1758916128.6963458
-File /workspaces/xblock_development/xblock-sdk/sample_xblocks/thumbs/thumbs.py first seen with mtime 1758915775.3933709
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/__init__.py first seen with mtime 1758916122.2543461
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/run_script.py first seen with mtime 1758916125.256346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/settings.py first seen with mtime 1758916125.268346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/tcl.py first seen with mtime 1758916122.3143463
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/filters/base.py first seen with mtime 1758916128.6973457
-File /workspaces/xblock_development/xblock-dragdrop2/drag_and_drop_v2/compat.py first seen with mtime 1758915775.3573709
-File /workspaces/xblock_development/xblock-vectordraw3/vectordraw/__init__.py first seen with mtime 1758915775.4043708
-File /workspaces/xblock_development/xblock-mcqs/mcqs/mcqs.py first seen with mtime 1758915775.3673708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/studio_editable.py first seen with mtime 1758916125.269346
+File /workspaces/xblock_development/openedx-xblock-inline-dropdown/inline_text_and_dropdown/inline_text_and_dropdown.py first seen with mtime 1759104734.3414428
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/__init__.py first seen with mtime 1759104867.534442
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/parse_shim.py first seen with mtime 1759104867.531442
+File /workspaces/xblock_development/xblock-vectordraw3/vectordraw/vectordraw.py first seen with mtime 1759104734.4234428
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/filters.py first seen with mtime 1759104850.875442
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/contrib/staticfiles/storage.py first seen with mtime 1759104821.864442
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/filters/base.py first seen with mtime 1759104867.538442
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_trie/_base.py first seen with mtime 1759104867.537442
+File /workspaces/xblock_development/drawing-xblock-react/drawing/initial_drawing.py first seen with mtime 1759106909.327429
+File /workspaces/xblock_development/xblock-sortable2/sortable/sortable.py first seen with mtime 1759104734.4154427
+File /workspaces/xblock_development/xblock-dragdrop2/drag_and_drop_v2/drag_and_drop_v2.py first seen with mtime 1759104734.3644428
+File /workspaces/xblock_development/xblock-myxblock-react/myxblock/myxblock.py first seen with mtime 1759104734.3814428
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/scorable.py first seen with mtime 1759104852.591442
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/css_sanitizer.py first seen with mtime 1759104867.530442
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/tokenizer.py first seen with mtime 1759104867.477442
+File /workspaces/xblock_development/openedx-xblock-inline-dropdown/inline_text_and_dropdown/__init__.py first seen with mtime 1759104734.3414428
+File /workspaces/xblock_development/xblock-vectordraw3/vectordraw/grader.py first seen with mtime 1759104734.4214427
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/codegen.py first seen with mtime 1759104850.875442
+File /workspaces/xblock_development/xblock-sdk/workbench/services.py first seen with mtime 1759104734.4094427
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_inputstream.py first seen with mtime 1759104867.534442
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/six_shim.py first seen with mtime 1759104867.5324419
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/ast.py first seen with mtime 1759104850.869442
 File /usr/local/python/3.12.1/lib/python3.12/xml/sax/_exceptions.py first seen with mtime 1752148678.0
-File /workspaces/xblock_development/xblock-sdk/workbench/blocks.py first seen with mtime 1758915775.3943708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/scorable.py first seen with mtime 1758916125.257346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/template/context_processors.py first seen with mtime 1758916109.886347
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/css.py first seen with mtime 1758916122.2783463
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/__init__.py first seen with mtime 1758916128.6933458
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/treewalkers/__init__.py first seen with mtime 1758916128.6993458
-File /workspaces/xblock_development/xblock-sdk/sample_xblocks/filethumbs/__init__.py first seen with mtime 1758915775.3913708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/runtime.py first seen with mtime 1758916124.928346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/pyparser.py first seen with mtime 1758916124.928346
-File /workspaces/xblock_development/xblock-sortable2/sortable/sortable.py first seen with mtime 1758915775.399371
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/util.py first seen with mtime 1758916124.929346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/resources.py first seen with mtime 1758916125.268346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/styles/__init__.py first seen with mtime 1758916122.3223462
-File /workspaces/xblock_development/xblock-sdk/workbench/services.py first seen with mtime 1758915775.3943708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblockutils/studio_editable.py first seen with mtime 1758916131.7263455
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/mako/cache.py first seen with mtime 1758916124.926346
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/actionscript.py first seen with mtime 1758916122.2693462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/_tokenizer.py first seen with mtime 1758916128.6943457
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/modeline.py first seen with mtime 1758916122.2553463
-File /workspaces/xblock_development/xblock-sdk/sample_xblocks/basic/problem.py first seen with mtime 1758915775.3903708
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/tinycss2/bytes.py first seen with mtime 1758916128.6513457
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/util.py first seen with mtime 1758916122.2573462
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/_vendor/html5lib/filters/__init__.py first seen with mtime 1758916128.6963458
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/callbacks.py first seen with mtime 1758916128.6913457
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/pygments/lexers/ruby.py first seen with mtime 1758916122.3093462
-"GET /resource/drawing_xblock/public/drawing.js HTTP/1.1" 200 2203914
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/bleach/linkifier.py first seen with mtime 1759104867.531442
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/xblock/utils/studio_editable.py first seen with mtime 1759104852.6404421
+"GET /static/workbench/js/vendor/jquery-migrate.min.js HTTP/1.1" 304 0
+"GET /static/workbench/js/runtime/1.js HTTP/1.1" 304 0
+"GET /jsi18n/ HTTP/1.1" 200 3343
+"GET /static/workbench/js/vendor/jquery.min.js HTTP/1.1" 304 0
+"GET /static/workbench/js/vendor/jquery.cookie.js HTTP/1.1" 304 0
+"GET /resource/drawing_xblock/public/drawing.js HTTP/1.1" 200 2204883
 Not Found: /resource/drawing_xblock/public/drawing.css
 Not Found: /resource/drawing_xblock/public/drawing.css
 "GET /resource/drawing_xblock/public/drawing.css HTTP/1.1" 404 3943
-"GET /jsi18n/ HTTP/1.1" 200 3343
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/conf/locale/en/__init__.py first seen with mtime 1758916109.0193472
-File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/conf/locale/en/formats.py first seen with mtime 1758916109.0193472
+"GET /static/workbench/js/runtime/logger.js HTTP/1.1" 304 0
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/conf/locale/en/formats.py first seen with mtime 1759104820.9084423
+File /workspaces/xblock_development/xblock-env/lib/python3.12/site-packages/django/conf/locale/en/__init__.py first seen with mtime 1759104820.9084423
 File /usr/local/python/3.12.1/lib/python3.12/encodings/unicode_escape.py first seen with mtime 1752148677.0
 Not Found: /resource/drawing_xblock/public/drawing.css
 Not Found: /resource/drawing_xblock/public/drawing.css
 "GET /resource/drawing_xblock/public/drawing.css HTTP/1.1" 404 3943
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
-(0.000) SELECT "workbench_xblockstate"."id", "workbench_xblockstate"."scope", "workbench_xblockstate"."scope_id", "workbench_xblockstate"."user_id", "workbench_xblockstate"."scenario", "workbench_xblockstate"."tag", "workbench_xblockstate"."created", "workbench_xblockstate"."state" FROM "workbench_xblockstate" WHERE ("workbench_xblockstate"."scenario" = 'drawingxblock-based-on-react' AND "workbench_xblockstate"."scope" = 'usage' AND "workbench_xblockstate"."scope_id" = 'drawingxblock-based-on-react.drawing_xblock.d0.u0' AND "workbench_xblockstate"."tag" = 'drawing_xblock' AND "workbench_xblockstate"."user_id" IS NULL) LIMIT 21; args=('drawingxblock-based-on-react', 'usage', 'drawingxblock-based-on-react.drawing_xblock.d0.u0', 'drawing_xblock'); alias=default
-"POST /handler/drawingxblock-based-on-react.drawing_xblock.d0.u0/send_drawing_json/?student=student_1& HTTP/1.1" 200 145
-File /workspaces/xblock_development/drawing-xblock-react/drawing/drawing_handlers.py first seen with mtime 1758983039.658869
+"GET /static/workbench/images/header-logo.png HTTP/1.1" 304 0

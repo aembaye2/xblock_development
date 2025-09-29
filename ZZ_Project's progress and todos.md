@@ -8,9 +8,9 @@ What is left according their importance
 
 1. Also use props to make drawing tools or other action icons on the canvas visible or not visible. This will help to easily deploy only the necessary tools for each question.
 
-2. Including initial drawing such as intial supply and demand, or consumer optimal point should be done
+Done!!! Including initial drawing such as intial supply and demand, or consumer optimal point should be done in the backend
 
-master translating pixel coordinates to the coordinate labels which are basically labels at those pixel coordinates. This will be helpful to manipulate coordinates not interms of pixels but coordinates the user can understand ----> done for line but should be extended to other shapes
+ Partially done !!! Master translating pixel coordinates of the main part of shapes for grading; Done for line successfully and can be extended for other shapes. This will be helpful to manipulate coordinates not interms of pixels but visible coordinates the user can understand.
 
 Done!!! Also each drawing tool and hence object must have its .json data reflect unique type, so that you can easily identify it when grading
 

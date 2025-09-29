@@ -3,6 +3,8 @@ import DrawableCanvas, { ComponentArgs } from "./DrawableCanvas"
 import DrawingModeSelector from "./DrawingModeSelector"
 import { CanvasStateProvider } from "./DrawableCanvasState"
 
+// All props, including initialDrawing, must be provided by backend/parent.
+// Example: <DrawingApp initialDrawing={...} canvasHeight={...} ... />
 export interface DrawingAppProps {
   AssessName: string
   index: number
@@ -12,6 +14,7 @@ export interface DrawingAppProps {
   submitButtonClicked: boolean
   bgnumber: number // New prop for selecting the background
   modes: { mode: string; icon: React.ElementType; description: string }[] // Add the modes prop
+  initialDrawing: object // initial drawing provided by backend/parent
 }
 
 export function DrawingApp({
@@ -23,6 +26,7 @@ export function DrawingApp({
   submitButtonClicked,
   bgnumber, // Consume the bgnumber prop
   modes, // Destructure the modes prop
+  initialDrawing,
 }: DrawingAppProps) {
   const [drawingMode, setDrawingMode] = useState(modes[0].mode) // Use the first mode as the initial state
   const [strokeColor, setStrokeColor] = useState("#000000")
@@ -55,7 +59,7 @@ export function DrawingApp({
     canvasWidth: canvasWidth,
     canvasHeight: canvasHeight,
     drawingMode: drawingMode,
-    initialDrawing: [{}],
+    initialDrawing: initialDrawing, // Provided by backend/parent
     displayToolbar: true,
     displayRadius: 3,
     scaleFactors: scaleFactors,

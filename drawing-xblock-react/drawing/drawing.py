@@ -11,6 +11,8 @@ from xblock.utils.resources import ResourceLoader
 resource_loader = ResourceLoader(__name__)
 
 
+from .initial_drawing import RECTANGLE_INITIAL_DRAWING
+
 class DrawingXBlock(ScorableXBlockMixin, XBlock):
     @XBlock.json_handler
     def send_drawing_json(self, data, suffix=''):
@@ -161,7 +163,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
 
     scaleFactors = List(
         #scaleFactors = [xlim, ylim, bottom_margin, left_margin, top_margin, right_margin]
-        default=[100, 200, 75, 84, 25, 35],
+        default=[10, 20, 75, 84, 25, 35],
         scope=Scope.settings,
         help="Scale factors for the canvas",
     )
@@ -173,10 +175,10 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     )
 
 
+
     def student_view(self, context=None):
         # Create an explicit container so React can mount reliably
         frag = Fragment()
-        #frag.add_content('<div id="drawing"></div>')
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/drawing.css'))
         frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/drawing.js'))
 
@@ -191,6 +193,8 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "canvasWidth": self.canvasWidth,
             "canvasHeight": self.canvasHeight,
             "nextButtonClicked": self.nextButtonClicked,
+            # Provide rectangle initial drawing from backend
+            "initialDrawing": RECTANGLE_INITIAL_DRAWING,
         }
         if self.user_answer is not None:
             init_data["user_answer"] = self.user_answer

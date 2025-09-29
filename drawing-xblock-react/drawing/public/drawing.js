@@ -59292,7 +59292,7 @@
 
 	function DrawingApp({ index, AssessName, canvasWidth, canvasHeight, scaleFactors, submitButtonClicked, bgnumber, // Consume the bgnumber prop
 	modes, // Destructure the modes prop
-	 }) {
+	initialDrawing, }) {
 	    const [drawingMode, setDrawingMode] = reactExports.useState(modes[0].mode); // Use the first mode as the initial state
 	    const [strokeColor, setStrokeColor] = reactExports.useState("#000000");
 	    const [strokeWidth, setStrokeWidth] = reactExports.useState(2);
@@ -59321,7 +59321,7 @@
 	        canvasWidth: canvasWidth,
 	        canvasHeight: canvasHeight,
 	        drawingMode: drawingMode,
-	        initialDrawing: [{}],
+	        initialDrawing: initialDrawing, // Provided by backend/parent
 	        displayToolbar: true,
 	        displayRadius: 3,
 	        scaleFactors: scaleFactors,
@@ -59673,6 +59673,33 @@
 	    const [submitButtonClicked, setSubmitButtonClicked] = reactExports.useState(initData.submitButtonClicked ?? false);
 	    const [summaryMsg, setSummaryMsg] = reactExports.useState("");
 	    const bgnumber = initData.bgnumber ?? 0; // New prop for selecting the background
+	    // Default initialDrawing: a single downward sloping black line, not selectable or movable
+	    const defaultInitialDrawing = {
+	        version: "5.3.0",
+	        objects: [
+	            {
+	                type: "line",
+	                version: "5.3.0",
+	                originX: "left",
+	                originY: "top",
+	                left: 50,
+	                top: 50,
+	                x1: 0,
+	                y1: 0,
+	                x2: 200,
+	                y2: 100,
+	                stroke: "#000000",
+	                strokeWidth: 2,
+	                selectable: false,
+	                evented: false,
+	                hasControls: false,
+	                hasBorders: false,
+	                lockMovementX: true,
+	                lockMovementY: true,
+	            },
+	        ],
+	    };
+	    const initialDrawing = initData.initialDrawing ?? defaultInitialDrawing;
 	    // Render the Submit button and its behavior
 	    const renderSubmitButton = () => {
 	        return (jsxRuntimeExports.jsx("div", { style: { marginTop: '8px' }, children: jsxRuntimeExports.jsx("button", { type: "button", onClick: async () => {
@@ -59707,7 +59734,7 @@
 	                    }, 200);
 	                }, children: "Submit" }) }));
 	    };
-	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, scaleFactors: scaleFactors, submitButtonClicked: submitButtonClicked, modes: modes, bgnumber: bgnumber }) })] }), renderSubmitButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Drawing Summary" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto', color: 'green', fontWeight: 'bold' }, children: summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer." })] })] }));
+	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, scaleFactors: scaleFactors, submitButtonClicked: submitButtonClicked, modes: modes, bgnumber: bgnumber, initialDrawing: initialDrawing }) })] }), renderSubmitButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Drawing Summary" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto', color: 'green', fontWeight: 'bold' }, children: summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer." })] })] }));
 	};
 	// Loader for XBlock React view
 	function initStudentView(runtime, container, initData) {
