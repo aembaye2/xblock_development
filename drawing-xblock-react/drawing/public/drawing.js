@@ -59662,33 +59662,7 @@
 	    const [submitButtonClicked, setSubmitButtonClicked] = reactExports.useState(initData.submitButtonClicked ?? false);
 	    const [summaryMsg, setSummaryMsg] = reactExports.useState("");
 	    const bgnumber = initData.bgnumber ?? 0; // New prop for selecting the background
-	    // Default initialDrawing: a single downward sloping black line, not selectable or movable
-	    const defaultInitialDrawing = {
-	        version: "5.3.0",
-	        objects: [
-	            {
-	                type: "line",
-	                version: "5.3.0",
-	                originX: "left",
-	                originY: "top",
-	                left: 50,
-	                top: 50,
-	                x1: 0,
-	                y1: 0,
-	                x2: 200,
-	                y2: 100,
-	                stroke: "#000000",
-	                strokeWidth: 2,
-	                selectable: false,
-	                evented: false,
-	                hasControls: false,
-	                hasBorders: false,
-	                lockMovementX: true,
-	                lockMovementY: true,
-	            },
-	        ],
-	    };
-	    const initialDrawing = initData.initialDrawing ?? defaultInitialDrawing;
+	    const initialDrawing = initData.initialDrawing ?? {}; // initial drawing from backend or empty
 	    const visibleModes = initData.visibleModes ?? undefined;
 	    // Render the Submit button and its behavior
 	    const renderSubmitButton = () => {

@@ -37,7 +37,7 @@ interface InitData {
   canvasHeight?: number;
   scaleFactors?: number[];
   submitButtonClicked?: boolean;
-  bgnumber?: number; // New prop for selecting the background
+  bgnumber?: number; // prop for selecting the background
   initialDrawing?: object; // initial drawing object, provided by backend or default
   visibleModes?: string[]; // list of mode keys that should be visible in the toolbar
 }
@@ -64,33 +64,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   const [summaryMsg, setSummaryMsg] = useState<string>("");
   const bgnumber = initData.bgnumber ?? 0 // New prop for selecting the background
 
-  // Default initialDrawing: a single downward sloping black line, not selectable or movable
-  const defaultInitialDrawing = {
-    version: "5.3.0",
-    objects: [
-      {
-        type: "line",
-        version: "5.3.0",
-        originX: "left",
-        originY: "top",
-        left: 50,
-        top: 50,
-        x1: 0,
-        y1: 0,
-        x2: 200,
-        y2: 100,
-        stroke: "#000000",
-        strokeWidth: 2,
-        selectable: false,
-        evented: false,
-        hasControls: false,
-        hasBorders: false,
-        lockMovementX: true,
-        lockMovementY: true,
-      },
-    ],
-  };
-  const initialDrawing = initData.initialDrawing ?? defaultInitialDrawing;
+  const initialDrawing = initData.initialDrawing ?? {}; // initial drawing from backend or empty
   const visibleModes = initData.visibleModes ?? undefined;
   // Render the Submit button and its behavior
   const renderSubmitButton = () => {

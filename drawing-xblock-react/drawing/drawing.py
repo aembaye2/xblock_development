@@ -99,7 +99,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     max_attempts = Integer(
         display_name="Maximum attempts",
         scope=Scope.settings,
-    default=3,
+        default=3,
         help="Maximum number of attempts allowed for this problem (1 = single attempt)",
     )
 
@@ -168,10 +168,17 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         help="Scale factors for the canvas",
     )
 
-    nextButtonClicked = Boolean(
+    submitButtonClicked = Boolean(
         default=False,
         scope=Scope.user_state,
-        help="Whether the next button has been clicked",
+        help="Whether the submit button has been clicked",
+    )
+
+    bgnumber = Integer(
+        display_name="Background Number",
+        scope=Scope.settings,
+        default=0,
+        help="Background image number (0-1) for selecting different backgrounds",
     )
 
     # Which drawing modes should be visible in the toolbar.
@@ -205,11 +212,12 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "AssessName": self.AssessName,
             "canvasWidth": self.canvasWidth,
             "canvasHeight": self.canvasHeight,
-            "nextButtonClicked": self.nextButtonClicked,
+            "submitButtonClicked": self.submitButtonClicked,
             # Provide rectangle initial drawing from backend
             "initialDrawing": RECTANGLE_INITIAL_DRAWING,
             # Visible modes whitelist for the frontend toolbar
             "visibleModes": self.visible_modes,
+            "bgnumber": self.bgnumber,  # pass background number to frontend
         }
         if self.user_answer is not None:
             init_data["user_answer"] = self.user_answer
