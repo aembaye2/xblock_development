@@ -174,6 +174,19 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         help="Whether the next button has been clicked",
     )
 
+    # Which drawing modes should be visible in the toolbar.
+    # This is a list of mode keys (strings) that the frontend will use to
+    # determine which tools to display. If empty or not provided, frontend  may choose to display all available modes.
+    # Tools available:
+    # "point","line","singlearrowhead","doublearrowhead","polygon","rect","circle",
+    # "freedraw","coordinate","curve","curve4pts","text","transform", "color", "strokeWidth", "download"]
+    visible_modes = List(
+        display_name="Visible Modes",
+        scope=Scope.settings,
+        default=["line", "circle", "point", "color", "strokeWidth", "download"], # <-- whitelist these tools
+        help="List of drawing modes to show in the toolbar (mode keys). Empty by default to hide all tools.",
+    )
+
 
 
     def student_view(self, context=None):
@@ -195,6 +208,8 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "nextButtonClicked": self.nextButtonClicked,
             # Provide rectangle initial drawing from backend
             "initialDrawing": RECTANGLE_INITIAL_DRAWING,
+            # Visible modes whitelist for the frontend toolbar
+            "visibleModes": self.visible_modes,
         }
         if self.user_answer is not None:
             init_data["user_answer"] = self.user_answer

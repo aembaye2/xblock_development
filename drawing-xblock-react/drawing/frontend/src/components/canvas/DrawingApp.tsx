@@ -14,6 +14,7 @@ export interface DrawingAppProps {
   submitButtonClicked: boolean
   bgnumber: number // New prop for selecting the background
   modes: { mode: string; icon: React.ElementType; description: string }[] // Add the modes prop
+  visibleModes?: string[] // Optional whitelist of mode keys to display
   initialDrawing: object // initial drawing provided by backend/parent
 }
 
@@ -26,27 +27,22 @@ export function DrawingApp({
   submitButtonClicked,
   bgnumber, // Consume the bgnumber prop
   modes, // Destructure the modes prop
+  visibleModes,
   initialDrawing,
 }: DrawingAppProps) {
-  const [drawingMode, setDrawingMode] = useState(modes[0].mode) // Use the first mode as the initial state
+  // visibleModes semantics:
+  // - undefined: backend did not provide the field -> preserve legacy behavior and show all modes
+  // - [] (empty array): explicit whitelist of zero -> show no modes
+  // - non-empty array: whitelist showing only listed modes
+  const visibleModesList = typeof visibleModes === 'undefined'
+    ? modes
+    : modes.filter(m => (visibleModes as string[]).includes(m.mode))
+
+  // Pick a safe initial mode: prefer the first visible mode; fall back to the first mode overall
+  const defaultMode = (visibleModesList && visibleModesList.length > 0) ? visibleModesList[0].mode : (modes.length > 0 ? modes[0].mode : '')
+  const [drawingMode, setDrawingMode] = useState(defaultMode)
   const [strokeColor, setStrokeColor] = useState("#000000")
   const [strokeWidth, setStrokeWidth] = useState(2)
-
-  // const xlim = 1000 // absolute in pixels
-  // const ylim = 2000 // absolute in pixels
-  // const bottom_margin = 75 // absolute in pixels
-  // const left_margin = 84
-  // const top_margin = 25
-  // const right_margin = 35
-  // const scaleFactors = [
-  //   xlim,
-  //   ylim,
-  //   bottom_margin,
-  //   left_margin,
-  //   top_margin,
-  //   right_margin,
-    
-  // ]
 
   const canvasProps: ComponentArgs = {
     AssessName: AssessName,
@@ -65,6 +61,8 @@ export function DrawingApp({
     scaleFactors: scaleFactors,
     submitButtonClicked: submitButtonClicked,
     bgnumber: bgnumber, // Pass the bgnumber prop to DrawableCanvas
+    // control visibility for non-mode UI elements via visibleModes whitelist
+    showDownload: typeof visibleModes === 'undefined' ? true : (visibleModes as string[]).includes('download'),
   }
 
   return (
@@ -81,30 +79,37 @@ export function DrawingApp({
             <DrawingModeSelector
               drawingMode={drawingMode}
               setDrawingMode={setDrawingMode}
-              modes={modes} // Pass the modes to the DrawingModeSelector
+              modes={visibleModesList} // Pass the filtered/visible modes to the DrawingModeSelector
             />
-            <div style={{ marginLeft: "10px" }}>
-              <label htmlFor="strokeColor">Color: </label>
-              <input
-                type="color"
-                id="strokeColor"
-                value={strokeColor}
-                onChange={(e) => setStrokeColor(e.target.value)}
-              />
-            </div>
-            {/* <div style={{ marginLeft: "10px" }}>
-              <label htmlFor="strokeWidth">Width: </label>
-              <input
-                type="range"
-                id="strokeWidth"
-                value={strokeWidth}
-                min="1"
-                max="5"
-                onChange={(e) => setStrokeWidth(Number(e.target.value))}
-                style={{ width: "50px" }}
-              />
-              <span>{strokeWidth}</span>
-            </div> */}
+            {/* Color selector: visible if visibleModes is undefined (legacy) or includes 'color' */}
+            { (typeof visibleModes === 'undefined' || (visibleModes as string[]).includes('color')) && (
+              <div style={{ marginLeft: "10px" }}>
+                <label htmlFor="strokeColor">Color: </label>
+                <input
+                  type="color"
+                  id="strokeColor"
+                  value={strokeColor}
+                  onChange={(e) => setStrokeColor(e.target.value)}
+                />
+              </div>
+            )}
+
+            {/* Stroke width selector: visible if visibleModes is undefined (legacy) or includes 'strokeWidth' */}
+            { (typeof visibleModes === 'undefined' || (visibleModes as string[]).includes('strokeWidth')) && (
+              <div style={{ marginLeft: "10px" }}>
+                <label htmlFor="strokeWidth">Width: </label>
+                <input
+                  type="range"
+                  id="strokeWidth"
+                  value={strokeWidth}
+                  min="1"
+                  max="5"
+                  onChange={(e) => setStrokeWidth(Number(e.target.value))}
+                  style={{ width: "50px" }}
+                />
+                <span>{strokeWidth}</span>
+              </div>
+            )}
           </div>
           <DrawableCanvas {...canvasProps} />
         </CanvasStateProvider>

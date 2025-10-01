@@ -37014,56 +37014,47 @@
 	const SquareIcon = ({ imgUrl, altText, invertX = false, size, enabled, clickCallback, }) => (jsxRuntimeExports.jsx("img", { src: imgUrl, className: `
     ${enabled ? styles.enabled : styles.disabled} ${invertX ? "" : styles.invertx}
     `, alt: altText, title: altText, height: `${size}px`, width: `${size}px`, onClick: clickCallback }));
-	const CanvasToolbar = ({ topPosition, leftPosition, canUndo, canRedo, downloadCallback, 
+	const CanvasToolbar = ({ topPosition, leftPosition, canUndo, canRedo, downloadCallback, showDownload, 
 	//downloadCallback2,
 	//saveCallback,
 	undoCallback, redoCallback, resetCallback, }) => {
 	    const GAP_BETWEEN_ICONS = 4;
 	    const ICON_SIZE = 24;
-	    const iconElements = [
-	        {
+	    const iconElements = [];
+	    // optionally push download
+	    if (showDownload === undefined || showDownload) {
+	        iconElements.push({
 	            imgUrl: img$1,
 	            altText: "download",
 	            invertX: false,
 	            enabled: true,
 	            clickCallback: downloadCallback,
-	        },
-	        // {
-	        //   imgUrl: download2,
-	        //   altText: "complete",
-	        //   invertX: true,
-	        //   enabled: true,
-	        //   clickCallback: downloadCallback2,
-	        // },
-	        // {
-	        //   imgUrl: save,
-	        //   altText: "saveto storage",
-	        //   invertX: false,
-	        //   enabled: true,
-	        //   clickCallback: saveCallback,
-	        // },
-	        {
-	            imgUrl: img$2,
-	            altText: "Undo",
-	            invertX: true,
-	            enabled: canUndo,
-	            clickCallback: canUndo ? undoCallback : () => { },
-	        },
-	        {
-	            imgUrl: img$2,
-	            altText: "Redo",
-	            invertX: false,
-	            enabled: canRedo,
-	            clickCallback: canRedo ? redoCallback : () => { },
-	        },
-	        {
-	            imgUrl: img$3,
-	            altText: "Reset canvas & history",
-	            invertX: false,
-	            enabled: true,
-	            clickCallback: resetCallback,
-	        },
-	    ];
+	        });
+	    }
+	    // undo
+	    iconElements.push({
+	        imgUrl: img$2,
+	        altText: "Undo",
+	        invertX: true,
+	        enabled: canUndo,
+	        clickCallback: canUndo ? undoCallback : () => { },
+	    });
+	    // redo
+	    iconElements.push({
+	        imgUrl: img$2,
+	        altText: "Redo",
+	        invertX: false,
+	        enabled: canRedo,
+	        clickCallback: canRedo ? redoCallback : () => { },
+	    });
+	    // reset
+	    iconElements.push({
+	        imgUrl: img$3,
+	        altText: "Reset canvas & history",
+	        invertX: false,
+	        enabled: true,
+	        clickCallback: resetCallback,
+	    });
 	    return (jsxRuntimeExports.jsx("div", { style: {
 	            position: "absolute",
 	            top: topPosition + 4,
@@ -59077,6 +59068,7 @@
 
 	const backgroundlist = [customBackground0, customBackground1];
 	const DrawableCanvas = ({ AssessName, index, fillColor, strokeWidth, strokeColor, backgroundImageURL, canvasWidth, canvasHeight, drawingMode, initialDrawing, displayToolbar, displayRadius, scaleFactors, submitButtonClicked, bgnumber, // Consume the bgnumber prop
+	showDownload, // optional boolean to show/hide download icon
 	 }) => {
 	    const canvasRef = reactExports.useRef(null);
 	    const backgroundCanvasRef = reactExports.useRef(null);
@@ -59270,7 +59262,7 @@
 	                        else {
 	                            console.log("Canvas reset canceled.");
 	                        }
-	                    } })) })] }));
+	                    }, showDownload: typeof showDownload === 'undefined' ? true : showDownload })) })] }));
 	};
 
 	const DrawingModeSelector = ({ drawingMode, setDrawingMode, modes, // Destructure the modes prop
@@ -59292,24 +59284,19 @@
 
 	function DrawingApp({ index, AssessName, canvasWidth, canvasHeight, scaleFactors, submitButtonClicked, bgnumber, // Consume the bgnumber prop
 	modes, // Destructure the modes prop
-	initialDrawing, }) {
-	    const [drawingMode, setDrawingMode] = reactExports.useState(modes[0].mode); // Use the first mode as the initial state
+	visibleModes, initialDrawing, }) {
+	    // visibleModes semantics:
+	    // - undefined: backend did not provide the field -> preserve legacy behavior and show all modes
+	    // - [] (empty array): explicit whitelist of zero -> show no modes
+	    // - non-empty array: whitelist showing only listed modes
+	    const visibleModesList = typeof visibleModes === 'undefined'
+	        ? modes
+	        : modes.filter(m => visibleModes.includes(m.mode));
+	    // Pick a safe initial mode: prefer the first visible mode; fall back to the first mode overall
+	    const defaultMode = (visibleModesList && visibleModesList.length > 0) ? visibleModesList[0].mode : (modes.length > 0 ? modes[0].mode : '');
+	    const [drawingMode, setDrawingMode] = reactExports.useState(defaultMode);
 	    const [strokeColor, setStrokeColor] = reactExports.useState("#000000");
 	    const [strokeWidth, setStrokeWidth] = reactExports.useState(2);
-	    // const xlim = 1000 // absolute in pixels
-	    // const ylim = 2000 // absolute in pixels
-	    // const bottom_margin = 75 // absolute in pixels
-	    // const left_margin = 84
-	    // const top_margin = 25
-	    // const right_margin = 35
-	    // const scaleFactors = [
-	    //   xlim,
-	    //   ylim,
-	    //   bottom_margin,
-	    //   left_margin,
-	    //   top_margin,
-	    //   right_margin,
-	    // ]
 	    const canvasProps = {
 	        AssessName: AssessName,
 	        index: index,
@@ -59327,12 +59314,14 @@
 	        scaleFactors: scaleFactors,
 	        submitButtonClicked: submitButtonClicked,
 	        bgnumber: bgnumber, // Pass the bgnumber prop to DrawableCanvas
+	        // control visibility for non-mode UI elements via visibleModes whitelist
+	        showDownload: typeof visibleModes === 'undefined' ? true : visibleModes.includes('download'),
 	    };
 	    return (jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: jsxRuntimeExports.jsx("div", { children: jsxRuntimeExports.jsxs(CanvasStateProvider, { children: [jsxRuntimeExports.jsxs("div", { style: {
 	                            display: "flex",
 	                            alignItems: "center",
 	                            marginBottom: "10px",
-	                        }, children: [jsxRuntimeExports.jsx(DrawingModeSelector, { drawingMode: drawingMode, setDrawingMode: setDrawingMode, modes: modes }), jsxRuntimeExports.jsxs("div", { style: { marginLeft: "10px" }, children: [jsxRuntimeExports.jsx("label", { htmlFor: "strokeColor", children: "Color: " }), jsxRuntimeExports.jsx("input", { type: "color", id: "strokeColor", value: strokeColor, onChange: (e) => setStrokeColor(e.target.value) })] })] }), jsxRuntimeExports.jsx(DrawableCanvas, { ...canvasProps })] }) }) }));
+	                        }, children: [jsxRuntimeExports.jsx(DrawingModeSelector, { drawingMode: drawingMode, setDrawingMode: setDrawingMode, modes: visibleModesList }), (typeof visibleModes === 'undefined' || visibleModes.includes('color')) && (jsxRuntimeExports.jsxs("div", { style: { marginLeft: "10px" }, children: [jsxRuntimeExports.jsx("label", { htmlFor: "strokeColor", children: "Color: " }), jsxRuntimeExports.jsx("input", { type: "color", id: "strokeColor", value: strokeColor, onChange: (e) => setStrokeColor(e.target.value) })] })), (typeof visibleModes === 'undefined' || visibleModes.includes('strokeWidth')) && (jsxRuntimeExports.jsxs("div", { style: { marginLeft: "10px" }, children: [jsxRuntimeExports.jsx("label", { htmlFor: "strokeWidth", children: "Width: " }), jsxRuntimeExports.jsx("input", { type: "range", id: "strokeWidth", value: strokeWidth, min: "1", max: "5", onChange: (e) => setStrokeWidth(Number(e.target.value)), style: { width: "50px" } }), jsxRuntimeExports.jsx("span", { children: strokeWidth })] }))] }), jsxRuntimeExports.jsx(DrawableCanvas, { ...canvasProps })] }) }) }));
 	}
 
 	/**
@@ -59700,6 +59689,7 @@
 	        ],
 	    };
 	    const initialDrawing = initData.initialDrawing ?? defaultInitialDrawing;
+	    const visibleModes = initData.visibleModes ?? undefined;
 	    // Render the Submit button and its behavior
 	    const renderSubmitButton = () => {
 	        return (jsxRuntimeExports.jsx("div", { style: { marginTop: '8px' }, children: jsxRuntimeExports.jsx("button", { type: "button", onClick: async () => {
@@ -59734,7 +59724,7 @@
 	                    }, 200);
 	                }, children: "Submit" }) }));
 	    };
-	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, scaleFactors: scaleFactors, submitButtonClicked: submitButtonClicked, modes: modes, bgnumber: bgnumber, initialDrawing: initialDrawing }) })] }), renderSubmitButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Drawing Summary" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto', color: 'green', fontWeight: 'bold' }, children: summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer." })] })] }));
+	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, scaleFactors: scaleFactors, submitButtonClicked: submitButtonClicked, modes: modes, visibleModes: visibleModes, bgnumber: bgnumber, initialDrawing: initialDrawing }) })] }), renderSubmitButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Drawing Summary" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto', color: 'green', fontWeight: 'bold' }, children: summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer." })] })] }));
 	};
 	// Loader for XBlock React view
 	function initStudentView(runtime, container, initData) {

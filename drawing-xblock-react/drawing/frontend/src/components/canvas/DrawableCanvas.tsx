@@ -31,6 +31,7 @@ export interface ComponentArgs {
   scaleFactors: number[]
   submitButtonClicked: boolean
   bgnumber: number // New prop for selecting the background
+  showDownload?: boolean // whether to show the download icon in the toolbar
 }
 
 const DrawableCanvas = ({
@@ -49,7 +50,8 @@ const DrawableCanvas = ({
   scaleFactors,
   submitButtonClicked,
   bgnumber, // Consume the bgnumber prop
-}: ComponentArgs) => {
+  showDownload, // optional boolean to show/hide download icon
+}: ComponentArgs & { showDownload?: boolean }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const backgroundCanvasRef = useRef<HTMLCanvasElement>(null)
   const canvasInstance = useRef<fabric.Canvas | null>(null)
@@ -320,6 +322,7 @@ const DrawableCanvas = ({
                 console.log("Canvas reset canceled.");
               }
             }}
+            showDownload={typeof showDownload === 'undefined' ? true : showDownload}
           />
         )}
       </div>     

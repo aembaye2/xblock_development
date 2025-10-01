@@ -39,6 +39,7 @@ interface InitData {
   submitButtonClicked?: boolean;
   bgnumber?: number; // New prop for selecting the background
   initialDrawing?: object; // initial drawing object, provided by backend or default
+  visibleModes?: string[]; // list of mode keys that should be visible in the toolbar
 }
 
 interface Props {
@@ -90,6 +91,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
     ],
   };
   const initialDrawing = initData.initialDrawing ?? defaultInitialDrawing;
+  const visibleModes = initData.visibleModes ?? undefined;
   // Render the Submit button and its behavior
   const renderSubmitButton = () => {
     return (
@@ -146,6 +148,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
             scaleFactors={scaleFactors}
             submitButtonClicked={submitButtonClicked}
             modes={modes}
+            visibleModes={visibleModes}
             bgnumber={bgnumber}
             initialDrawing={initialDrawing}
           />

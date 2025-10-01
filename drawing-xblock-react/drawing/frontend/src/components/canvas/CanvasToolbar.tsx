@@ -53,6 +53,7 @@ interface CanvasToolbarProps {
   canUndo: boolean
   canRedo: boolean
   downloadCallback: () => void
+  showDownload?: boolean
   //downloadCallback2: () => void
   //saveCallback: () => void
   undoCallback: () => void
@@ -66,6 +67,7 @@ const CanvasToolbar = ({
   canUndo,
   canRedo,
   downloadCallback,
+  showDownload,
   //downloadCallback2,
   //saveCallback,
   undoCallback,
@@ -74,50 +76,44 @@ const CanvasToolbar = ({
 }: CanvasToolbarProps) => {
   const GAP_BETWEEN_ICONS = 4
   const ICON_SIZE = 24
-  const iconElements = [
-    {
+  const iconElements: any[] = []
+  // optionally push download
+  if (showDownload === undefined || showDownload) {
+    iconElements.push({
       imgUrl: download,
       altText: "download",
       invertX: false,
       enabled: true,
       clickCallback: downloadCallback,
-    },
-    // {
-    //   imgUrl: download2,
-    //   altText: "complete",
-    //   invertX: true,
-    //   enabled: true,
-    //   clickCallback: downloadCallback2,
-    // },
-    // {
-    //   imgUrl: save,
-    //   altText: "saveto storage",
-    //   invertX: false,
-    //   enabled: true,
-    //   clickCallback: saveCallback,
-    // },
-    {
-      imgUrl: undo,
-      altText: "Undo",
-      invertX: true,
-      enabled: canUndo,
-      clickCallback: canUndo ? undoCallback : () => {},
-    },
-    {
-      imgUrl: undo,
-      altText: "Redo",
-      invertX: false,
-      enabled: canRedo,
-      clickCallback: canRedo ? redoCallback : () => {},
-    },
-    {
-      imgUrl: bin,
-      altText: "Reset canvas & history",
-      invertX: false,
-      enabled: true,
-      clickCallback: resetCallback,
-    },
-  ]
+    })
+  }
+
+  // undo
+  iconElements.push({
+    imgUrl: undo,
+    altText: "Undo",
+    invertX: true,
+    enabled: canUndo,
+    clickCallback: canUndo ? undoCallback : () => {},
+  })
+
+  // redo
+  iconElements.push({
+    imgUrl: undo,
+    altText: "Redo",
+    invertX: false,
+    enabled: canRedo,
+    clickCallback: canRedo ? redoCallback : () => {},
+  })
+
+  // reset
+  iconElements.push({
+    imgUrl: bin,
+    altText: "Reset canvas & history",
+    invertX: false,
+    enabled: true,
+    clickCallback: resetCallback,
+  })
 
   return (
     <div
