@@ -6,11 +6,13 @@ Main part of this is done such as sending the .json drawing to the backend, and 
 
 What is left according their importance
 
-1. Also use props to make drawing tools or other action icons on the canvas visible or not visible. This will help to easily deploy only the necessary tools for each question.
+1. 
 
 Partially done !!! Master translating pixel coordinates of the main part of shapes for grading; Done for line successfully and can be extended for other shapes. This will be helpful to manipulate coordinates not interms of pixels but visible coordinates the user can understand.
 
-Done!!! Including initial drawing such as intial supply and demand, or consumer optimal point should be done in the backend
+Done !!! Also use props to make drawing tools or other action icons on the canvas visible or not visible. This will help to easily deploy only the necessary tools for each question.
+
+Done!!! Including initial drawing such as intial supply and demand, or consumer optimal point-- this should be in the studentView and studioViews backend as fields
 
 Done!!! Also each drawing tool and hence object must have its .json data reflect unique type, so that you can easily identify it when grading
 
