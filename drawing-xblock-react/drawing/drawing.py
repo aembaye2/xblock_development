@@ -109,33 +109,12 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         default=0,
     )
 
-    # Canvas settings
-    canvasWidth = Integer(
-        display_name="Canvas Width",
-        scope=Scope.settings,
-        default=800,
-        help="Width of the drawing canvas",
-    )
-
-    canvasHeight = Integer(
-        display_name="Canvas Height",
-        scope=Scope.settings,
-        default=600,
-        help="Height of the drawing canvas",
-    )
-
-    scaleFactors = List(
-        display_name="Scale Factors",
-        scope=Scope.settings,
-        default=[1000, 2000, 75, 84, 25, 35],
-        help="Scale factors for coordinate transformation: [xmax, ymax, bottom_margin, left_margin, top_margin, right_margin]",
-    )
-
     @property
     def remaining_attempts(self):
         """Remaining number of attempts"""
         return max(self.max_attempts - self.attempts, 0)
 
+    
     AssessName = String(
         display_name="quiz1",
         scope=Scope.settings,
@@ -212,6 +191,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "AssessName": self.AssessName,
             "canvasWidth": self.canvasWidth,
             "canvasHeight": self.canvasHeight,
+            "scaleFactors": self.scaleFactors,
             "submitButtonClicked": self.submitButtonClicked,
             # Provide rectangle initial drawing from backend
             "initialDrawing": RECTANGLE_INITIAL_DRAWING,

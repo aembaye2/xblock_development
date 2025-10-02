@@ -10,9 +10,9 @@ import { tools, FabricTool } from "./libs"
 //   //downloadCallback4Json,
 //   //logCanvasData,
 // } from "./helpers"
-import { customBackground0, customBackground1 } from "./AxesLabels"
+import { customBackground } from "./AxesLabels"
 
-const backgroundlist: any = [customBackground0, customBackground1]
+const backgroundlist: any = [customBackground]
 
 export interface ComponentArgs {
   AssessName: string
