@@ -58777,7 +58777,7 @@
 	};
 
 	//// other drawing:
-	function customBackground(canvasWidth, canvasHeight, scaleFactors) {
+	function customBackground(canvasWidth, canvasHeight, scaleFactors, axisLabels = ["Quantity, Q", "Price, P"]) {
 	    const objects = [];
 	    const rect = new fabricExports.fabric.Rect({
 	        //scaleFactors = [xlim, ylim, bottom_margin, left_margin, top_margin, right_margin]
@@ -58867,11 +58867,11 @@
 	        objects.push(tick, text, vLine);
 	    }
 	    // Add x-axis title
-	    const xAxisTitle = new fabricExports.fabric.Text("Quantity, Q", {
+	    const xAxisTitle = new fabricExports.fabric.Text(axisLabels[0], {
 	        left: rectLeft + rectWidth / 2,
 	        top: rectTop + rectHeight + 40,
-	        fontSize: 24,
-	        fontStyle: "italic", // Set text to italics
+	        fontSize: 15,
+	        fontStyle: "normal", // "italic", Set text to italics
 	        fill: "black",
 	        originX: "center",
 	        selectable: false,
@@ -58883,11 +58883,11 @@
 	    });
 	    objects.push(xAxisTitle);
 	    // Add y-axis title
-	    const yAxisTitle = new fabricExports.fabric.Text("Price, P", {
+	    const yAxisTitle = new fabricExports.fabric.Text(axisLabels[1], {
 	        left: rectLeft - 65, // Adjusted for more space
 	        top: rectTop + rectHeight / 2,
-	        fontSize: 24,
-	        fontStyle: "italic", // Set text to italics
+	        fontSize: 17,
+	        fontStyle: "normal",
 	        fill: "black",
 	        originX: "center",
 	        originY: "center",
@@ -58923,6 +58923,7 @@
 
 	const backgroundlist = [customBackground];
 	const DrawableCanvas = ({ AssessName, index, fillColor, strokeWidth, strokeColor, backgroundImageURL, canvasWidth, canvasHeight, drawingMode, initialDrawing, displayToolbar, displayRadius, scaleFactors, submitButtonClicked, bgnumber, // Consume the bgnumber prop
+	axisLabels, // optional axis labels [xLabel, yLabel]
 	showDownload, // optional boolean to show/hide download icon
 	 }) => {
 	    const canvasRef = reactExports.useRef(null);
@@ -58946,7 +58947,7 @@
 	            backgroundCanvasInstance.current = new fabricExports.fabric.StaticCanvas(backgroundCanvasRef.current, {
 	                enableRetinaScaling: false,
 	            });
-	            const group = customBackground(canvasWidth, canvasHeight, scaleFactors);
+	            const group = customBackground(canvasWidth, canvasHeight, scaleFactors, axisLabels);
 	            backgroundCanvasInstance.current.add(group);
 	            backgroundCanvasInstance.current.renderAll();
 	        }
@@ -59139,7 +59140,7 @@
 
 	function DrawingApp({ index, AssessName, canvasWidth, canvasHeight, scaleFactors, submitButtonClicked, bgnumber, // Consume the bgnumber prop
 	modes, // Destructure the modes prop
-	visibleModes, initialDrawing, }) {
+	visibleModes, initialDrawing, axisLabels, }) {
 	    // visibleModes semantics:
 	    // - undefined: backend did not provide the field -> preserve legacy behavior and show all modes
 	    // - [] (empty array): explicit whitelist of zero -> show no modes
@@ -59169,6 +59170,7 @@
 	        scaleFactors: scaleFactors,
 	        submitButtonClicked: submitButtonClicked,
 	        bgnumber: bgnumber, // Pass the bgnumber prop to DrawableCanvas
+	        axisLabels: axisLabels,
 	        // control visibility for non-mode UI elements via visibleModes whitelist
 	        showDownload: typeof visibleModes === 'undefined' ? true : visibleModes.includes('download'),
 	    };
@@ -59517,6 +59519,7 @@
 	    const [submitButtonClicked, setSubmitButtonClicked] = reactExports.useState(initData.submitButtonClicked ?? false);
 	    const [summaryMsg, setSummaryMsg] = reactExports.useState("");
 	    const bgnumber = initData.bgnumber ?? 0; // New prop for selecting the background
+	    const axisLabels = initData.axisLabels ?? ["q", "p"];
 	    const initialDrawing = initData.initialDrawing ?? {}; // initial drawing from backend or empty
 	    const visibleModes = initData.visibleModes ?? undefined;
 	    // Render the Submit button and its behavior
@@ -59553,7 +59556,7 @@
 	                    }, 200);
 	                }, children: "Submit" }) }));
 	    };
-	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, scaleFactors: scaleFactors, submitButtonClicked: submitButtonClicked, modes: modes, visibleModes: visibleModes, bgnumber: bgnumber, initialDrawing: initialDrawing }) })] }), renderSubmitButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Drawing Summary" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto', color: 'green', fontWeight: 'bold' }, children: summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer." })] })] }));
+	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, scaleFactors: scaleFactors, submitButtonClicked: submitButtonClicked, modes: modes, visibleModes: visibleModes, bgnumber: bgnumber, axisLabels: axisLabels, initialDrawing: initialDrawing }) })] }), renderSubmitButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Drawing Summary" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto', color: 'green', fontWeight: 'bold' }, children: summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer." })] })] }));
 	};
 	// Loader for XBlock React view
 	function initStudentView(runtime, container, initData) {

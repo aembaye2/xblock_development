@@ -6,9 +6,13 @@ Main part of this is done such as sending the .json drawing to the backend, and 
 
 What is left according their importance
 
-1. 
+1. Having now able to process the .json drawing for line drawing, ask possible questions of drawing and have a function that processes different questions of drawing !!! Do this based on the visble coordinates and not pixels
 
-Partially done !!! Master translating pixel coordinates of the main part of shapes for grading; Done for line successfully and can be extended for other shapes. This will be helpful to manipulate coordinates not interms of pixels but in terms of visible coordinates the user can understand.
+2. create many initial drawing .json file from the same canvas and put them in a list so that you can use them
+
+3. Build the studioView so that you can edit all the fields
+
+4. test the xblock in openedx instance
 
 Done !!! Also use props to make drawing tools or other action icons on the canvas visible or not visible. This will help to easily deploy only the necessary tools for each question.
 
@@ -16,5 +20,5 @@ Done!!! Including initial drawing such as intial supply and demand, or consumer 
 
 Done!!! Also each drawing tool and hence object must have its .json data reflect unique type, so that you can easily identify it when grading
 
-Done!!! In order not to be changed by the user, the x-y axes coordinates must be introduced as background canvas drawings. However, we have to change the coordinates to many possibilities at will using props for some of the values of the coordinates; the props must be changed at the .py file or the studioview for each question >>> done!! Here we don't really need to change the entire background but the coordinates base on max_lim for x and y coordinates
+Done!!! In order not to be changed by the user, the x-y axes coordinates must be introduced as background canvas drawings. However, we have to change the coordinates to many possibilities at will using props for some of the values of the coordinates; the props must be changed at the .py file or the studioview for each question >>> Here we don't really need to change the entire background but the coordinates base on max_lim for x and y coordinates
 

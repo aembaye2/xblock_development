@@ -40,6 +40,7 @@ interface InitData {
   bgnumber?: number; // prop for selecting the background
   initialDrawing?: object; // initial drawing object, provided by backend or default
   visibleModes?: string[]; // list of mode keys that should be visible in the toolbar
+  axisLabels?: [string, string]; // optional axis labels [xLabel, yLabel]
 }
 
 interface Props {
@@ -63,6 +64,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   const [submitButtonClicked, setSubmitButtonClicked] = useState<boolean>(initData.submitButtonClicked ?? false)
   const [summaryMsg, setSummaryMsg] = useState<string>("");
   const bgnumber = initData.bgnumber ?? 0 // New prop for selecting the background
+  const axisLabels = initData.axisLabels ?? ["q", "p"]
 
   const initialDrawing = initData.initialDrawing ?? {}; // initial drawing from backend or empty
   const visibleModes = initData.visibleModes ?? undefined;
@@ -124,6 +126,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
             modes={modes}
             visibleModes={visibleModes}
             bgnumber={bgnumber}
+            axisLabels={axisLabels}
             initialDrawing={initialDrawing}
           />
         </div>

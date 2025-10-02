@@ -1,5 +1,9 @@
 # initial_drawing.py
 # Rectangle initial drawing for DrawingXBlock (Fabric.js format)
+EMPTY_INITIAL_DRAWING = {
+    "version": "5.3.0",
+    "objects": []
+}
 
 RECTANGLE_INITIAL_DRAWING = {
     "version": "5.3.0",

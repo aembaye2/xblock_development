@@ -4,7 +4,8 @@ import { fabric } from "fabric"
 export function customBackground(
   canvasWidth: any,
   canvasHeight: any,
-  scaleFactors: any
+  scaleFactors: any,
+  axisLabels: [string, string] = ["Quantity, Q", "Price, P"]
 ) {
   const objects = []
   const rect = new fabric.Rect({
@@ -104,40 +105,41 @@ export function customBackground(
     objects.push(tick, text, vLine)
   }
 
+
   // Add x-axis title
-    const xAxisTitle = new fabric.Text("Quantity, Q", {
-      left: rectLeft + rectWidth / 2,
-      top: rectTop + rectHeight + 40,
-      fontSize: 24,
-      fontStyle: "italic", // Set text to italics
-      fill: "black",
-      originX: "center",
-      selectable: false,
-      evented: false,
-      hasControls: false,
-      lockMovementX: true,
-      lockMovementY: true,
-      lockRotation: true,
-    });
-    objects.push(xAxisTitle);
+  const xAxisTitle = new fabric.Text(axisLabels[0], {
+    left: rectLeft + rectWidth / 2,
+    top: rectTop + rectHeight + 40,
+    fontSize: 15,
+    fontStyle: "normal", // "italic", Set text to italics
+    fill: "black",
+    originX: "center",
+    selectable: false,
+    evented: false,
+    hasControls: false,
+    lockMovementX: true,
+    lockMovementY: true,
+    lockRotation: true,
+  });
+  objects.push(xAxisTitle);
 
   // Add y-axis title
-    const yAxisTitle = new fabric.Text("Price, P", {
-      left: rectLeft - 65, // Adjusted for more space
-      top: rectTop + rectHeight / 2,
-      fontSize: 24,
-      fontStyle: "italic", // Set text to italics
-      fill: "black",
-      originX: "center",
-      originY: "center",
-      angle: -90,
-      selectable: false,
-      evented: false,
-      hasControls: false,
-      lockMovementX: true,
-      lockMovementY: true,
-      lockRotation: true,
-    });
+  const yAxisTitle = new fabric.Text(axisLabels[1], {
+    left: rectLeft - 65, // Adjusted for more space
+    top: rectTop + rectHeight / 2,
+    fontSize: 17,
+    fontStyle: "normal", 
+    fill: "black",
+    originX: "center",
+    originY: "center",
+    angle: -90,
+    selectable: false,
+    evented: false,
+    hasControls: false,
+    lockMovementX: true,
+    lockMovementY: true,
+    lockRotation: true,
+  });
   objects.push(yAxisTitle);
   //// Move the first element (rect) to the last position (when rectangle is drawn first, it is overlapped by others)
   const firstElement = objects.shift()

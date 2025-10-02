@@ -11,7 +11,7 @@ from xblock.utils.resources import ResourceLoader
 resource_loader = ResourceLoader(__name__)
 
 
-from .initial_drawing import RECTANGLE_INITIAL_DRAWING
+from .initial_drawing import RECTANGLE_INITIAL_DRAWING, EMPTY_INITIAL_DRAWING
 
 class DrawingXBlock(ScorableXBlockMixin, XBlock):
     @XBlock.json_handler
@@ -169,12 +169,18 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     visible_modes = List(
         display_name="Visible Modes",
         scope=Scope.settings,
-        default=["line", "circle", "point", "color", "strokeWidth", "download"], # <-- whitelist these tools
+        default=["line",  "point", "curve4pts", "text","color", "download"], # <-- whitelist these tools
         help="List of drawing modes to show in the toolbar (mode keys). Empty by default to hide all tools.",
     )
 
+    axis_labels = List(
+        display_name="Axis Labels",
+        scope=Scope.settings,
+        default=["Quantity, Q", "Price, P"], # Example with long label and newline
+        help="Labels for the X and Y axes",
+    )
 
-
+    # TO-DO: change this view to display more interesting things.
     def student_view(self, context=None):
         # Create an explicit container so React can mount reliably
         frag = Fragment()
@@ -194,10 +200,11 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "scaleFactors": self.scaleFactors,
             "submitButtonClicked": self.submitButtonClicked,
             # Provide rectangle initial drawing from backend
-            "initialDrawing": RECTANGLE_INITIAL_DRAWING,
+            "initialDrawing": EMPTY_INITIAL_DRAWING, #RECTANGLE_INITIAL_DRAWING,
             # Visible modes whitelist for the frontend toolbar
             "visibleModes": self.visible_modes,
             "bgnumber": self.bgnumber,  # pass background number to frontend
+            "axisLabels": self.axis_labels,  # pass axis labels to frontend
         }
         if self.user_answer is not None:
             init_data["user_answer"] = self.user_answer
