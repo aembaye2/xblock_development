@@ -58958,9 +58958,32 @@
 	                enableRetinaScaling: false,
 	            });
 	            // Load initial drawing only once
-	            canvasInstance.current.loadFromJSON(initialDrawing, () => {
+	            let parsedInitialDrawing = initialDrawing;
+	            // If initialDrawing is a string (from Python), parse it
+	            if (typeof initialDrawing === 'string') {
+	                try {
+	                    parsedInitialDrawing = JSON.parse(initialDrawing.replace(/None/g, 'null').replace(/True/g, 'true').replace(/False/g, 'false'));
+	                }
+	                catch (e) {
+	                    console.error('Failed to parse initialDrawing JSON:', e);
+	                }
+	            }
+	            // Convert type 'curve4pts' and 'curve' to 'path' for Fabric.js compatibility
+	            function convertCurvesToPaths(obj) {
+	                if (Array.isArray(obj)) {
+	                    obj.forEach(convertCurvesToPaths);
+	                }
+	                else if (obj && typeof obj === 'object') {
+	                    if (obj.type === 'curve4pts' || obj.type === 'curve') {
+	                        obj.type = 'path';
+	                    }
+	                    Object.values(obj).forEach(convertCurvesToPaths);
+	                }
+	            }
+	            convertCurvesToPaths(parsedInitialDrawing);
+	            canvasInstance.current.loadFromJSON(parsedInitialDrawing, () => {
 	                canvasInstance.current?.renderAll();
-	                resetState(initialDrawing);
+	                resetState(parsedInitialDrawing);
 	            });
 	        }
 	        if (backgroundCanvasRef.current) {
@@ -59078,6 +59101,24 @@
 	                localStorage.setItem(`${AssessName}-canvasDrawing-${index}`, JSON.stringify(canvasData));
 	                // small log for debugging
 	                console.log(`Canvas JSON saved to localStorage for ${AssessName}-${index}`);
+	                // Call the download function (can be commented out to disable download)
+	                downloadDrawingJson(canvasData, AssessName, index);
+	                // Function to trigger download of drawing JSON
+	                function downloadDrawingJson(canvasData, AssessName, index) {
+	                    const jsonStr = JSON.stringify(canvasData, null, 2);
+	                    const blob = new Blob([jsonStr], { type: 'application/json' });
+	                    const url = URL.createObjectURL(blob);
+	                    const a = document.createElement('a');
+	                    a.href = url;
+	                    a.download = `${AssessName}-canvasDrawing-${index}.json`;
+	                    a.style.display = 'none';
+	                    document.body.appendChild(a);
+	                    a.click();
+	                    setTimeout(() => {
+	                        document.body.removeChild(a);
+	                        URL.revokeObjectURL(url);
+	                    }, 100);
+	                }
 	            }
 	        }
 	        catch (err) {

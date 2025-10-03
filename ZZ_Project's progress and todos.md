@@ -8,11 +8,11 @@ What is left according their importance
 
 1. Having now able to process the .json drawing for line drawing, ask possible questions of drawing and have a function that processes different questions of drawing !!! Do this based on the visble coordinates and not pixels
 
-2. create many initial drawing .json file from the same canvas and put them in a list so that you can use them
+2. Build the studioView so that you can edit all the fields
 
-3. Build the studioView so that you can edit all the fields
+3. test the xblock in openedx instance
 
-4. test the xblock in openedx instance
+Done and can be expanded!!! create many initial drawing .json file from the same canvas and put them in folder and use the as needed
 
 Done !!! Also use props to make drawing tools or other action icons on the canvas visible or not visible. This will help to easily deploy only the necessary tools for each question.
 

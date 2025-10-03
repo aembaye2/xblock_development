@@ -1,5 +1,6 @@
 """TO-DO: Write a description of what this XBlock is."""
 import os
+import json
 
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
@@ -11,9 +12,16 @@ from xblock.utils.resources import ResourceLoader
 resource_loader = ResourceLoader(__name__)
 
 
-from .initial_drawing import RECTANGLE_INITIAL_DRAWING, EMPTY_INITIAL_DRAWING
+# Dynamically load all .json files in initialdrawing_gallery as variables
+import glob
+gallery_dir = os.path.join(os.path.dirname(__file__), "initialdrawing_gallery")
+for json_file in glob.glob(os.path.join(gallery_dir, "*.json")):
+    var_name = os.path.splitext(os.path.basename(json_file))[0].upper()
+    with open(json_file, "r") as f:
+        globals()[var_name] = json.load(f)
 
 class DrawingXBlock(ScorableXBlockMixin, XBlock):
+
     @XBlock.json_handler
     def send_drawing_json(self, data, suffix=''):
         """
@@ -125,7 +133,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     index = Integer(
         default=0,
         scope=Scope.content,
-        help="Initial drawing index",
+        help="Drawing index",
     )
 
     canvasWidth = Integer(
@@ -186,6 +194,13 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         default=False,
         help="Whether to hide axis labels by default",
     )
+
+    initial_drawing = List(
+        default=  LINE_INITIAL_DRAWING, #CURVE , #{}, #curve , LINE_INITIAL_DRAWING,  {}, #EMPTY_INITIAL_DRAWING, #RECTANGLE_INITIAL_DRAWING, #
+        scope=Scope.content,
+        help="Initial drawing data for the canvas (Fabric.js format)",
+    )
+
     # TO-DO: change this view to display more interesting things.
     def student_view(self, context=None):
         # Create an explicit container so React can mount reliably
@@ -206,7 +221,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "scaleFactors": self.scaleFactors,
             "submitButtonClicked": self.submitButtonClicked,
             # Provide rectangle initial drawing from backend
-            "initialDrawing": EMPTY_INITIAL_DRAWING, #RECTANGLE_INITIAL_DRAWING,
+            "initialDrawing": self.initial_drawing, 
             # Visible modes whitelist for the frontend toolbar
             "visibleModes": self.visible_modes,
             "bgnumber": self.bgnumber,  # pass background number to frontend
