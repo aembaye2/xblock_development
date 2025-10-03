@@ -5,7 +5,8 @@ export function customBackground(
   canvasWidth: any,
   canvasHeight: any,
   scaleFactors: any,
-  axisLabels: [string, string] = ["Quantity, Q", "Price, P"]
+  axisLabels: [string, string] = ["Quantity, Q", "Price, P" ],
+  hideLabels: boolean = false
 ) {
   const objects = []
   const rect = new fabric.Rect({
@@ -42,21 +43,25 @@ export function customBackground(
       lockMovementY: true,
       lockRotation: true,
     })
-    const text = new fabric.Text(
-      (scaleFactors[1] - (i * scaleFactors[1]) / 10).toString(),
-      {
-        left: rectLeft - 35,
-        top: y - 10,
-        fontSize: 20,
-        fill: "black",
-        selectable: false,
-        evented: false,
-        hasControls: false,
-        lockMovementX: true,
-        lockMovementY: true,
-        lockRotation: true,
-      }
-    )
+    // numeric label for the tick (hidden when hideLabels is true)
+    let text: fabric.Text | undefined
+    if (!hideLabels) {
+      text = new fabric.Text(
+        (scaleFactors[1] - (i * scaleFactors[1]) / 10).toString(),
+        {
+          left: rectLeft - 35,
+          top: y - 10,
+          fontSize: 20,
+          fill: "black",
+          selectable: false,
+          evented: false,
+          hasControls: false,
+          lockMovementX: true,
+          lockMovementY: true,
+          lockRotation: true,
+        }
+      )
+    }
     const hLine = new fabric.Line([rectLeft, y, rectLeft + rectWidth, y], {
       stroke: "lightgray",
       selectable: false,
@@ -66,7 +71,11 @@ export function customBackground(
       lockMovementY: true,
       lockRotation: true,
     })
-    objects.push(tick, text, hLine)
+    if (text) {
+      objects.push(tick, text, hLine)
+    } else {
+      objects.push(tick, hLine)
+    }
   }
 
   // Add tick marks, numbers, and lines to the bottom side
@@ -84,15 +93,19 @@ export function customBackground(
         lockRotation: true,
       }
     )
-    const text = new fabric.Text(((i * scaleFactors[0]) / 10).toString(), {
-      left: x - 7,
-      top: rectTop + rectHeight + 10,
-      fontSize: 20,
-      fill: "black",
-      selectable: false,
-      evented: false,
-      hasControls: false,
-    })
+    // numeric label for the tick (hidden when hideLabels is true)
+    let text: fabric.Text | undefined
+    if (!hideLabels) {
+      text = new fabric.Text(((i * scaleFactors[0]) / 10).toString(), {
+        left: x - 7,
+        top: rectTop + rectHeight + 10,
+        fontSize: 20,
+        fill: "black",
+        selectable: false,
+        evented: false,
+        hasControls: false,
+      })
+    }
     const vLine = new fabric.Line([x, rectTop, x, rectTop + rectHeight], {
       stroke: "lightgray",
       selectable: false,
@@ -102,45 +115,52 @@ export function customBackground(
       lockMovementY: true,
       lockRotation: true,
     })
-    objects.push(tick, text, vLine)
+    if (text) {
+      objects.push(tick, text, vLine)
+    } else {
+      objects.push(tick, vLine)
+    }
   }
 
 
-  // Add x-axis title
-  const xAxisTitle = new fabric.Text(axisLabels[0], {
-    left: rectLeft + rectWidth / 2,
-    top: rectTop + rectHeight + 40,
-    fontSize: 15,
-    fontStyle: "normal", // "italic", Set text to italics
-    fill: "black",
-    originX: "center",
-    selectable: false,
-    evented: false,
-    hasControls: false,
-    lockMovementX: true,
-    lockMovementY: true,
-    lockRotation: true,
-  });
-  objects.push(xAxisTitle);
+  // Add x- and y-axis titles (unless hidden)
+  
+    // Add x-axis title
+    const xAxisTitle = new fabric.Text(axisLabels[0], {
+      left: rectLeft + rectWidth / 2,
+      top: rectTop + rectHeight + 40,
+      fontSize: 20,
+      fontStyle: "normal", // "italic", Set text to italics
+      fill: "black",
+      originX: "center",
+      selectable: false,
+      evented: false,
+      hasControls: false,
+      lockMovementX: true,
+      lockMovementY: true,
+      lockRotation: true,
+    });
+    objects.push(xAxisTitle);
 
-  // Add y-axis title
-  const yAxisTitle = new fabric.Text(axisLabels[1], {
-    left: rectLeft - 65, // Adjusted for more space
-    top: rectTop + rectHeight / 2,
-    fontSize: 17,
-    fontStyle: "normal", 
-    fill: "black",
-    originX: "center",
-    originY: "center",
-    angle: -90,
-    selectable: false,
-    evented: false,
-    hasControls: false,
-    lockMovementX: true,
-    lockMovementY: true,
-    lockRotation: true,
-  });
-  objects.push(yAxisTitle);
+    // Add y-axis title
+    const yAxisTitle = new fabric.Text(axisLabels[1], {
+      left: rectLeft - 65, // Adjusted for more space
+      top: rectTop + rectHeight / 2,
+      fontSize: 20,
+      fontStyle: "normal",
+      fill: "black",
+      originX: "center",
+      originY: "center",
+      angle: -90,
+      selectable: false,
+      evented: false,
+      hasControls: false,
+      lockMovementX: true,
+      lockMovementY: true,
+      lockRotation: true,
+    });
+    objects.push(yAxisTitle);
+
   //// Move the first element (rect) to the last position (when rectangle is drawn first, it is overlapped by others)
   const firstElement = objects.shift()
   objects.push(firstElement)

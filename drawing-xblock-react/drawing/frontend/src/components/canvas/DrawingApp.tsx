@@ -16,7 +16,8 @@ export interface DrawingAppProps {
   modes: { mode: string; icon: React.ElementType; description: string }[] // Add the modes prop
   visibleModes?: string[] // Optional whitelist of mode keys to display
   initialDrawing: object // initial drawing provided by backend/parent
-  axisLabels?: [string, string]
+  axisLabels?: [string, string],
+  hideLabels?: boolean,
 }
 
 export function DrawingApp({
@@ -31,6 +32,7 @@ export function DrawingApp({
   visibleModes,
   initialDrawing,
   axisLabels,
+  hideLabels,
 }: DrawingAppProps) {
   // visibleModes semantics:
   // - undefined: backend did not provide the field -> preserve legacy behavior and show all modes
@@ -64,6 +66,7 @@ export function DrawingApp({
     submitButtonClicked: submitButtonClicked,
     bgnumber: bgnumber, // Pass the bgnumber prop to DrawableCanvas
     axisLabels: axisLabels,
+    hideLabels: hideLabels,
     // control visibility for non-mode UI elements via visibleModes whitelist
     showDownload: typeof visibleModes === 'undefined' ? true : (visibleModes as string[]).includes('download'),
   }

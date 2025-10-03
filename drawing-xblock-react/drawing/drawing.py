@@ -180,6 +180,12 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         help="Labels for the X and Y axes",
     )
 
+    hideLabels = Boolean(
+        display_name="Hide Axis Labels",
+        scope=Scope.settings,
+        default=False,
+        help="Whether to hide axis labels by default",
+    )
     # TO-DO: change this view to display more interesting things.
     def student_view(self, context=None):
         # Create an explicit container so React can mount reliably
@@ -205,6 +211,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "visibleModes": self.visible_modes,
             "bgnumber": self.bgnumber,  # pass background number to frontend
             "axisLabels": self.axis_labels,  # pass axis labels to frontend
+            "hideLabels": self.hideLabels,  # hide axis labels by default
         }
         if self.user_answer is not None:
             init_data["user_answer"] = self.user_answer

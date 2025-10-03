@@ -32,6 +32,7 @@ export interface ComponentArgs {
   submitButtonClicked: boolean
   bgnumber: number // New prop for selecting the background
   axisLabels?: [string, string]
+  hideLabels?: boolean
   showDownload?: boolean // whether to show the download icon in the toolbar
 }
 
@@ -52,6 +53,7 @@ const DrawableCanvas = ({
   submitButtonClicked,
   bgnumber, // Consume the bgnumber prop
   axisLabels, // optional axis labels [xLabel, yLabel]
+  hideLabels = false, // optional boolean to hide axis labels
   showDownload, // optional boolean to show/hide download icon
 }: ComponentArgs & { showDownload?: boolean }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -100,7 +102,8 @@ const DrawableCanvas = ({
         canvasWidth,
         canvasHeight,
         scaleFactors,
-        axisLabels
+        axisLabels,
+        hideLabels
       )
 
       backgroundCanvasInstance.current.add(group)

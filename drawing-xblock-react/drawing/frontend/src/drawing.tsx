@@ -41,6 +41,7 @@ interface InitData {
   initialDrawing?: object; // initial drawing object, provided by backend or default
   visibleModes?: string[]; // list of mode keys that should be visible in the toolbar
   axisLabels?: [string, string]; // optional axis labels [xLabel, yLabel]
+  hideLabels?: boolean; // optional boolean to hide axis labels
 }
 
 interface Props {
@@ -65,6 +66,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   const [summaryMsg, setSummaryMsg] = useState<string>("");
   const bgnumber = initData.bgnumber ?? 0 // New prop for selecting the background
   const axisLabels = initData.axisLabels ?? ["q", "p"]
+  const hideLabels = initData.hideLabels ?? false
 
   const initialDrawing = initData.initialDrawing ?? {}; // initial drawing from backend or empty
   const visibleModes = initData.visibleModes ?? undefined;
@@ -128,6 +130,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
             bgnumber={bgnumber}
             axisLabels={axisLabels}
             initialDrawing={initialDrawing}
+            hideLabels={hideLabels}
           />
         </div>
       </div>

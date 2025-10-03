@@ -58777,7 +58777,7 @@
 	};
 
 	//// other drawing:
-	function customBackground(canvasWidth, canvasHeight, scaleFactors, axisLabels = ["Quantity, Q", "Price, P"]) {
+	function customBackground(canvasWidth, canvasHeight, scaleFactors, axisLabels = ["Quantity, Q", "Price, P"], hideLabels = false) {
 	    const objects = [];
 	    const rect = new fabricExports.fabric.Rect({
 	        //scaleFactors = [xlim, ylim, bottom_margin, left_margin, top_margin, right_margin]
@@ -58811,18 +58811,22 @@
 	            lockMovementY: true,
 	            lockRotation: true,
 	        });
-	        const text = new fabricExports.fabric.Text((scaleFactors[1] - (i * scaleFactors[1]) / 10).toString(), {
-	            left: rectLeft - 35,
-	            top: y - 10,
-	            fontSize: 20,
-	            fill: "black",
-	            selectable: false,
-	            evented: false,
-	            hasControls: false,
-	            lockMovementX: true,
-	            lockMovementY: true,
-	            lockRotation: true,
-	        });
+	        // numeric label for the tick (hidden when hideLabels is true)
+	        let text;
+	        if (!hideLabels) {
+	            text = new fabricExports.fabric.Text((scaleFactors[1] - (i * scaleFactors[1]) / 10).toString(), {
+	                left: rectLeft - 35,
+	                top: y - 10,
+	                fontSize: 20,
+	                fill: "black",
+	                selectable: false,
+	                evented: false,
+	                hasControls: false,
+	                lockMovementX: true,
+	                lockMovementY: true,
+	                lockRotation: true,
+	            });
+	        }
 	        const hLine = new fabricExports.fabric.Line([rectLeft, y, rectLeft + rectWidth, y], {
 	            stroke: "lightgray",
 	            selectable: false,
@@ -58832,7 +58836,12 @@
 	            lockMovementY: true,
 	            lockRotation: true,
 	        });
-	        objects.push(tick, text, hLine);
+	        if (text) {
+	            objects.push(tick, text, hLine);
+	        }
+	        else {
+	            objects.push(tick, hLine);
+	        }
 	    }
 	    // Add tick marks, numbers, and lines to the bottom side
 	    for (let i = 0; i <= 10; i++) {
@@ -58846,15 +58855,19 @@
 	            lockMovementY: true,
 	            lockRotation: true,
 	        });
-	        const text = new fabricExports.fabric.Text(((i * scaleFactors[0]) / 10).toString(), {
-	            left: x - 7,
-	            top: rectTop + rectHeight + 10,
-	            fontSize: 20,
-	            fill: "black",
-	            selectable: false,
-	            evented: false,
-	            hasControls: false,
-	        });
+	        // numeric label for the tick (hidden when hideLabels is true)
+	        let text;
+	        if (!hideLabels) {
+	            text = new fabricExports.fabric.Text(((i * scaleFactors[0]) / 10).toString(), {
+	                left: x - 7,
+	                top: rectTop + rectHeight + 10,
+	                fontSize: 20,
+	                fill: "black",
+	                selectable: false,
+	                evented: false,
+	                hasControls: false,
+	            });
+	        }
 	        const vLine = new fabricExports.fabric.Line([x, rectTop, x, rectTop + rectHeight], {
 	            stroke: "lightgray",
 	            selectable: false,
@@ -58864,13 +58877,19 @@
 	            lockMovementY: true,
 	            lockRotation: true,
 	        });
-	        objects.push(tick, text, vLine);
+	        if (text) {
+	            objects.push(tick, text, vLine);
+	        }
+	        else {
+	            objects.push(tick, vLine);
+	        }
 	    }
+	    // Add x- and y-axis titles (unless hidden)
 	    // Add x-axis title
 	    const xAxisTitle = new fabricExports.fabric.Text(axisLabels[0], {
 	        left: rectLeft + rectWidth / 2,
 	        top: rectTop + rectHeight + 40,
-	        fontSize: 15,
+	        fontSize: 20,
 	        fontStyle: "normal", // "italic", Set text to italics
 	        fill: "black",
 	        originX: "center",
@@ -58886,7 +58905,7 @@
 	    const yAxisTitle = new fabricExports.fabric.Text(axisLabels[1], {
 	        left: rectLeft - 65, // Adjusted for more space
 	        top: rectTop + rectHeight / 2,
-	        fontSize: 17,
+	        fontSize: 20,
 	        fontStyle: "normal",
 	        fill: "black",
 	        originX: "center",
@@ -58924,6 +58943,7 @@
 	const backgroundlist = [customBackground];
 	const DrawableCanvas = ({ AssessName, index, fillColor, strokeWidth, strokeColor, backgroundImageURL, canvasWidth, canvasHeight, drawingMode, initialDrawing, displayToolbar, displayRadius, scaleFactors, submitButtonClicked, bgnumber, // Consume the bgnumber prop
 	axisLabels, // optional axis labels [xLabel, yLabel]
+	hideLabels = false, // optional boolean to hide axis labels
 	showDownload, // optional boolean to show/hide download icon
 	 }) => {
 	    const canvasRef = reactExports.useRef(null);
@@ -58947,7 +58967,7 @@
 	            backgroundCanvasInstance.current = new fabricExports.fabric.StaticCanvas(backgroundCanvasRef.current, {
 	                enableRetinaScaling: false,
 	            });
-	            const group = customBackground(canvasWidth, canvasHeight, scaleFactors, axisLabels);
+	            const group = customBackground(canvasWidth, canvasHeight, scaleFactors, axisLabels, hideLabels);
 	            backgroundCanvasInstance.current.add(group);
 	            backgroundCanvasInstance.current.renderAll();
 	        }
@@ -59140,7 +59160,7 @@
 
 	function DrawingApp({ index, AssessName, canvasWidth, canvasHeight, scaleFactors, submitButtonClicked, bgnumber, // Consume the bgnumber prop
 	modes, // Destructure the modes prop
-	visibleModes, initialDrawing, axisLabels, }) {
+	visibleModes, initialDrawing, axisLabels, hideLabels, }) {
 	    // visibleModes semantics:
 	    // - undefined: backend did not provide the field -> preserve legacy behavior and show all modes
 	    // - [] (empty array): explicit whitelist of zero -> show no modes
@@ -59171,6 +59191,7 @@
 	        submitButtonClicked: submitButtonClicked,
 	        bgnumber: bgnumber, // Pass the bgnumber prop to DrawableCanvas
 	        axisLabels: axisLabels,
+	        hideLabels: hideLabels,
 	        // control visibility for non-mode UI elements via visibleModes whitelist
 	        showDownload: typeof visibleModes === 'undefined' ? true : visibleModes.includes('download'),
 	    };
@@ -59520,6 +59541,7 @@
 	    const [summaryMsg, setSummaryMsg] = reactExports.useState("");
 	    const bgnumber = initData.bgnumber ?? 0; // New prop for selecting the background
 	    const axisLabels = initData.axisLabels ?? ["q", "p"];
+	    const hideLabels = initData.hideLabels ?? false;
 	    const initialDrawing = initData.initialDrawing ?? {}; // initial drawing from backend or empty
 	    const visibleModes = initData.visibleModes ?? undefined;
 	    // Render the Submit button and its behavior
@@ -59556,7 +59578,7 @@
 	                    }, 200);
 	                }, children: "Submit" }) }));
 	    };
-	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, scaleFactors: scaleFactors, submitButtonClicked: submitButtonClicked, modes: modes, visibleModes: visibleModes, bgnumber: bgnumber, axisLabels: axisLabels, initialDrawing: initialDrawing }) })] }), renderSubmitButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Drawing Summary" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto', color: 'green', fontWeight: 'bold' }, children: summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer." })] })] }));
+	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, scaleFactors: scaleFactors, submitButtonClicked: submitButtonClicked, modes: modes, visibleModes: visibleModes, bgnumber: bgnumber, axisLabels: axisLabels, initialDrawing: initialDrawing, hideLabels: hideLabels }) })] }), renderSubmitButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Drawing Summary" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto', color: 'green', fontWeight: 'bold' }, children: summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer." })] })] }));
 	};
 	// Loader for XBlock React view
 	function initStudentView(runtime, container, initData) {
