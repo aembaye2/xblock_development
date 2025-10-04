@@ -16,32 +16,57 @@ const messages = {
 
 interface InitData {
   question: string;
-  options: string[];
-  correct: number;
   max_attempts?: number;
   weight?: number;
   has_score?: boolean;
+  index?: number;
+  AssessName?: string;
+  canvasWidth?: number;
+  canvasHeight?: number;
+  scaleFactors?: number[];
+  bgnumber?: number;
+  visibleModes?: string[];
+  axisLabels?: [string, string];
+  hideLabels?: boolean;
+  initialDrawing?: any;
 }
 
 interface Props {
   runtime: BoundRuntime;
   question: string;
-  options: string[];
-  correct: number;
   max_attempts?: number;
   weight?: number;
   has_score?: boolean;
+  index?: number;
+  AssessName?: string;
+  canvasWidth?: number;
+  canvasHeight?: number;
+  scaleFactors?: number[];
+  bgnumber?: number;
+  visibleModes?: string[];
+  axisLabels?: [string, string];
+  hideLabels?: boolean;
+  initialDrawing?: any;
 }
 
-const StudioView: React.FC<Props> = ({ runtime, question, options, correct }) => {
-  const [q, setQ] = React.useState(question);
-  const [opts, setOpts] = React.useState(options);
-  const [corr, setCorr] = React.useState(correct);
-  const [maxAttempts, setMaxAttempts] = React.useState<number>(propsToNumber((runtime as any).initData?.max_attempts, 1));
-  const [weight, setWeight] = React.useState<number>(propsToNumber((runtime as any).initData?.weight, 1));
-  const [hasScore, setHasScore] = React.useState<boolean>((runtime as any).initData?.has_score ?? true);
+const StudioView: React.FC<Props> = (props) => {
+  const { runtime } = props;
+  const [q, setQ] = React.useState(props.question);
+  const [maxAttempts, setMaxAttempts] = React.useState<number>(propsToNumber(props.max_attempts, 1));
+  const [weight, setWeight] = React.useState<number>(propsToNumber(props.weight, 1));
+  const [hasScore, setHasScore] = React.useState<boolean>(props.has_score ?? true);
+  // Drawing fields
+  const [index, setIndex] = React.useState<number>(propsToNumber(props.index, 0));
+  const [AssessName, setAssessName] = React.useState<string>(props.AssessName ?? 'quiz1');
+  const [canvasWidth, setCanvasWidth] = React.useState<number>(propsToNumber(props.canvasWidth, 500));
+  const [canvasHeight, setCanvasHeight] = React.useState<number>(propsToNumber(props.canvasHeight, 400));
+  const [scaleFactors, setScaleFactors] = React.useState<number[]>(props.scaleFactors ?? [10, 20, 75, 84, 25, 35]);
+  const [bgnumber, setBgnumber] = React.useState<number>(propsToNumber(props.bgnumber, 0));
+  const [visibleModes, setVisibleModes] = React.useState<string[]>(props.visibleModes ?? ["line", "point", "curve4pts", "text", "color", "download"]);
+  const [axisLabels, setAxisLabels] = React.useState<[string, string]>(props.axisLabels ?? ["Quantity, Q", "Price, P"]);
+  const [hideLabels, setHideLabels] = React.useState<boolean>(props.hideLabels ?? false);
+  const [initialDrawing, setInitialDrawing] = React.useState<any>(props.initialDrawing ?? {});
 
-  // small helper to coerce possibly-undefined props to numbers
   function propsToNumber(val: any, fallback: number) {
     const n = Number(val);
     return Number.isFinite(n) ? n : fallback;
@@ -49,37 +74,9 @@ const StudioView: React.FC<Props> = ({ runtime, question, options, correct }) =>
   const [isSaving, setIsSaving] = React.useState(false);
   const [errors, setErrors] = React.useState<string[]>([]);
 
-  const handleOptionChange = (idx: number, value: string) => {
-    const newOpts = [...opts];
-    newOpts[idx] = value;
-    setOpts(newOpts);
-  };
-
-  const addOption = () => setOpts([...opts, ""]);
-  const removeOption = (idx: number) => setOpts(opts.filter((_, i) => i !== idx));
-
-  const removeOptionSafe = (idx: number) => {
-    // Prevent removing options when there would be fewer than 2
-    if (opts.length <= 2) return;
-    const newOpts = opts.filter((_, i) => i !== idx);
-    // Adjust correct index if needed
-    let newCorr = corr;
-    if (idx === corr) {
-      newCorr = 0; // reset to first option
-    } else if (idx < corr) {
-      newCorr = corr - 1;
-    }
-    setOpts(newOpts);
-    setCorr(newCorr);
-  };
-
   const validate = (): string[] => {
     const errs: string[] = [];
     if (!q || q.trim().length === 0) errs.push('Question is required.');
-    const trimmed = opts.map(o => (o ?? '').trim());
-    if (trimmed.length < 2) errs.push('At least two options are required.');
-    trimmed.forEach((o, i) => { if (!o) errs.push(`Option ${i + 1} must not be empty.`); });
-    if (typeof corr !== 'number' || corr < 0 || corr >= opts.length) errs.push('A valid correct answer must be selected.');
     return errs;
   };
 
@@ -90,14 +87,21 @@ const StudioView: React.FC<Props> = ({ runtime, question, options, correct }) =>
 
     setIsSaving(true);
     try {
-      // Use the BoundRuntime helper to show Studio saving UI and close modal on success
       await runtime.studioSaveAndClose(runtime.postHandler('save_quiz', {
         question: q,
-        options: opts,
-        correct: corr,
         max_attempts: maxAttempts,
         weight: weight,
         has_score: hasScore,
+        index,
+        AssessName,
+        canvasWidth,
+        canvasHeight,
+        scaleFactors,
+        bgnumber,
+        visibleModes,
+        axisLabels,
+        hideLabels,
+        initialDrawing,
       }));
     } finally {
       setIsSaving(false);
@@ -106,30 +110,10 @@ const StudioView: React.FC<Props> = ({ runtime, question, options, correct }) =>
 
   return (
     <div className="myxblock-studio">
-      <h2>Edit Quiz</h2>
+      <h2>Edit Drawing Block</h2>
       <div>
         <label>Question:</label>
         <input type="text" value={q} onChange={e => setQ(e.target.value)} />
-      </div>
-      <div>
-        <label>Options:</label>
-        {opts.map((opt, idx) => (
-          <div key={idx}>
-            <input
-              type="text"
-              value={opt}
-              onChange={e => handleOptionChange(idx, e.target.value)}
-            />
-            <input
-              type="radio"
-              name="correct"
-              checked={corr === idx}
-              onChange={() => setCorr(idx)}
-            /> Correct
-            <button type="button" onClick={() => removeOptionSafe(idx)} disabled={opts.length <= 2}>Remove</button>
-          </div>
-        ))}
-        <button type="button" onClick={addOption}>Add Option</button>
       </div>
       <div>
         <label>Max attempts:</label>
@@ -142,6 +126,74 @@ const StudioView: React.FC<Props> = ({ runtime, question, options, correct }) =>
       <div>
         <label>Graded:</label>
         <input type="checkbox" checked={hasScore} onChange={e => setHasScore(e.target.checked)} />
+      </div>
+      <hr />
+      <h3>Drawing Settings</h3>
+      <div>
+        <label>Drawing Index:</label>
+        <input type="number" value={index} onChange={e => setIndex(Number(e.target.value))} />
+      </div>
+      <div>
+        <label>Assessment Name:</label>
+        <input type="text" value={AssessName} onChange={e => setAssessName(e.target.value)} />
+      </div>
+      <div>
+        <label>Canvas Width:</label>
+        <input type="number" value={canvasWidth} onChange={e => setCanvasWidth(Number(e.target.value))} />
+      </div>
+      <div>
+        <label>Canvas Height:</label>
+        <input type="number" value={canvasHeight} onChange={e => setCanvasHeight(Number(e.target.value))} />
+      </div>
+      <div>
+        <label>Scale Factors (comma separated):</label>
+        <input
+          type="text"
+          value={scaleFactors.join(",")}
+          onChange={e => setScaleFactors(e.target.value.split(",").map(s => Number(s.trim())).filter(n => !isNaN(n)))}
+        />
+      </div>
+      <div>
+        <label>Background Number:</label>
+        <input type="number" value={bgnumber} onChange={e => setBgnumber(Number(e.target.value))} />
+      </div>
+      <div>
+        <label>Visible Modes (comma separated):</label>
+        <input
+          type="text"
+          value={visibleModes.join(",")}
+          onChange={e => setVisibleModes(e.target.value.split(",").map(s => s.trim()).filter(Boolean))}
+        />
+      </div>
+      <div>
+        <label>Axis Labels (comma separated):</label>
+        <input
+          type="text"
+          value={axisLabels.join(",")}
+          onChange={e => {
+            const arr = e.target.value.split(",").map(s => s.trim());
+            setAxisLabels([arr[0] || "", arr[1] || ""] as [string, string]);
+          }}
+        />
+      </div>
+      <div>
+        <label>Hide Axis Labels:</label>
+        <input type="checkbox" checked={hideLabels} onChange={e => setHideLabels(e.target.checked)} />
+      </div>
+      <div>
+        <label>Initial Drawing (JSON):</label>
+        <textarea
+          value={JSON.stringify(initialDrawing, null, 2)}
+          onChange={e => {
+            try {
+              setInitialDrawing(JSON.parse(e.target.value));
+            } catch {
+              // ignore parse errors for now
+            }
+          }}
+          rows={6}
+          style={{ width: '100%' }}
+        />
       </div>
       {errors.length > 0 && (
         <div className="studio-errors">
@@ -161,9 +213,7 @@ function initStudioView(runtime: XBlockRuntime, container: HTMLDivElement | JQue
     <IntlProvider messages={(messages as any)[languageCode]} locale={languageCode} defaultLocale="en">
       <StudioView
         runtime={new BoundRuntime(runtime, container)}
-        question={initData.question}
-        options={initData.options}
-        correct={initData.correct}
+        {...initData}
       />
     </IntlProvider>
   );

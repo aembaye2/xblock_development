@@ -38,7 +38,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         canvasHeight = self.canvasHeight
 
         # Debug: print received data
-        print(f"Using XBlock fields: scaleFactors={scaleFactors}, canvasWidth={canvasWidth}, canvasHeight={canvasHeight}")
+        #print(f"Using XBlock fields: scaleFactors={scaleFactors}, canvasWidth={canvasWidth}, canvasHeight={canvasHeight}")
 
         ### Add this line to print the JSON to server logs
         #print(drawing)  # Outputs the drawing JSON to the server console/logs
@@ -54,24 +54,12 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     # Fields are defined on the class.  You can access them in your code as
     # self.<fieldname>.
 
-
     question = String(
         default="Question: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod auctor urna, vel tincidunt elit varius id. Nullam in lacus ac odio vehicula tempus a ac magna. Ut sit amet orci orci. Nulla posuere purus nec orci blandit, sed interdum libero interdum. Sed lacinia libero ac sem vehicula, nec facilisis purus pretium. Fusce accumsan, odio euismod laoreet porttitor, felis nunc maximus odio, nec aliquet erat neque in velit. Nam iaculis ut risus id lacinia. Maecenas id metus sed libero tincidunt tristique ac ac metus. Proin lacinia vestibulum nisi, ac cursus lorem efficitur id. Integer sed magna tincidunt, suscipit mi non, mollis elit. Donec sed nulla turpis. Cras varius neque in nisi eleifend, ac euismod felis fermentum. Quisque ut gravida felis. Nam et lacus dolor. Integer ac cursus urna. Donec aliquam, lectus a facilisis vestibulum, turpis libero pretium enim, non maximus ante elit vel libero. Aliquam erat volutpat. Etiam sit amet eros sed purus fermentum vehicula. ", scope=Scope.content,
         help="Quiz question",
     )
-    options = List(
-        default=["2", "3", "4", "5"], scope=Scope.content,
-        help="Answer options",
-    )
 
-    correct = Integer(
-        default=2, scope=Scope.content,
-        help="Index of correct answer",
-    )
-    user_answer = Integer(
-        default=None, scope=Scope.user_state,
-        help="User's answer index",
-    )
+    # Removed MCQ fields: options, correct, user_answer
     # Score stored per-user
     # Raw score storage (ScorableXBlockMixin pattern)
     raw_earned = Float(
@@ -177,7 +165,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     visible_modes = List(
         display_name="Visible Modes",
         scope=Scope.settings,
-        default=["line",  "point", "curve4pts", "text","color", "download"], # <-- whitelist these tools
+        default=["line",  "point", "curve4pts", "text","coordinate","color", "download"], # <-- whitelist these tools
         help="List of drawing modes to show in the toolbar (mode keys). Empty by default to hide all tools.",
     )
 
@@ -203,34 +191,25 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
 
     # TO-DO: change this view to display more interesting things.
     def student_view(self, context=None):
-        # Create an explicit container so React can mount reliably
         frag = Fragment()
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/drawing.css'))
         frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/drawing.js'))
 
-        # Only include user_answer in init data if it's set for this user.
+        # Only drawing-related fields are sent to the frontend
         init_data = {
             "question": self.question,
-            "options": self.options,
-            "correct": self.correct,
-            # Drawing app init values from XBlock fields
             "index": self.index,
             "AssessName": self.AssessName,
             "canvasWidth": self.canvasWidth,
             "canvasHeight": self.canvasHeight,
             "scaleFactors": self.scaleFactors,
             "submitButtonClicked": self.submitButtonClicked,
-            # Provide rectangle initial drawing from backend
-            "initialDrawing": self.initial_drawing, 
-            # Visible modes whitelist for the frontend toolbar
+            "initialDrawing": self.initial_drawing,
             "visibleModes": self.visible_modes,
-            "bgnumber": self.bgnumber,  # pass background number to frontend
-            "axisLabels": self.axis_labels,  # pass axis labels to frontend
-            "hideLabels": self.hideLabels,  # hide axis labels by default
+            "bgnumber": self.bgnumber,
+            "axisLabels": self.axis_labels,
+            "hideLabels": self.hideLabels,
         }
-        if self.user_answer is not None:
-            init_data["user_answer"] = self.user_answer
-        # pass attempt information to the frontend
         init_data["attempts"] = self.attempts
         init_data["remaining_attempts"] = self.remaining_attempts
         frag.initialize_js('initDrawingXBlockStudentView', init_data)
@@ -239,72 +218,75 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
 
     def studio_view(self, context=None):
         frag = Fragment()
-        #frag.add_content('<div id="drawing-studio"></div>')
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/drawing.css'))
-        # Load Fabric.js in studio as well so previews work in the workbench.
         frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/drawing_studio.js'))
 
+        # Only drawing-related fields for editing in Studio
         init_data = {
             "question": self.question,
-            "options": self.options,
-            "correct": self.correct,
             "max_attempts": self.max_attempts,
             "weight": self.weight,
             "has_score": self.has_score,
+            "index": self.index,
+            "AssessName": self.AssessName,
+            "canvasWidth": self.canvasWidth,
+            "canvasHeight": self.canvasHeight,
+            "scaleFactors": self.scaleFactors,
+            "bgnumber": self.bgnumber,
+            "visibleModes": self.visible_modes,
+            "axisLabels": self.axis_labels,
+            "hideLabels": self.hideLabels,
+            "initialDrawing": self.initial_drawing,
         }
         frag.initialize_js('initDrawingXBlockStudioView', init_data)
         return frag
 
 
     @XBlock.json_handler
-    def submit_answer(self, data, suffix=''):
-        answer = data.get('answer')
-        # validate attempts
-        if self.remaining_attempts <= 0:
-            raise JsonHandlerError(409, "Max number of attempts reached")
-
-        # store the user's answer
-        self.user_answer = answer
-
-        # increment attempts
-        self.attempts += 1
-
-        # compute correctness
+    def save_quiz(self, data, suffix=''):
+        # Save question and drawing-related fields
+        self.question = data.get('question', self.question)
         try:
-            is_correct = (int(answer) == int(self.correct))
-        except Exception:
-            is_correct = False
-
-        # set raw score and mark complete if correct or no remaining attempts
-        raw_score = 1.0 if is_correct else 0.0
-        self.set_score(Score(raw_score, self.max_score()))
-        # completed if student got it correct or has no more remaining attempts
-        self.completed = bool(int(self.raw_earned)) or (self.remaining_attempts <= 0)
-
-        # publish grade to LMS using ScorableXBlockMixin helper
-        try:
-            self.publish_grade(self.score, False)
-        except Exception:
-            # best-effort: do not raise if publishing fails in workbench
-            pass
-
-        # emit progress event
-        try:
-            self.runtime.publish(self, 'progress', {})
+            self.max_attempts = int(data.get('max_attempts', self.max_attempts))
         except Exception:
             pass
+        try:
+            self.weight = float(data.get('weight', self.weight))
+        except Exception:
+            pass
+        try:
+            self.has_score = bool(data.get('has_score', self.has_score))
+        except Exception:
+            pass
+        try:
+            self.index = int(data.get('index', self.index))
+        except Exception:
+            pass
+        self.AssessName = data.get('AssessName', self.AssessName)
+        try:
+            self.canvasWidth = int(data.get('canvasWidth', self.canvasWidth))
+        except Exception:
+            pass
+        try:
+            self.canvasHeight = int(data.get('canvasHeight', self.canvasHeight))
+        except Exception:
+            pass
+        self.scaleFactors = data.get('scaleFactors', self.scaleFactors)
+        try:
+            self.bgnumber = int(data.get('bgnumber', self.bgnumber))
+        except Exception:
+            pass
+        self.visible_modes = data.get('visibleModes', self.visible_modes)
+        self.axis_labels = data.get('axisLabels', self.axis_labels)
+        try:
+            self.hideLabels = bool(data.get('hideLabels', self.hideLabels))
+        except Exception:
+            pass
+        self.initial_drawing = data.get('initialDrawing', self.initial_drawing)
+        return {"result": "success"}
 
-        earned = self.raw_earned * self.weight
-        total = self.raw_possible * self.weight
 
-        return {
-            "correct": is_correct,
-            "score": raw_score,
-            "grade": earned,
-            "max_grade": total,
-            "attempts": self.attempts,
-            "remaining_attempts": self.remaining_attempts,
-        }
+    # Removed MCQ answer/grade logic. Drawing blocks may implement their own grading if needed.
 
     def max_score(self):
         """Return max score for this component."""
@@ -338,26 +320,6 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             except Exception:
                 pass
 
-
-    @XBlock.json_handler
-    def save_quiz(self, data, suffix=''):
-        self.question = data.get('question', self.question)
-        self.options = data.get('options', self.options)
-        self.correct = data.get('correct', self.correct)
-        # save grading settings
-        try:
-            self.max_attempts = int(data.get('max_attempts', self.max_attempts))
-        except Exception:
-            pass
-        try:
-            self.weight = float(data.get('weight', self.weight))
-        except Exception:
-            pass
-        try:
-            self.has_score = bool(data.get('has_score', self.has_score))
-        except Exception:
-            pass
-        return {"result": "success"}
 
     @classmethod
     def workbench_scenarios(cls):

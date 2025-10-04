@@ -25,9 +25,6 @@ const messages = {
 
 interface InitData {
   question: string;
-  options: string[];
-  correct: number;
-  user_answer?: number;
   attempts?: number;
   remaining_attempts?: number;
   // drawing app props
@@ -37,82 +34,68 @@ interface InitData {
   canvasHeight?: number;
   scaleFactors?: number[];
   submitButtonClicked?: boolean;
-  bgnumber?: number; // prop for selecting the background
-  initialDrawing?: object; // initial drawing object, provided by backend or default
-  visibleModes?: string[]; // list of mode keys that should be visible in the toolbar
-  axisLabels?: [string, string]; // optional axis labels [xLabel, yLabel]
-  hideLabels?: boolean; // optional boolean to hide axis labels
+  bgnumber?: number;
+  initialDrawing?: object;
+  visibleModes?: string[];
+  axisLabels?: [string, string];
+  hideLabels?: boolean;
 }
 
-interface Props {
-  runtime: BoundRuntime;
-  question: string;
-  options: string[]
-  correct: number;
-  user_answer?: number;
-  attempts?: number;
-  remaining_attempts?: number;
-}
+// No MCQ Props needed
 
 const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ runtime, initData }) => {
-  // Render the DrawingApp using initData from the XBlock
-  const index = initData.index ?? 1
-  const AssessName = initData.AssessName ?? initData.question ?? 'quiz1'
-  const canvasWidth = initData.canvasWidth ?? 500
-  const canvasHeight = initData.canvasHeight ?? 400
-  const scaleFactors= initData.scaleFactors ?? [100, 200, 75, 84, 25, 35] // default scaleFactor
-  // local UI state to trigger saving the canvas JSON to localStorage
-  const [submitButtonClicked, setSubmitButtonClicked] = useState<boolean>(initData.submitButtonClicked ?? false)
+  const index = initData.index ?? 1;
+  const AssessName = initData.AssessName ?? 'quiz1';
+  const canvasWidth = initData.canvasWidth ?? 500;
+  const canvasHeight = initData.canvasHeight ?? 400;
+  const scaleFactors = initData.scaleFactors ?? [100, 200, 75, 84, 25, 35];
+  const [submitButtonClicked, setSubmitButtonClicked] = useState<boolean>(initData.submitButtonClicked ?? false);
   const [summaryMsg, setSummaryMsg] = useState<string>("");
-  const bgnumber = initData.bgnumber ?? 0 // New prop for selecting the background
-  const axisLabels = initData.axisLabels ?? ["q", "p"]
-  const hideLabels = initData.hideLabels ?? false
-
-  const initialDrawing = initData.initialDrawing ?? {}; // initial drawing from backend or empty
+  const bgnumber = initData.bgnumber ?? 0;
+  const axisLabels = initData.axisLabels ?? ["q", "p"];
+  const hideLabels = initData.hideLabels ?? false;
+  const initialDrawing = initData.initialDrawing ?? {};
   const visibleModes = initData.visibleModes ?? undefined;
-  // Render the Submit button and its behavior
-  const renderSubmitButton = () => {
-    return (
-      <div style={{ marginTop: '8px' }}>
-        <button
-          type="button"
-          onClick={async () => {
-            setSubmitButtonClicked(true);
-            setTimeout(async () => {
-              const key = `${AssessName}-canvasDrawing-${index}`;
-              const raw = localStorage.getItem(key);
-              let parsed = null;
-              if (raw) {
-                try {
-                  parsed = JSON.parse(raw);
-                } catch (e) {
-                  parsed = raw;
-                }
+
+  const renderSubmitButton = () => (
+    <div style={{ marginTop: '8px' }}>
+      <button
+        type="button"
+        onClick={async () => {
+          setSubmitButtonClicked(true);
+          setTimeout(async () => {
+            const key = `${AssessName}-canvasDrawing-${index}`;
+            const raw = localStorage.getItem(key);
+            let parsed = null;
+            if (raw) {
+              try {
+                parsed = JSON.parse(raw);
+              } catch (e) {
+                parsed = raw;
               }
-              // Send to backend via the XBlock runtime and display backend summary
-              if (parsed) {
-                try {
-                  const result = await runtime.postHandler('send_drawing_json', { drawing: parsed });
-                  setSummaryMsg(result.summary || "No summary returned.");
-                } catch (err) {
-                  console.error('send_drawing_json error', err);
-                  setSummaryMsg("Error sending drawing to backend.");
-                }
-              } else {
-                setSummaryMsg("No drawing data found.");
+            }
+            if (parsed) {
+              try {
+                const result = await runtime.postHandler('send_drawing_json', { drawing: parsed });
+                setSummaryMsg(result.summary || "No summary returned.");
+              } catch (err) {
+                console.error('send_drawing_json error', err);
+                setSummaryMsg("Error sending drawing to backend.");
               }
-              setSubmitButtonClicked(false);
-            }, 200);
-          }}
-        >
-          Submit
-        </button>
-      </div>
-    );
-  };
+            } else {
+              setSummaryMsg("No drawing data found.");
+            }
+            setSubmitButtonClicked(false);
+          }, 200);
+        }}
+      >
+        Submit
+      </button>
+    </div>
+  );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px', }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px' }}>
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }}>
         <div className="block-info" style={{ flex: 1, marginRight: '24px', minWidth: '300px' }}>
           <p>{initData.question}</p>
@@ -135,7 +118,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
         </div>
       </div>
       {renderSubmitButton()}
-      <div className="block-info2" style={{marginTop: '24px', minWidth: '300px', width: '100%' }}>
+      <div className="block-info2" style={{ marginTop: '24px', minWidth: '300px', width: '100%' }}>
         <h4>Drawing Summary</h4>
         <div style={{ overflowX: 'auto', color: 'green', fontWeight: 'bold' }}>
           {summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer."}
@@ -143,7 +126,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
       </div>
     </div>
   );
-}
+};
 
 // Loader for XBlock React view
 function initStudentView(runtime: XBlockRuntime, container: HTMLDivElement | JQueryWrappedDiv, initData: InitData) {
