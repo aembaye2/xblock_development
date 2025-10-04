@@ -180,7 +180,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         display_name="Hide Axis Labels",
         scope=Scope.settings,
         default=False,
-        help="Whether to hide axis labels by default",
+        help="Whether to hide axis labels by default,",
     )
 
     initial_drawing = List(
