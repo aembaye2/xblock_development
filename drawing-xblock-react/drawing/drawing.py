@@ -184,7 +184,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     )
 
     initial_drawing = List(
-        default=  LINE_INITIAL_DRAWING, #CURVE , #{}, #curve , LINE_INITIAL_DRAWING,  {}, #EMPTY_INITIAL_DRAWING, #RECTANGLE_INITIAL_DRAWING, #
+        default= {}, #LINE_INITIAL_DRAWING, #CURVE , #{}, #curve , LINE_INITIAL_DRAWING,  {}, #EMPTY_INITIAL_DRAWING, #RECTANGLE_INITIAL_DRAWING, #
         scope=Scope.content,
         help="Initial drawing data for the canvas (Fabric.js format)",
     )
