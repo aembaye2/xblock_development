@@ -162,7 +162,7 @@ class CoordinateTool extends FabricTool {
         evented: false,
       }
     )
-    this.coordinates_group.type = 'coordinate'  // Override the type to 'coordinate' instead of 'group'
+    //this.coordinates_group.type = 'coordinate'  // Override the type to 'coordinate' instead of 'group'
 
     canvas.add(this.coordinates_group)
     canvas.renderAll()
@@ -239,7 +239,7 @@ class CoordinateTool extends FabricTool {
         evented: false,
       }
     )
-    this.tempCoordinates_group.type = 'coordinate'  // Override the type to 'coordinate' instead of 'group'
+    //this.tempCoordinates_group.type = 'coordinate'  // Override the type to 'coordinate' instead of 'group'
 
     canvas.add(this.tempCoordinates_group)
     canvas.renderAll()

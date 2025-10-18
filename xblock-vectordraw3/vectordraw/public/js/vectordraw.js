@@ -332,6 +332,15 @@ function VectorDrawXBlock(runtime, element, init_args) {
 
     VectorDraw.prototype.updateVectorProperties = function(vector) {
         var vec_settings = this.getVectorSettingsByName(vector.name);
+        // Defensive: if no matching settings found, avoid crashing and log helpful info.
+        if (!vec_settings) {
+            try {
+                console.warn('VectorDraw: no settings found for vector', vector && vector.name, 'available settings:', this.settings && this.settings.vectors);
+            } catch (e) {
+                // swallow any console errors
+            }
+            return;
+        }
         var x1 = vector.point1.X(),
             y1 = vector.point1.Y(),
             x2 = vector.point2.X(),

@@ -57,7 +57,7 @@ class PointTool extends FabricTool {
       evented: false,
       radius: this.displayRadius,
     })
-    this.currentCircle.type = 'point'  // Override the type to 'point' instead of 'circle'
+    //this.currentCircle.type = 'point'  // Override the type to 'point' instead of 'circle'
     if (_clicked === 0) {
       canvas.add(this.currentCircle)
     }

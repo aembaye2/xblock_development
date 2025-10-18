@@ -54535,7 +54535,6 @@
 	            selectable: false,
 	            evented: false,
 	        });
-	        this.singlearrow.type = 'singlearrowhead'; // Override the type to 'singlearrowhead' instead of 'group'
 	        // Add custom property to identify the tool
 	        this.singlearrow.toObject = (function (toObject) {
 	            return function () {
@@ -54667,7 +54666,7 @@
 	            selectable: false,
 	            evented: false,
 	        });
-	        this.doublearrow.type = 'doublearrowhead'; // Override the type to 'doublearrowhead' instead of 'group'
+	        //this.doublearrow.type = 'doublearrowhead'  // Override the type to 'doublearrowhead' instead of 'group'
 	        canvas.add(this.doublearrow);
 	        canvas.renderAll();
 	    }
@@ -54905,7 +54904,7 @@
 	            selectable: false,
 	            evented: false,
 	        });
-	        this.coordinates_group.type = 'coordinate'; // Override the type to 'coordinate' instead of 'group'
+	        //this.coordinates_group.type = 'coordinate'  // Override the type to 'coordinate' instead of 'group'
 	        canvas.add(this.coordinates_group);
 	        canvas.renderAll();
 	    }
@@ -54967,7 +54966,7 @@
 	            selectable: false,
 	            evented: false,
 	        });
-	        this.tempCoordinates_group.type = 'coordinate'; // Override the type to 'coordinate' instead of 'group'
+	        //this.tempCoordinates_group.type = 'coordinate'  // Override the type to 'coordinate' instead of 'group'
 	        canvas.add(this.tempCoordinates_group);
 	        canvas.renderAll();
 	    }
@@ -58172,7 +58171,7 @@
 	            selectable: false,
 	            evented: false,
 	        });
-	        this.finalCurve.type = 'curve'; // Override the type to 'curve' instead of 'path'
+	        //this.finalCurve.type = 'curve'  // Override the type to 'curve' instead of 'path'
 	        if (this.finalCurve.width !== 0 && this.finalCurve.height !== 0) {
 	            canvas.add(this.finalCurve);
 	            //canvas.renderAll()
@@ -58301,7 +58300,7 @@
 	            selectable: false,
 	            evented: false,
 	        });
-	        this.finalCurve.type = 'curve4pts'; // Override the type to 'curve4pts' instead of 'path'
+	        //this.finalCurve.type = 'curve4pts'  // Override the type to 'curve4pts' instead of 'path'
 	        if (this.finalCurve.width !== 0 && this.finalCurve.height !== 0) {
 	            canvas.add(this.finalCurve);
 	            //canvas.renderAll()
@@ -58322,15 +58321,7 @@
 	        this._canvas.isDrawingMode = true;
 	        this._canvas.freeDrawingBrush.width = strokeWidth;
 	        this._canvas.freeDrawingBrush.color = strokeColor;
-	        // Override the type of free-drawn paths to 'freedraw'
-	        this._canvas.on('path:created', (e) => {
-	            if (e.path) {
-	                e.path.type = 'freedraw';
-	            }
-	        });
-	        return () => {
-	            this._canvas.off('path:created');
-	        };
+	        return () => { };
 	    }
 	}
 
@@ -58444,7 +58435,7 @@
 	            evented: false,
 	            radius: this.displayRadius,
 	        });
-	        this.currentCircle.type = 'point'; // Override the type to 'point' instead of 'circle'
+	        //this.currentCircle.type = 'point'  // Override the type to 'point' instead of 'circle'
 	        if (_clicked === 0) {
 	            canvas.add(this.currentCircle);
 	        }
@@ -58615,7 +58606,7 @@
 	            selectable: false,
 	            evented: false,
 	        });
-	        this.currentPath.type = 'polygon'; // Override the type to 'polygon' instead of 'path'
+	        //this.currentPath.type = 'polygon'  // Override the type to 'polygon' instead of 'path'
 	        canvas.add(this.currentPath);
 	        this._pathString = "M ";
 	        this.isMouseDown = false;

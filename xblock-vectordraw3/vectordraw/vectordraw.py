@@ -563,7 +563,59 @@ class VectorDrawXBlock(StudioEditableXBlockMixin, XBlock):
 
     @staticmethod
     def workbench_scenarios():
+        """A canned scenario for display in the workbench."""
+        # Prefer loading scenarios from templates so we keep rich examples in
+        # `templates/xml`. If that fails (for example, loader missing), fall
+        # back to a minimal inline scenario.
+        try:
+            return loader.load_scenarios_from_path('templates/xml')
+        except Exception:
+            return [
+                ("VectorDrawXBlock",
+                 """<vectordraw url_name="vectordraw_example" />
+                 """)
+            ]
+    # def workbench_scenarios():
+    #     """
+    #     Canned scenarios for display in the workbench.
+    #     """
+    #     return loader.load_scenarios_from_path('templates/xml')
+
+    @staticmethod
+    def workbench_scenarios_programmatic():
         """
-        Canned scenarios for display in the workbench.
+        Example: programmatically generate a workbench scenario without keeping
+        a separate XML file on disk.
+
+        Note: the workbench API expects scenario usages as XML strings, so this
+        helper builds a minimal XML snippet and embeds JSON-encoded settings
+        into attributes (escaping double quotes as &quot;). This avoids managing
+        separate XML files while still allowing a programmatic workflow.
         """
-        return loader.load_scenarios_from_path('templates/xml')
+        import json
+
+        vectors = json.dumps([
+            {
+                "name": "example",
+                "tail": [0, 0],
+                "length": 5,
+                "angle": 30,
+                "render": true
+            }
+        ])
+        points = json.dumps([])
+        expected = json.dumps({})
+
+        # Escape double quotes for inclusion as XML attribute values
+        vectors_attr = vectors.replace('"', '&quot;')
+        points_attr = points.replace('"', '&quot;')
+        expected_attr = expected.replace('"', '&quot;')
+
+        xml = (
+            '<vertical_demo>\n'
+            '  <vectordraw url_name="vectordraw_example" '
+            'vectors="{vectors}" points="{points}" expected_result="{expected}" />\n'
+            '</vertical_demo>'
+        ).format(vectors=vectors_attr, points=points_attr, expected=expected_attr)
+
+        return [("VectorDrawXBlock (programmatic)", xml)]

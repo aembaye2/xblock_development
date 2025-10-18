@@ -126,7 +126,7 @@ class DoubleArrowHeadTool extends FabricTool {
         evented: false,
       }
     )
-    this.doublearrow.type = 'doublearrowhead'  // Override the type to 'doublearrowhead' instead of 'group'
+    //this.doublearrow.type = 'doublearrowhead'  // Override the type to 'doublearrowhead' instead of 'group'
 
     canvas.add(this.doublearrow)
     canvas.renderAll()
