@@ -56,6 +56,13 @@ npm install --legacy-peer-deps
 2. Use this xblock as template to work on xblock-drawing
 
 ## pushing to repo
-git add .
-git commit -m "on 10/18/2025a with version"
-git push origin main
+git add setup.py  # if you change the version in the setup.py
+git commit -m "Bump drawing-xblock-react to v1.0.3"
+git tag -a v1.0.3 -m "Release v1.0.3"
+# push branch + any tags that point at pushed commits
+git push origin main --follow-tags
+
+
+# then in openedx tutor:
+
+tutor config save --append OPENEDX_EXTRA_PIP_REQUIREMENTS="git+https://github.com/aembaye2/xblock_development.git@v1.0.3#subdirectory=drawing-xblock-react"
