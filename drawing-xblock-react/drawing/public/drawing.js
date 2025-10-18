@@ -5687,6 +5687,19 @@
 	            console.error(error);
 	        }
 	    }
+	    /**
+	     * Delegate notify calls to the underlying XBlock runtime.
+	     * This helper makes it convenient to call `runtime.notify(...)` on a BoundRuntime
+	     * instance and avoids consumers needing to reference the inner `.runtime` field.
+	     * We keep this intentionally permissive in typing because the XBlock runtime's
+	     * notify method uses several overloads; callers should use the documented shapes.
+	     */
+	    notify(name, data) {
+	        // Use a runtime call if available. Cast to any to keep the wrapper simple.
+	        if (this.runtime && typeof this.runtime.notify === 'function') {
+	            this.runtime.notify(name, data);
+	        }
+	    }
 	}
 
 	var tQLRmz$1 = [

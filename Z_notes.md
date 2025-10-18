@@ -57,5 +57,5 @@ npm install --legacy-peer-deps
 
 ## pushing to repo
 git add .
-git commit -m "on 9/7/2025 success!"
+git commit -m "on 10/18/2025a with version"
 git push origin main

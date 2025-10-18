@@ -90,5 +90,19 @@ export class BoundRuntime {
     }
   }
 
+  /**
+   * Delegate notify calls to the underlying XBlock runtime.
+   * This helper makes it convenient to call `runtime.notify(...)` on a BoundRuntime
+   * instance and avoids consumers needing to reference the inner `.runtime` field.
+   * We keep this intentionally permissive in typing because the XBlock runtime's
+   * notify method uses several overloads; callers should use the documented shapes.
+   */
+  notify(name: string, data?: any): void {
+    // Use a runtime call if available. Cast to any to keep the wrapper simple.
+    if (this.runtime && typeof (this.runtime as any).notify === 'function') {
+      (this.runtime as any).notify(name, data);
+    }
+  }
+
   // To access other methods like children(), notify(), etc. use the .runtime property
 }
