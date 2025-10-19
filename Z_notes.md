@@ -57,8 +57,8 @@ npm install --legacy-peer-deps
 
 ## pushing to repo
 git add setup.py  # if you change the version in the setup.py
-git commit -m "Bump drawing-xblock-react to v1.0.3"
-git tag -a v1.0.3 -m "Release v1.0.3"
+git commit -m "Bump drawing-xblock-react to v1.0.4"
+git tag -a v1.0.4 -m "Release v1.0.4"
 # push branch + any tags that point at pushed commits
 git push origin main --follow-tags
 

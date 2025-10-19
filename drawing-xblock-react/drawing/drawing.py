@@ -165,7 +165,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     visible_modes = List(
         display_name="Visible Modes",
         scope=Scope.settings,
-        default=["line",  "point", "curve4pts", "text","coordinate","color", "download"], # <-- whitelist these tools
+        default=["line",  "point", "curve4pts", "text","coordinate", "download", "rect"], # <-- whitelist these tools
         help="List of drawing modes to show in the toolbar (mode keys). Empty by default to hide all tools.",
     )
 
