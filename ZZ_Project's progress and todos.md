@@ -8,7 +8,7 @@ What is left according their importance
 
 1. Having now able to process the .json drawing for line drawing, ask possible questions of drawing and have a function that processes different questions of drawing !!! Do this based on the visble coordinates and not pixels
 
-2. Build the studioView so that you can edit all the fields
+2. Build the studioView so that you can edit all the fields (understand the basic xblock-react which has a working editable field and myxblock which has many of the fields and work well in openedx instance and then you can make the modification for the drawing studioView which is not working)
 
 3. test the xblock in openedx instance
 

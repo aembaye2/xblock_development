@@ -80,7 +80,7 @@ class McqsXBlock(ScorableXBlockMixin, XBlock, StudioEditableXBlockMixin):
 
         # there must be two choices to choose from
         if not data.choices or len(data.choices) < 2:
-            validation.add(ValidationMessage(ValidationMessage.ERROR, u"Please enter atleast two choices"))
+            validation.add(ValidationMessage(ValidationMessage.ERROR, u"Please enter at least two choices"))
 
         if data.correct_choice not in range(1, len(data.choices) + 1):
             validation.add(ValidationMessage(
