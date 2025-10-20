@@ -19,6 +19,12 @@ class MyXBlock(ScorableXBlockMixin, XBlock):
     # Fields are defined on the class.  You can access them in your code as
     # self.<fieldname>.
 
+    display_name = String(
+        display_name="Display Name",
+        scope=Scope.settings,
+        default="MyXBlock",
+    )
+
 
     question = String(
         default="What is 2 + 2?", scope=Scope.content,
@@ -86,11 +92,6 @@ class MyXBlock(ScorableXBlockMixin, XBlock):
         """Remaining number of attempts"""
         return max(self.max_attempts - self.attempts, 0)
 
-    display_name = String(
-        display_name="Display Name",
-        scope=Scope.settings,
-        default="MyXBlock",
-    )
 
 
     def student_view(self, context=None):

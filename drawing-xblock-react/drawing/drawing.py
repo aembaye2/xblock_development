@@ -165,7 +165,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     visible_modes = List(
         display_name="Visible Modes",
         scope=Scope.settings,
-        default=["line",  "point", "curve4pts", "text","coordinate", "download", "rect"], # <-- whitelist these tools
+        default=["line",   "curve4pts", "text","coordinate", "download", "rect"], # <-- whitelist these tools
         help="List of drawing modes to show in the toolbar (mode keys). Empty by default to hide all tools.",
     )
 
@@ -262,7 +262,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             self.index = int(data.get('index', self.index))
         except Exception:
             pass
-        self.AssessName = data.get('AssessName', self.AssessName)
+            self.AssessName = data.get('AssessName', self.AssessName)
         try:
             self.canvasWidth = int(data.get('canvasWidth', self.canvasWidth))
         except Exception:
