@@ -182,6 +182,27 @@ class MyXBlock(ScorableXBlockMixin, XBlock):
             "remaining_attempts": self.remaining_attempts,
         }
 
+
+    @XBlock.json_handler
+    def save_quiz(self, data, suffix=''):
+        self.question = data.get('question', self.question)
+        self.options = data.get('options', self.options)
+        self.correct = data.get('correct', self.correct)
+        # save grading settings
+        try:
+            self.max_attempts = int(data.get('max_attempts', self.max_attempts))
+        except Exception:
+            pass
+        try:
+            self.weight = float(data.get('weight', self.weight))
+        except Exception:
+            pass
+        try:
+            self.has_score = bool(data.get('has_score', self.has_score))
+        except Exception:
+            pass
+        return {"result": "success"}
+
     def max_score(self):
         """Return max score for this component."""
         return 1.0
@@ -215,25 +236,7 @@ class MyXBlock(ScorableXBlockMixin, XBlock):
                 pass
 
 
-    @XBlock.json_handler
-    def save_quiz(self, data, suffix=''):
-        self.question = data.get('question', self.question)
-        self.options = data.get('options', self.options)
-        self.correct = data.get('correct', self.correct)
-        # save grading settings
-        try:
-            self.max_attempts = int(data.get('max_attempts', self.max_attempts))
-        except Exception:
-            pass
-        try:
-            self.weight = float(data.get('weight', self.weight))
-        except Exception:
-            pass
-        try:
-            self.has_score = bool(data.get('has_score', self.has_score))
-        except Exception:
-            pass
-        return {"result": "success"}
+    
 
     @classmethod
     def workbench_scenarios(cls):

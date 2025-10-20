@@ -5671,10 +5671,10 @@
 	        return fetch(url, { headers, ...otherInit });
 	    }
 	    /**
-	     * A helper method to show a "saving..." toast while changes are being saved,
-	     * to handle errors, and to close the settings editor modal when complete.
-	     * @param savePromise
-	     */
+	       * A helper method to show a "saving..." toast while changes are being saved,
+	          * to handle errors, and to close the settings editor modal when complete.
+	             * @param savePromise
+	                */
 	    async studioSaveAndClose(savePromise) {
 	        this.runtime.notify('save', { state: 'start', element: this.element, message: "Saving..." });
 	        try {
@@ -5688,12 +5688,12 @@
 	        }
 	    }
 	    /**
-	     * Delegate notify calls to the underlying XBlock runtime.
-	     * This helper makes it convenient to call `runtime.notify(...)` on a BoundRuntime
-	     * instance and avoids consumers needing to reference the inner `.runtime` field.
-	     * We keep this intentionally permissive in typing because the XBlock runtime's
-	     * notify method uses several overloads; callers should use the documented shapes.
-	     */
+	       * Delegate notify calls to the underlying XBlock runtime.
+	          * This helper makes it convenient to call `runtime.notify(...)` on a BoundRuntime
+	             * instance and avoids consumers needing to reference the inner `.runtime` field.
+	                * We keep this intentionally permissive in typing because the XBlock runtime's
+	                   * notify method uses several overloads; callers should use the documented shapes.
+	                      */
 	    notify(name, data) {
 	        // Use a runtime call if available. Cast to any to keep the wrapper simple.
 	        if (this.runtime && typeof this.runtime.notify === 'function') {

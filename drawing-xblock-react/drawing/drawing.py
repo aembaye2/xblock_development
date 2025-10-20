@@ -162,10 +162,10 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     # Tools available:
     # "point","line","singlearrowhead","doublearrowhead","polygon","rect","circle",
     # "freedraw","coordinate","curve","curve4pts","text","transform", "color", "strokeWidth", "download"]
-    visible_modes = List(
+    visibleModes = List(
         display_name="Visible Modes",
         scope=Scope.settings,
-        default=["line",   "curve4pts", "text","coordinate", "download", "rect"], # <-- whitelist these tools
+        default=["line", "point",  "curve4pts", "text","coordinate", "download", "rect"], # <-- whitelist these tools
         help="List of drawing modes to show in the toolbar (mode keys). Empty by default to hide all tools.",
     )
 
@@ -184,7 +184,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     )
 
     initial_drawing = List(
-        default= {}, #LINE_INITIAL_DRAWING, #CURVE , #{}, #curve , LINE_INITIAL_DRAWING,  {}, #EMPTY_INITIAL_DRAWING, #RECTANGLE_INITIAL_DRAWING, #
+        default= [], #LINE_INITIAL_DRAWING, #CURVE , #{}, #curve , LINE_INITIAL_DRAWING,  {}, #EMPTY_INITIAL_DRAWING, #RECTANGLE_INITIAL_DRAWING, #
         scope=Scope.content,
         help="Initial drawing data for the canvas (Fabric.js format)",
     )
@@ -205,7 +205,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "scaleFactors": self.scaleFactors,
             "submitButtonClicked": self.submitButtonClicked,
             "initialDrawing": self.initial_drawing,
-            "visibleModes": self.visible_modes,
+            "visibleModes": self.visibleModes,
             "bgnumber": self.bgnumber,
             "axisLabels": self.axis_labels,
             "hideLabels": self.hideLabels,
@@ -233,7 +233,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "canvasHeight": self.canvasHeight,
             "scaleFactors": self.scaleFactors,
             "bgnumber": self.bgnumber,
-            "visibleModes": self.visible_modes,
+            "visibleModes": self.visibleModes,
             "axisLabels": self.axis_labels,
             "hideLabels": self.hideLabels,
             "initialDrawing": self.initial_drawing,
@@ -241,10 +241,9 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         frag.initialize_js('initDrawingXBlockStudioView', init_data)
         return frag
 
-
     @XBlock.json_handler
     def save_quiz(self, data, suffix=''):
-        # Save question and drawing-related fields
+    # Save question and drawing-related fields
         self.question = data.get('question', self.question)
         try:
             self.max_attempts = int(data.get('max_attempts', self.max_attempts))
@@ -262,7 +261,9 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             self.index = int(data.get('index', self.index))
         except Exception:
             pass
-            self.AssessName = data.get('AssessName', self.AssessName)
+        
+        self.AssessName = data.get('AssessName', self.AssessName)  # ✅ Fixed indentation
+        
         try:
             self.canvasWidth = int(data.get('canvasWidth', self.canvasWidth))
         except Exception:
@@ -271,18 +272,24 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             self.canvasHeight = int(data.get('canvasHeight', self.canvasHeight))
         except Exception:
             pass
+        
         self.scaleFactors = data.get('scaleFactors', self.scaleFactors)
+        
         try:
             self.bgnumber = int(data.get('bgnumber', self.bgnumber))
         except Exception:
             pass
+        
         self.visible_modes = data.get('visibleModes', self.visible_modes)
         self.axis_labels = data.get('axisLabels', self.axis_labels)
+        
         try:
             self.hideLabels = bool(data.get('hideLabels', self.hideLabels))
         except Exception:
             pass
+        
         self.initial_drawing = data.get('initialDrawing', self.initial_drawing)
+        
         return {"result": "success"}
 
 

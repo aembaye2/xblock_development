@@ -56,9 +56,9 @@ npm install --legacy-peer-deps
 2. Use this xblock as template to work on xblock-drawing
 
 ## pushing to repo
-git add drawing-xblock-react/setup.py  # if you change the version in the setup.py
-git commit -m "Bump drawing-xblock-react to v1.0.6"
-git tag -a v1.0.6 -m "Release v1.0.6"
+git add . # drawing-xblock-react/setup.py  # if you change the version in the setup.py
+git commit -m "Bump drawing-xblock-react to v1.0.7"
+git tag -a v1.0.7 -m "Release v1.0.7"
 # push branch + any tags that point at pushed commits
 git push origin main --follow-tags
 
