@@ -5637,7 +5637,7 @@
 	//
 	// 🛑 As an XBlock author, you probably should NOT edit this file. 🛑
 	function getCsrfToken() {
-	    return document.cookie.split("; ").find((row) => row.startsWith("csrftoken="))?.split("=")[1] ?? 'unknown CSRF!';
+	    return document.cookie.split("; ").find((row) => row.startsWith("csrftoken="))?.split("=")[1] ?? '';
 	}
 	/** Wraps the XBlock runtime to make it easier to use */
 	class BoundRuntime {
@@ -5650,11 +5650,29 @@
 	    /** GET data from a JSON handler */
 	    async getHandler(handlerName) {
 	        const response = await this.rawHandler(handlerName, { method: 'GET' });
+	        const contentType = response.headers.get('content-type') || '';
+	        if (!response.ok) {
+	            const text = await response.text();
+	            throw new Error(`GET ${handlerName} failed: ${response.status} ${response.statusText} - ${text.substring(0, 1000)}`);
+	        }
+	        if (!contentType.includes('application/json')) {
+	            const text = await response.text();
+	            throw new Error(`GET ${handlerName} did not return JSON (content-type: ${contentType}). Response: ${text.substring(0, 1000)}`);
+	        }
 	        return response.json();
 	    }
 	    /** POST data to a JSON handler */
 	    async postHandler(handlerName, data = {}) {
 	        const response = await this.rawHandler(handlerName, { method: 'POST', body: JSON.stringify(data) });
+	        const contentType = response.headers.get('content-type') || '';
+	        if (!response.ok) {
+	            const text = await response.text();
+	            throw new Error(`POST ${handlerName} failed: ${response.status} ${response.statusText} - ${text.substring(0, 1000)}`);
+	        }
+	        if (!contentType.includes('application/json')) {
+	            const text = await response.text();
+	            throw new Error(`POST ${handlerName} did not return JSON (content-type: ${contentType}). Response: ${text.substring(0, 1000)}`);
+	        }
 	        return response.json();
 	    }
 	    /** Call an XBlock handler */
@@ -5662,8 +5680,16 @@
 	        const url = this.runtime.handlerUrl(this.element, handlerName, suffix, query);
 	        let { headers, ...otherInit } = init;
 	        headers = new Headers(headers); // Wrap headers into a Headers object if not already
-	        if (init.method !== 'GET') {
-	            headers.set('X-CSRFToken', getCsrfToken());
+	        // Prefer JSON responses
+	        if (!headers.has('Accept'))
+	            headers.set('Accept', 'application/json');
+	        // Mark as AJAX to avoid some middleware redirects
+	        if (!headers.has('X-Requested-With'))
+	            headers.set('X-Requested-With', 'XMLHttpRequest');
+	        // Only set CSRF token header when we actually have one
+	        const csrf = getCsrfToken();
+	        if (init.method !== 'GET' && csrf) {
+	            headers.set('X-CSRFToken', csrf);
 	        }
 	        if (!headers.has('Content-Type')) {
 	            headers.set('Content-Type', 'application/json');

@@ -34,7 +34,7 @@ export interface XBlockRuntime {
                                        }
 
                                        export function getCsrfToken(): string {
-                                         return document.cookie.split("; ").find((row) => row.startsWith("csrftoken="))?.split("=")[1] ?? 'unknown CSRF!';
+                                        return document.cookie.split("; ").find((row) => row.startsWith("csrftoken="))?.split("=")[1] ?? '';
                                          }
 
                                          /** Wraps the XBlock runtime to make it easier to use */
@@ -46,8 +46,17 @@ export interface XBlockRuntime {
 
                                                        /** GET data from a JSON handler */
                                                          async getHandler<Data extends Record<string, any> = Record<string, any>>(handlerName: string): Promise<Data> {
-                                                             const response = await this.rawHandler(handlerName, { method: 'GET' });
-                                                                 return response.json();
+                                                            const response = await this.rawHandler(handlerName, { method: 'GET' });
+                                                            const contentType = response.headers.get('content-type') || '';
+                                                            if (!response.ok) {
+                                                              const text = await response.text();
+                                                              throw new Error(`GET ${handlerName} failed: ${response.status} ${response.statusText} - ${text.substring(0, 1000)}`);
+                                                            }
+                                                            if (!contentType.includes('application/json')) {
+                                                              const text = await response.text();
+                                                              throw new Error(`GET ${handlerName} did not return JSON (content-type: ${contentType}). Response: ${text.substring(0, 1000)}`);
+                                                            }
+                                                            return response.json();
                                                                    }
 
                                                                      /** POST data to a JSON handler */
@@ -55,22 +64,41 @@ export interface XBlockRuntime {
                                                                            handlerName: string,
                                                                                data: Record<string, any> = {},
                                                                                  ): Promise<Data> {
-                                                                                     const response = await this.rawHandler(handlerName, { method: 'POST', body: JSON.stringify(data) });
-                                                                                         return response.json();
+                                                                          const response = await this.rawHandler(handlerName, { method: 'POST', body: JSON.stringify(data) });
+                                                                          const contentType = response.headers.get('content-type') || '';
+                                                                          if (!response.ok) {
+                                                                            const text = await response.text();
+                                                                            throw new Error(`POST ${handlerName} failed: ${response.status} ${response.statusText} - ${text.substring(0, 1000)}`);
+                                                                          }
+                                                                          if (!contentType.includes('application/json')) {
+                                                                            const text = await response.text();
+                                                                            throw new Error(`POST ${handlerName} did not return JSON (content-type: ${contentType}). Response: ${text.substring(0, 1000)}`);
+                                                                          }
+                                                                          return response.json();
                                                                                            }
 
                                                                                              /** Call an XBlock handler */
                                                                                                rawHandler(handlerName: string, init: RequestInit, suffix?: string, query?: string): Promise<Response> {
                                                                                                    const url = this.runtime.handlerUrl(this.element, handlerName, suffix, query);
-                                                                                                       let { headers, ...otherInit } = init;
-                                                                                                           headers = new Headers(headers); // Wrap headers into a Headers object if not already
-                                                                                                               if (init.method !== 'GET') {
-                                                                                                                     headers.set('X-CSRFToken', getCsrfToken());
-                                                                                                                         }
-                                                                                                                             if (!headers.has('Content-Type')) {
-                                                                                                                                   headers.set('Content-Type', 'application/json');
-                                                                                                                                       }
-                                                                                                                                           return fetch(url, { headers, ...otherInit });
+                                                                                                      let { headers, ...otherInit } = init;
+                                                                                                      headers = new Headers(headers); // Wrap headers into a Headers object if not already
+
+                                                                                                      // Prefer JSON responses
+                                                                                                      if (!headers.has('Accept')) headers.set('Accept', 'application/json');
+                                                                                                      // Mark as AJAX to avoid some middleware redirects
+                                                                                                      if (!headers.has('X-Requested-With')) headers.set('X-Requested-With', 'XMLHttpRequest');
+
+                                                                                                      // Only set CSRF token header when we actually have one
+                                                                                                      const csrf = getCsrfToken();
+                                                                                                      if (init.method !== 'GET' && csrf) {
+                                                                                                        headers.set('X-CSRFToken', csrf);
+                                                                                                      }
+
+                                                                                                      if (!headers.has('Content-Type')) {
+                                                                                                        headers.set('Content-Type', 'application/json');
+                                                                                                      }
+
+                                                                                                      return fetch(url, { headers, ...otherInit });
                                                                                                                                              }
 
                                                                                                                                                /**
