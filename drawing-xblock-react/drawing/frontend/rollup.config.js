@@ -9,36 +9,38 @@ import { transform as intlTransform } from '@formatjs/ts-transformer';
 import postcss from 'rollup-plugin-postcss';
 import image from '@rollup/plugin-image';
 
-export default {
-  output: {
-  dir: '../public',
-  format: 'iife',
-  entryFileNames: '[name].js',
-  sourcemap: true,  
-  },
-  plugins: [
-    postcss(),
-    json(),
-  // Transform SVG imports into React components when imported as modules
-  svgr(),
-    url({
-      include: ['**/*.svg'],
-      limit: 0, // Always copy SVG files
-    }),
-    image(),
-    typescript({
-      // Configure a transformer to automatically add message IDs to <FormattedMessage /> and other react-intl usages
-      transformers: () => ({
-        before: [intlTransform({ overrideIdFn: '[sha512:contenthash:base64:6]', ast: true })],
+export default (commandLineArgs) => {
+  // Get input from command line, default to drawing.tsx
+  const input = commandLineArgs.input || 'src/drawing.tsx';
+  
+  return {
+    input,  // ✅ Add this
+    output: {
+      dir: '../public',
+      format: 'iife',
+      entryFileNames: '[name].js',
+      sourcemap: true,  
+    },
+    plugins: [
+      postcss(),
+      json(),
+      svgr(),
+      url({
+        include: ['**/*.svg'],
+        limit: 0,
       }),
-    }),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('production'),
-      preventAssignment: true,
-    }),
-    // Resolve node modules for browser (prefer browser field)
-    nodeResolve({ browser: true, preferBuiltins: false }),
-    // Convert CommonJS modules to ES modules so rollup can include them
-    commonjs({ transformMixedEsModules: true }),
-  ]
+      image(),
+      typescript({
+        transformers: () => ({
+          before: [intlTransform({ overrideIdFn: '[sha512:contenthash:base64:6]', ast: true })],
+        }),
+      }),
+      replace({
+        'process.env.NODE_ENV': JSON.stringify('production'),
+        preventAssignment: true,
+      }),
+      nodeResolve({ browser: true, preferBuiltins: false }),
+      commonjs({ transformMixedEsModules: true }),
+    ]
+  };
 };

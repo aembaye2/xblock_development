@@ -5640,10 +5640,10 @@
 	        return fetch(url, { headers, ...otherInit });
 	    }
 	    /**
-	     * A helper method to show a "saving..." toast while changes are being saved,
-	     * to handle errors, and to close the settings editor modal when complete.
-	     * @param savePromise
-	     */
+	       * A helper method to show a "saving..." toast while changes are being saved,
+	          * to handle errors, and to close the settings editor modal when complete.
+	             * @param savePromise
+	                */
 	    async studioSaveAndClose(savePromise) {
 	        this.runtime.notify('save', { state: 'start', element: this.element, message: "Saving..." });
 	        try {
@@ -5654,6 +5654,19 @@
 	        catch (error) {
 	            this.runtime.notify('error', { title: 'Failed to save changes', message: 'An error occurred.' });
 	            console.error(error);
+	        }
+	    }
+	    /**
+	       * Delegate notify calls to the underlying XBlock runtime.
+	          * This helper makes it convenient to call `runtime.notify(...)` on a BoundRuntime
+	             * instance and avoids consumers needing to reference the inner `.runtime` field.
+	                * We keep this intentionally permissive in typing because the XBlock runtime's
+	                   * notify method uses several overloads; callers should use the documented shapes.
+	                      */
+	    notify(name, data) {
+	        // Use a runtime call if available. Cast to any to keep the wrapper simple.
+	        if (this.runtime && typeof this.runtime.notify === 'function') {
+	            this.runtime.notify(name, data);
 	        }
 	    }
 	}
@@ -5792,84 +5805,160 @@
 	    fa: faMessages,
 	    fr: frMessages,
 	};
-	const StudioView = ({ runtime, question, options, correct }) => {
-	    const [q, setQ] = React.useState(question);
-	    const [opts, setOpts] = React.useState(options);
-	    const [corr, setCorr] = React.useState(correct);
-	    const [maxAttempts, setMaxAttempts] = React.useState(propsToNumber(runtime.initData?.max_attempts, 1));
-	    const [weight, setWeight] = React.useState(propsToNumber(runtime.initData?.weight, 1));
-	    const [hasScore, setHasScore] = React.useState(runtime.initData?.has_score ?? true);
-	    // small helper to coerce possibly-undefined props to numbers
+	const StudioView = ({ runtime, question, max_attempts, weight, has_score, index, AssessName, canvasWidth, canvasHeight, scaleFactors, bgnumber, visibleModes, axisLabels, hideLabels, initialDrawing }) => {
+	    // Helper to coerce possibly-undefined props to numbers
 	    function propsToNumber(val, fallback) {
 	        const n = Number(val);
 	        return Number.isFinite(n) ? n : fallback;
 	    }
+	    const [q, setQ] = React.useState(question || '');
+	    const [idx, setIdx] = React.useState(index ?? 0);
+	    const [assessName, setAssessName] = React.useState(AssessName ?? '');
+	    const [cw, setCw] = React.useState(propsToNumber(canvasWidth, 500));
+	    const [ch, setCh] = React.useState(propsToNumber(canvasHeight, 400));
+	    const [scale, setScale] = React.useState(scaleFactors ?? [10, 20, 75, 84, 25, 35]);
+	    const [bgNumber, setBgNumber] = React.useState(propsToNumber(bgnumber, 0));
+	    const [modes, setModes] = React.useState(visibleModes ?? []);
+	    const [axes, setAxes] = React.useState(axisLabels ?? []);
+	    const [hideLbls, setHideLbls] = React.useState(hideLabels ?? false);
+	    const [initialDrawStr, setInitialDrawStr] = React.useState(JSON.stringify(initialDrawing ?? {}, null, 2));
+	    const [initialDraw, setInitialDraw] = React.useState(initialDrawing ?? {});
+	    const [maxAttempts, setMaxAttempts] = React.useState(propsToNumber(max_attempts, 3));
+	    const [w, setW] = React.useState(propsToNumber(weight, 1));
+	    const [hasScore, setHasScore] = React.useState(has_score ?? true);
 	    const [isSaving, setIsSaving] = React.useState(false);
 	    const [errors, setErrors] = React.useState([]);
-	    const handleOptionChange = (idx, value) => {
-	        const newOpts = [...opts];
-	        newOpts[idx] = value;
-	        setOpts(newOpts);
+	    // Helpers for editing drawing-specific arrays (scaleFactors, visibleModes, axisLabels)
+	    const setScaleFromString = (val) => {
+	        const parts = val.split(',').map(s => Number(s.trim())).filter(n => Number.isFinite(n));
+	        if (parts.length > 0)
+	            setScale(parts);
 	    };
-	    const addOption = () => setOpts([...opts, ""]);
-	    const removeOptionSafe = (idx) => {
-	        // Prevent removing options when there would be fewer than 2
-	        if (opts.length <= 2)
-	            return;
-	        const newOpts = opts.filter((_, i) => i !== idx);
-	        // Adjust correct index if needed
-	        let newCorr = corr;
-	        if (idx === corr) {
-	            newCorr = 0; // reset to first option
+	    const setModesFromString = (val) => {
+	        const parts = val.split(',').map(s => s.trim()).filter(s => s.length > 0);
+	        setModes(parts);
+	    };
+	    const setAxesFromString = (val) => {
+	        const parts = val.split(',').map(s => s.trim());
+	        setAxes(parts);
+	    };
+	    const handleInitialDrawChange = (e) => {
+	        setInitialDrawStr(e.target.value);
+	        try {
+	            const parsed = JSON.parse(e.target.value);
+	            setInitialDraw(parsed);
+	            // Clear JSON error if it exists
+	            setErrors(prev => prev.filter(err => !err.includes('Initial Drawing')));
 	        }
-	        else if (idx < corr) {
-	            newCorr = corr - 1;
+	        catch (err) {
+	            // Add JSON parse error
+	            setErrors(prev => {
+	                const filtered = prev.filter(err => !err.includes('Initial Drawing'));
+	                return [...filtered, 'Initial Drawing must be valid JSON'];
+	            });
 	        }
-	        setOpts(newOpts);
-	        setCorr(newCorr);
 	    };
 	    const validate = () => {
 	        const errs = [];
 	        if (!q || q.trim().length === 0)
 	            errs.push('Question is required.');
-	        const trimmed = opts.map(o => (o ?? '').trim());
-	        if (trimmed.length < 2)
-	            errs.push('At least two options are required.');
-	        trimmed.forEach((o, i) => { if (!o)
-	            errs.push(`Option ${i + 1} must not be empty.`); });
-	        if (typeof corr !== 'number' || corr < 0 || corr >= opts.length)
-	            errs.push('A valid correct answer must be selected.');
+	        if (!Number.isFinite(cw) || cw <= 0)
+	            errs.push('Canvas width must be a positive number.');
+	        if (!Number.isFinite(ch) || ch <= 0)
+	            errs.push('Canvas height must be a positive number.');
+	        // Final validation of JSON
+	        try {
+	            JSON.parse(initialDrawStr);
+	        }
+	        catch {
+	            if (!errs.some(e => e.includes('Initial Drawing'))) {
+	                errs.push('Initial Drawing must be valid JSON');
+	            }
+	        }
 	        return errs;
 	    };
 	    const save = async () => {
+	        console.log('Save button clicked');
 	        const validation = validate();
 	        setErrors(validation);
-	        if (validation.length > 0)
+	        if (validation.length > 0) {
+	            console.log('Validation errors:', validation);
 	            return;
+	        }
 	        setIsSaving(true);
 	        try {
-	            // Use the BoundRuntime helper to show Studio saving UI and close modal on success
-	            await runtime.studioSaveAndClose(runtime.postHandler('save_quiz', {
+	            const payload = {
 	                question: q,
-	                options: opts,
-	                correct: corr,
 	                max_attempts: maxAttempts,
-	                weight: weight,
+	                weight: w,
 	                has_score: hasScore,
-	            }));
+	                index: idx,
+	                AssessName: assessName,
+	                canvasWidth: cw,
+	                canvasHeight: ch,
+	                scaleFactors: scale,
+	                bgnumber: bgNumber,
+	                visibleModes: modes,
+	                axisLabels: axes,
+	                hideLabels: hideLbls,
+	                initialDrawing: initialDraw,
+	            };
+	            console.log('Saving payload:', payload);
+	            await runtime.studioSaveAndClose(runtime.postHandler('save_quiz', payload));
+	            console.log('Save successful');
+	            // Modal will close automatically via studioSaveAndClose
+	        }
+	        catch (error) {
+	            console.error('Save failed:', error);
+	            const errorMsg = error instanceof Error ? error.message : String(error);
+	            setErrors([`Failed to save: ${errorMsg}`]);
+	            // Modal stays open so user can see the error
 	        }
 	        finally {
 	            setIsSaving(false);
 	        }
 	    };
-	    return (jsxRuntimeExports.jsxs("div", { className: "myxblock-studio", children: [jsxRuntimeExports.jsx("h2", { children: "Edit Quiz" }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { children: "Question:" }), jsxRuntimeExports.jsx("input", { type: "text", value: q, onChange: e => setQ(e.target.value) })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { children: "Options:" }), opts.map((opt, idx) => (jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("input", { type: "text", value: opt, onChange: e => handleOptionChange(idx, e.target.value) }), jsxRuntimeExports.jsx("input", { type: "radio", name: "correct", checked: corr === idx, onChange: () => setCorr(idx) }), " Correct", jsxRuntimeExports.jsx("button", { type: "button", onClick: () => removeOptionSafe(idx), disabled: opts.length <= 2, children: "Remove" })] }, idx))), jsxRuntimeExports.jsx("button", { type: "button", onClick: addOption, children: "Add Option" })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { children: "Max attempts:" }), jsxRuntimeExports.jsx("input", { type: "number", value: maxAttempts, onChange: e => setMaxAttempts(Number(e.target.value)) })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { children: "Weight (points):" }), jsxRuntimeExports.jsx("input", { type: "number", value: weight, onChange: e => setWeight(Number(e.target.value)) })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { children: "Graded:" }), jsxRuntimeExports.jsx("input", { type: "checkbox", checked: hasScore, onChange: e => setHasScore(e.target.checked) })] }), errors.length > 0 && (jsxRuntimeExports.jsx("div", { className: "studio-errors", children: errors.map((err, i) => jsxRuntimeExports.jsx("div", { className: "text-danger", children: err }, i)) })), jsxRuntimeExports.jsx("button", { className: "btn btn-primary", onClick: save, disabled: isSaving, children: isSaving ? 'Saving...' : 'Save' })] }));
+	    const cancel = () => {
+	        runtime.notify('cancel', {});
+	    };
+	    return (jsxRuntimeExports.jsxs("div", { className: "myxblock-studio", style: { padding: '20px', maxWidth: '800px' }, children: [jsxRuntimeExports.jsx("h2", { style: { marginBottom: '20px', fontSize: '24px', fontWeight: 'bold' }, children: "Edit Drawing XBlock" }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Question:" }), jsxRuntimeExports.jsx("input", { type: "text", value: q, onChange: (e) => setQ(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Assessment Name:" }), jsxRuntimeExports.jsx("input", { type: "text", value: assessName, onChange: (e) => setAssessName(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Index:" }), jsxRuntimeExports.jsx("input", { type: "number", value: idx, onChange: (e) => setIdx(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }, children: [jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Canvas Width (px):" }), jsxRuntimeExports.jsx("input", { type: "number", value: cw, onChange: (e) => setCw(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Canvas Height (px):" }), jsxRuntimeExports.jsx("input", { type: "number", value: ch, onChange: (e) => setCh(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Scale Factors (comma-separated numbers):" }), jsxRuntimeExports.jsx("input", { type: "text", value: scale.join(', '), onChange: (e) => setScaleFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Format: xlim, ylim, bottom_margin, left_margin, top_margin, right_margin" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Background Number:" }), jsxRuntimeExports.jsx("input", { type: "number", value: bgNumber, onChange: (e) => setBgNumber(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Visible Modes (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: modes.join(', '), onChange: (e) => setModesFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Available: point, line, singlearrowhead, doublearrowhead, polygon, rect, circle, freedraw, coordinate, curve, curve4pts, text, transform, color, strokeWidth, download" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Axis Labels (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: axes.join(', '), onChange: (e) => setAxesFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Format: X-axis label, Y-axis label" })] }), jsxRuntimeExports.jsx("div", { style: { marginBottom: '15px' }, children: jsxRuntimeExports.jsxs("label", { style: { display: 'flex', alignItems: 'center', cursor: 'pointer' }, children: [jsxRuntimeExports.jsx("input", { type: "checkbox", checked: hideLbls, onChange: (e) => setHideLbls(e.target.checked), style: { marginRight: '8px' } }), jsxRuntimeExports.jsx("span", { style: { fontWeight: 'bold' }, children: "Hide Axis Labels" })] }) }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Initial Drawing (JSON):" }), jsxRuntimeExports.jsx("textarea", { value: initialDrawStr, onChange: handleInitialDrawChange, rows: 8, style: {
+	                            width: '100%',
+	                            padding: '8px',
+	                            border: '1px solid #ccc',
+	                            borderRadius: '4px',
+	                            fontFamily: 'monospace',
+	                            fontSize: '13px'
+	                        } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Enter valid JSON for initial canvas objects (Fabric.js format)" })] }), jsxRuntimeExports.jsxs("div", { style: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginBottom: '15px' }, children: [jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Max Attempts:" }), jsxRuntimeExports.jsx("input", { type: "number", value: maxAttempts, onChange: (e) => setMaxAttempts(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Weight (points):" }), jsxRuntimeExports.jsx("input", { type: "number", value: w, onChange: (e) => setW(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsx("div", { children: jsxRuntimeExports.jsxs("label", { style: { display: 'flex', alignItems: 'center', cursor: 'pointer', height: '100%', paddingTop: '30px' }, children: [jsxRuntimeExports.jsx("input", { type: "checkbox", checked: hasScore, onChange: (e) => setHasScore(e.target.checked), style: { marginRight: '8px' } }), jsxRuntimeExports.jsx("span", { style: { fontWeight: 'bold' }, children: "Graded" })] }) })] }), errors.length > 0 && (jsxRuntimeExports.jsx("div", { style: {
+	                    marginBottom: '15px',
+	                    padding: '12px',
+	                    backgroundColor: '#f8d7da',
+	                    border: '1px solid #f5c6cb',
+	                    borderRadius: '4px'
+	                }, children: errors.map((err, i) => (jsxRuntimeExports.jsxs("div", { style: { color: '#721c24', marginBottom: errors.length > 1 && i < errors.length - 1 ? '8px' : '0' }, children: ["\u2022 ", err] }, i))) })), jsxRuntimeExports.jsxs("div", { style: { display: 'flex', gap: '10px', paddingTop: '10px', borderTop: '1px solid #ddd' }, children: [jsxRuntimeExports.jsx("button", { onClick: save, disabled: isSaving, style: {
+	                            padding: '10px 20px',
+	                            backgroundColor: isSaving ? '#6c757d' : '#007bff',
+	                            color: 'white',
+	                            border: 'none',
+	                            borderRadius: '4px',
+	                            cursor: isSaving ? 'not-allowed' : 'pointer',
+	                            fontWeight: 'bold',
+	                            fontSize: '14px'
+	                        }, children: isSaving ? 'Saving...' : 'Save' }), jsxRuntimeExports.jsx("button", { onClick: cancel, disabled: isSaving, style: {
+	                            padding: '10px 20px',
+	                            backgroundColor: '#6c757d',
+	                            color: 'white',
+	                            border: 'none',
+	                            borderRadius: '4px',
+	                            cursor: isSaving ? 'not-allowed' : 'pointer',
+	                            fontSize: '14px'
+	                        }, children: "Cancel" })] })] }));
 	};
 	function initStudioView(runtime, container, initData) {
 	    if ('jquery' in container)
 	        container = container[0];
 	    const languageCode = document.body.parentElement.lang;
 	    const root = ReactDOM.createRoot(container);
-	    root.render(jsxRuntimeExports.jsx(IntlProvider, { messages: messages[languageCode], locale: languageCode, defaultLocale: "en", children: jsxRuntimeExports.jsx(StudioView, { runtime: new BoundRuntime(runtime, container), question: initData.question, options: initData.options, correct: initData.correct }) }));
+	    root.render(jsxRuntimeExports.jsx(IntlProvider, { messages: messages[languageCode], locale: languageCode, defaultLocale: "en", children: jsxRuntimeExports.jsx(StudioView, { runtime: new BoundRuntime(runtime, container), ...initData }) }));
 	}
 	globalThis.initDrawingXBlockStudioView = initStudioView;
 
