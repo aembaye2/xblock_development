@@ -6,11 +6,11 @@ Main part of this is done such as sending the .json drawing to the backend, and 
 
 What is left according their importance
 
-1. Having now able to process the .json drawing for line drawing, ask possible questions of drawing and have a function that processes different questions of drawing !!! Do this based on the visble coordinates and not pixels
-
-2. Build the studioView so that you can edit all the fields (understand the basic xblock-react which has a working editable field and myxblock which has many of the fields and work well in openedx instance and then you can make the modification for the drawing studioView which is not working)
-
-3. test the xblock in openedx instance
+1. Build the studioView so that you can edit all the fields (understand the basic xblock-react which has a working editable field and myxblock which has more fields and work well in openedx instance and then you can make the modification for the drawing studioView which is not working) --- > To the most part, the studioview edit is working but is throwing error. When "Save" button, it seems that html is sent instead of json file to the backend; so we need to fix that
+   
+2. Having now able to process the .json drawing for line drawing, ask possible questions of drawing and have a function that processes different questions of drawing !!! Do this based on the visble coordinates and not pixels
+   
+3. Test the xblock in openedx instance and if something doesn't work, get browser console errors and feed it to AI (Claude or GitHub Copilot)
 
 Done and can be expanded!!! create many initial drawing .json file from the same canvas and put them in folder and use the as needed
 
