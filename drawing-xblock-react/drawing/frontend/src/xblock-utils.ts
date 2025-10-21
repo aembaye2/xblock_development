@@ -5,133 +5,93 @@
 
 export interface XBlockRuntime {
   handlerUrl(element: HTMLDivElement, handlerName: string, suffix?: string, query?: string): string;
-    /** @deprecated XBlocks should not use children */
-      children(element: HTMLDivElement): string[];
+  /** @deprecated XBlocks should not use children */
+  children(element: HTMLDivElement): string[];
 
-        // On Studio runtime only:
-          /** Listen to a Studio event */
-            listenTo?(eventName: string, callback: () => void): void;
-              /** Refresh the view for the xblock represented by the specified element. */
-                refreshXBlock(element: HTMLDivElement): void;
-                  /** Notify the Studio runtime of a client-side event */
-                    notify(name: 'save', data: { state: 'start', element: HTMLDivElement, message: string }): void;
-                      notify(name: 'save', data: { state: 'end', element: HTMLDivElement }): void;
-                        notify(name: 'error', data: { title: string, message: string }): void;
-                          notify(name: 'cancel', data: Record<never, never>): void;
-                            notify(name: 'modal-shown', data: any): void;
-                            }
+  // On Studio runtime only:
+  /** Listen to a Studio event */
+  listenTo?(eventName: string, callback: () => void): void;
+  /** Refresh the view for the xblock represented by the specified element. */
+  refreshXBlock(element: HTMLDivElement): void;
+  /** Notify the Studio runtime of a client-side event */
+  notify(name: 'save', data: { state: 'start', element: HTMLDivElement, message: string }): void;
+  notify(name: 'save', data: { state: 'end', element: HTMLDivElement }): void;
+  notify(name: 'error', data: { title: string, message: string }): void;
+  notify(name: 'cancel', data: Record<never, never>): void;
+  notify(name: 'modal-shown', data: any): void;
+}
 
-                            /**
-                             * Sometimes the XBlock API returns an HTMLElement wrapped in jQuery.
-                              * We want to discourage use of jQuery, so this is a minimal type definition
-                               * that just provides enough typing for you to identify and unwrap such
-                                * variables. See https://youmightnotneedjquery.com/
-                                 */
-                                 export interface JQueryWrappedDiv {
-                                   "0": HTMLDivElement;
-                                     /** The jQuery version number */
-                                       jquery: string;
-                                       }
+/**
+ * Sometimes the XBlock API returns an HTMLElement wrapped in jQuery.
+ * We want to discourage use of jQuery, so this is a minimal type definition
+ * that just provides enough typing for you to identify and unwrap such
+ * variables. See https://youmightnotneedjquery.com/
+ */
+export interface JQueryWrappedDiv {
+  "0": HTMLDivElement;
+  /** The jQuery version number */
+  jquery: string;
+}
 
-                                       export function getCsrfToken(): string {
-                                        return document.cookie.split("; ").find((row) => row.startsWith("csrftoken="))?.split("=")[1] ?? '';
-                                         }
+export function getCsrfToken(): string {
+  return document.cookie.split("; ").find((row) => row.startsWith("csrftoken="))?.split("=")[1] ?? 'unknown CSRF!';
+}
 
-                                         /** Wraps the XBlock runtime to make it easier to use */
-                                         export class BoundRuntime {
-                                           constructor(
-                                               public readonly runtime: XBlockRuntime,
-                                                   public readonly element: HTMLDivElement
-                                                     ) {}
+/** Wraps the XBlock runtime to make it easier to use */
+export class BoundRuntime {
+  notify(arg0: string, arg1: {}) {
+    throw new Error('Method not implemented.');
+  }
+  constructor(
+    public readonly runtime: XBlockRuntime,
+    public readonly element: HTMLDivElement
+  ) {}
 
-                                                       /** GET data from a JSON handler */
-                                                         async getHandler<Data extends Record<string, any> = Record<string, any>>(handlerName: string): Promise<Data> {
-                                                            const response = await this.rawHandler(handlerName, { method: 'GET' });
-                                                            const contentType = response.headers.get('content-type') || '';
-                                                            if (!response.ok) {
-                                                              const text = await response.text();
-                                                              throw new Error(`GET ${handlerName} failed: ${response.status} ${response.statusText} - ${text.substring(0, 1000)}`);
-                                                            }
-                                                            if (!contentType.includes('application/json')) {
-                                                              const text = await response.text();
-                                                              throw new Error(`GET ${handlerName} did not return JSON (content-type: ${contentType}). Response: ${text.substring(0, 1000)}`);
-                                                            }
-                                                            return response.json();
-                                                                   }
+  /** GET data from a JSON handler */
+  async getHandler<Data extends Record<string, any> = Record<string, any>>(handlerName: string): Promise<Data> {
+    const response = await this.rawHandler(handlerName, { method: 'GET' });
+    return response.json();
+  }
 
-                                                                     /** POST data to a JSON handler */
-                                                                       async postHandler<Data extends Record<string, any> = Record<string, any>>(
-                                                                           handlerName: string,
-                                                                               data: Record<string, any> = {},
-                                                                                 ): Promise<Data> {
-                                                                          const response = await this.rawHandler(handlerName, { method: 'POST', body: JSON.stringify(data) });
-                                                                          const contentType = response.headers.get('content-type') || '';
-                                                                          if (!response.ok) {
-                                                                            const text = await response.text();
-                                                                            throw new Error(`POST ${handlerName} failed: ${response.status} ${response.statusText} - ${text.substring(0, 1000)}`);
-                                                                          }
-                                                                          if (!contentType.includes('application/json')) {
-                                                                            const text = await response.text();
-                                                                            throw new Error(`POST ${handlerName} did not return JSON (content-type: ${contentType}). Response: ${text.substring(0, 1000)}`);
-                                                                          }
-                                                                          return response.json();
-                                                                                           }
+  /** POST data to a JSON handler */
+  async postHandler<Data extends Record<string, any> = Record<string, any>>(
+    handlerName: string,
+    data: Record<string, any> = {},
+  ): Promise<Data> {
+    const response = await this.rawHandler(handlerName, { method: 'POST', body: JSON.stringify(data) });
+    return response.json();
+  }
 
-                                                                                             /** Call an XBlock handler */
-                                                                                               rawHandler(handlerName: string, init: RequestInit, suffix?: string, query?: string): Promise<Response> {
-                                                                                                   const url = this.runtime.handlerUrl(this.element, handlerName, suffix, query);
-                                                                                                      let { headers, ...otherInit } = init;
-                                                                                                      headers = new Headers(headers); // Wrap headers into a Headers object if not already
+  /** Call an XBlock handler */
+  rawHandler(handlerName: string, init: RequestInit, suffix?: string, query?: string): Promise<Response> {
+    const url = this.runtime.handlerUrl(this.element, handlerName, suffix, query);
+    let { headers, ...otherInit } = init;
+    headers = new Headers(headers); // Wrap headers into a Headers object if not already
+    if (init.method !== 'GET') {
+      headers.set('X-CSRFToken', getCsrfToken());
+    }
+    if (!headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json');
+    }
+    return fetch(url, { headers, ...otherInit });
+  }
 
-                                                                                                      // Prefer JSON responses
-                                                                                                      if (!headers.has('Accept')) headers.set('Accept', 'application/json');
-                                                                                                      // Mark as AJAX to avoid some middleware redirects
-                                                                                                      if (!headers.has('X-Requested-With')) headers.set('X-Requested-With', 'XMLHttpRequest');
+  /**
+   * A helper method to show a "saving..." toast while changes are being saved,
+   * to handle errors, and to close the settings editor modal when complete.
+   * @param savePromise 
+   */
+  async studioSaveAndClose(savePromise: Promise<any>): Promise<void> {
+    this.runtime.notify('save', { state: 'start', element: this.element, message: "Saving..." });
+    try {
+      await savePromise;
+      this.runtime.notify('save', { state: 'end', element: this.element });
+      this.runtime.notify('cancel', {});  // Close the modal
+    } catch (error: unknown) {
+      this.runtime.notify('error', { title: 'Failed to save changes', message: 'An error occurred.' });
+      console.error(error);
+    }
+  }
 
-                                                                                                      // Only set CSRF token header when we actually have one
-                                                                                                      const csrf = getCsrfToken();
-                                                                                                      if (init.method !== 'GET' && csrf) {
-                                                                                                        headers.set('X-CSRFToken', csrf);
-                                                                                                      }
-
-                                                                                                      if (!headers.has('Content-Type')) {
-                                                                                                        headers.set('Content-Type', 'application/json');
-                                                                                                      }
-
-                                                                                                      return fetch(url, { headers, ...otherInit });
-                                                                                                                                             }
-
-                                                                                                                                               /**
-                                                                                                                                                  * A helper method to show a "saving..." toast while changes are being saved,
-                                                                                                                                                     * to handle errors, and to close the settings editor modal when complete.
-                                                                                                                                                        * @param savePromise 
-                                                                                                                                                           */
-                                                                                                                                                             async studioSaveAndClose(savePromise: Promise<any>): Promise<void> {
-                                                                                                                                                                 this.runtime.notify('save', { state: 'start', element: this.element, message: "Saving..." });
-                                                                                                                                                                     try {
-                                                                                                                                                                           await savePromise;
-                                                                                                                                                                                 this.runtime.notify('save', { state: 'end', element: this.element });
-                                                                                                                                                                                       this.runtime.notify('cancel', {});  // Close the modal
-                                                                                                                                                                                           } catch (error: unknown) {
-                                                                                                                                                                                                 this.runtime.notify('error', { title: 'Failed to save changes', message: 'An error occurred.' });
-                                                                                                                                                                                                       console.error(error);
-                                                                                                                                                                                                           }
-                                                                                                                                                                                                             }
-
-                                                                                                                                                                                                               /**
-                                                                                                                                                                                                                  * Delegate notify calls to the underlying XBlock runtime.
-                                                                                                                                                                                                                     * This helper makes it convenient to call `runtime.notify(...)` on a BoundRuntime
-                                                                                                                                                                                                                        * instance and avoids consumers needing to reference the inner `.runtime` field.
-                                                                                                                                                                                                                           * We keep this intentionally permissive in typing because the XBlock runtime's
-                                                                                                                                                                                                                              * notify method uses several overloads; callers should use the documented shapes.
-                                                                                                                                                                                                                                 */
-                                                                                                                                                                                                                                   notify(name: string, data?: any): void {
-                                                                                                                                                                                                                                       // Use a runtime call if available. Cast to any to keep the wrapper simple.
-                                                                                                                                                                                                                                           if (this.runtime && typeof (this.runtime as any).notify === 'function') {
-                                                                                                                                                                                                                                                 (this.runtime as any).notify(name, data);
-                                                                                                                                                                                                                                                     }
-                                                                                                                                                                                                                                                       }
-
-                                                                                                                                                                                                                                                         // To access other methods like children(), notify(), etc. use the .runtime property
-                                                                                                                                                                                                                                                         }
-                                                                                                                                                                                                                                                         
+  // To access other methods like children(), notify(), etc. use the .runtime property
+}

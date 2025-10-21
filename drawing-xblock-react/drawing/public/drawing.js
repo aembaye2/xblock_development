@@ -5637,12 +5637,15 @@
 	//
 	// 🛑 As an XBlock author, you probably should NOT edit this file. 🛑
 	function getCsrfToken() {
-	    return document.cookie.split("; ").find((row) => row.startsWith("csrftoken="))?.split("=")[1] ?? '';
+	    return document.cookie.split("; ").find((row) => row.startsWith("csrftoken="))?.split("=")[1] ?? 'unknown CSRF!';
 	}
 	/** Wraps the XBlock runtime to make it easier to use */
 	class BoundRuntime {
 	    runtime;
 	    element;
+	    notify(arg0, arg1) {
+	        throw new Error('Method not implemented.');
+	    }
 	    constructor(runtime, element) {
 	        this.runtime = runtime;
 	        this.element = element;
@@ -5650,29 +5653,11 @@
 	    /** GET data from a JSON handler */
 	    async getHandler(handlerName) {
 	        const response = await this.rawHandler(handlerName, { method: 'GET' });
-	        const contentType = response.headers.get('content-type') || '';
-	        if (!response.ok) {
-	            const text = await response.text();
-	            throw new Error(`GET ${handlerName} failed: ${response.status} ${response.statusText} - ${text.substring(0, 1000)}`);
-	        }
-	        if (!contentType.includes('application/json')) {
-	            const text = await response.text();
-	            throw new Error(`GET ${handlerName} did not return JSON (content-type: ${contentType}). Response: ${text.substring(0, 1000)}`);
-	        }
 	        return response.json();
 	    }
 	    /** POST data to a JSON handler */
 	    async postHandler(handlerName, data = {}) {
 	        const response = await this.rawHandler(handlerName, { method: 'POST', body: JSON.stringify(data) });
-	        const contentType = response.headers.get('content-type') || '';
-	        if (!response.ok) {
-	            const text = await response.text();
-	            throw new Error(`POST ${handlerName} failed: ${response.status} ${response.statusText} - ${text.substring(0, 1000)}`);
-	        }
-	        if (!contentType.includes('application/json')) {
-	            const text = await response.text();
-	            throw new Error(`POST ${handlerName} did not return JSON (content-type: ${contentType}). Response: ${text.substring(0, 1000)}`);
-	        }
 	        return response.json();
 	    }
 	    /** Call an XBlock handler */
@@ -5680,16 +5665,8 @@
 	        const url = this.runtime.handlerUrl(this.element, handlerName, suffix, query);
 	        let { headers, ...otherInit } = init;
 	        headers = new Headers(headers); // Wrap headers into a Headers object if not already
-	        // Prefer JSON responses
-	        if (!headers.has('Accept'))
-	            headers.set('Accept', 'application/json');
-	        // Mark as AJAX to avoid some middleware redirects
-	        if (!headers.has('X-Requested-With'))
-	            headers.set('X-Requested-With', 'XMLHttpRequest');
-	        // Only set CSRF token header when we actually have one
-	        const csrf = getCsrfToken();
-	        if (init.method !== 'GET' && csrf) {
-	            headers.set('X-CSRFToken', csrf);
+	        if (init.method !== 'GET') {
+	            headers.set('X-CSRFToken', getCsrfToken());
 	        }
 	        if (!headers.has('Content-Type')) {
 	            headers.set('Content-Type', 'application/json');
@@ -5697,10 +5674,10 @@
 	        return fetch(url, { headers, ...otherInit });
 	    }
 	    /**
-	       * A helper method to show a "saving..." toast while changes are being saved,
-	          * to handle errors, and to close the settings editor modal when complete.
-	             * @param savePromise
-	                */
+	     * A helper method to show a "saving..." toast while changes are being saved,
+	     * to handle errors, and to close the settings editor modal when complete.
+	     * @param savePromise
+	     */
 	    async studioSaveAndClose(savePromise) {
 	        this.runtime.notify('save', { state: 'start', element: this.element, message: "Saving..." });
 	        try {
@@ -5711,19 +5688,6 @@
 	        catch (error) {
 	            this.runtime.notify('error', { title: 'Failed to save changes', message: 'An error occurred.' });
 	            console.error(error);
-	        }
-	    }
-	    /**
-	       * Delegate notify calls to the underlying XBlock runtime.
-	          * This helper makes it convenient to call `runtime.notify(...)` on a BoundRuntime
-	             * instance and avoids consumers needing to reference the inner `.runtime` field.
-	                * We keep this intentionally permissive in typing because the XBlock runtime's
-	                   * notify method uses several overloads; callers should use the documented shapes.
-	                      */
-	    notify(name, data) {
-	        // Use a runtime call if available. Cast to any to keep the wrapper simple.
-	        if (this.runtime && typeof this.runtime.notify === 'function') {
-	            this.runtime.notify(name, data);
 	        }
 	    }
 	}

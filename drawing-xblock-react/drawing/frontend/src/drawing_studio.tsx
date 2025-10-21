@@ -131,47 +131,49 @@ const StudioView: React.FC<Props> = ({
   };
 
   const save = async () => {
-    console.log('Save button clicked');
-    const validation = validate();
-    setErrors(validation);
-    if (validation.length > 0) {
-      console.log('Validation errors:', validation);
-      return;
-    }
+  console.log('Save button clicked');
+  const validation = validate();
+  setErrors(validation);
+  if (validation.length > 0) {
+    console.log('Validation errors:', validation);
+    return;
+  }
 
-    setIsSaving(true);
+  setIsSaving(true);
+  
+  try {
+    const payload = {
+      question: q,
+      max_attempts: maxAttempts,
+      weight: w,
+      has_score: hasScore,
+      index: idx,
+      AssessName: assessName,
+      canvasWidth: cw,
+      canvasHeight: ch,
+      scaleFactors: scale,
+      bgnumber: bgNumber,
+      visibleModes: modes,
+      axisLabels: axes,
+      hideLabels: hideLbls,
+      initialDrawing: initialDraw,
+    };
+    console.log('Saving payload:', payload);
     
-    try {
-      const payload = {
-        question: q,
-        max_attempts: maxAttempts,
-        weight: w,
-        has_score: hasScore,
-        index: idx,
-        AssessName: assessName,
-        canvasWidth: cw,
-        canvasHeight: ch,
-        scaleFactors: scale,
-        bgnumber: bgNumber,
-        visibleModes: modes,
-        axisLabels: axes,
-        hideLabels: hideLbls,
-        initialDrawing: initialDraw,
-      };
-      console.log('Saving payload:', payload);
-      
-      await runtime.studioSaveAndClose(runtime.postHandler('save_quiz', payload));
-      console.log('Save successful');
-      // Modal will close automatically via studioSaveAndClose
-    } catch (error) {
-      console.error('Save failed:', error);
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      setErrors([`Failed to save: ${errorMsg}`]);
-      // Modal stays open so user can see the error
-    } finally {
-      setIsSaving(false);
-    }
-  };
+    // ✅ CORRECT: Pass the Promise itself, not the awaited result
+    await runtime.studioSaveAndClose(
+      runtime.postHandler('save_quiz', payload)
+    );
+    
+    console.log('Save successful');
+  } catch (error) {
+    console.error('Save failed:', error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    setErrors([`Failed to save: ${errorMsg}`]);
+  } finally {
+    setIsSaving(false);
+  }
+};
 
   const cancel = () => {
     runtime.notify('cancel', {});
