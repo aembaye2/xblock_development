@@ -165,7 +165,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     visibleModes = List(
         display_name="Visible Modes",
         scope=Scope.settings,
-        default=["line", "rect"], # <-- whitelist these tools
+        default=["line", "circle"], # <-- whitelist these tools
         help="List of drawing modes to show in the toolbar (mode keys). Empty by default to hide all tools.",
     )
 
@@ -280,7 +280,12 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         except Exception:
             pass
         
-        self.visible_modes = data.get('visibleModes', self.visible_modes)
+    # `visibleModes` is the field defined on this XBlock (camelCase).
+    # Previously this line used `visible_modes` (snake_case) which does not
+    # match the declared field name and could raise AttributeError when
+    # trying to access the fallback value. Use the correct field name so
+    # changes persist to the XBlock settings.
+        self.visibleModes = data.get('visibleModes', self.visibleModes)
         self.axis_labels = data.get('axisLabels', self.axis_labels)
         
         try:
