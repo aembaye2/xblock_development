@@ -181,7 +181,56 @@ const StudioView: React.FC<Props> = ({
 
   return (
     <div className="myxblock-studio" style={{ padding: '20px', maxWidth: '800px' }}>
-      <h2 style={{ marginBottom: '20px', fontSize: '24px', fontWeight: 'bold' }}>Edit Drawing XBlock</h2>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '20px',
+        position: 'sticky',
+        top: 0,
+        backgroundColor: 'white',
+        paddingTop: '6px',
+        paddingBottom: '6px',
+        zIndex: 2
+      }}>
+        <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 'bold' }}>Edit Drawing XBlock</h2>
+
+        {/* Top toolbar: Save / Cancel visible without scrolling (near modal close button) */}
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button
+            onClick={save}
+            disabled={isSaving}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: isSaving ? '#6c757d' : '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: isSaving ? 'not-allowed' : 'pointer',
+              fontWeight: 'bold',
+              fontSize: '14px'
+            }}
+          >
+            {isSaving ? 'Saving...' : 'Save'}
+          </button>
+
+          <button
+            onClick={cancel}
+            disabled={isSaving}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#6c757d',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: isSaving ? 'not-allowed' : 'pointer',
+              fontSize: '14px'
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
       
       <div style={{ marginBottom: '15px' }}>
         <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
