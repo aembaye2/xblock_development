@@ -1,6 +1,7 @@
 """TO-DO: Write a description of what this XBlock is."""
 import os
 import json
+import logging
 
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
@@ -19,6 +20,72 @@ for json_file in glob.glob(os.path.join(gallery_dir, "*.json")):
     var_name = os.path.splitext(os.path.basename(json_file))[0].upper()
     with open(json_file, "r") as f:
         globals()[var_name] = json.load(f)
+
+
+def validate_initial_drawing(value, max_items=500, max_bytes=200_000):
+    """Validate and lightly sanitize the `initial_drawing` payload received from Studio.
+
+    - Ensures the value is a list of dict-like objects.
+    - Keeps only a small whitelist of keys per object.
+    - Normalizes common numeric fields to float and clips item count/size.
+    - Raises ValueError for irrecoverable issues so callers can handle safely.
+    """
+    logger = logging.getLogger(__name__)
+
+    if value is None:
+        return []
+
+    if not isinstance(value, list):
+        raise ValueError("initialDrawing must be a list")
+
+    out = []
+    allowed_keys = {
+        "type",
+        "left",
+        "top",
+        "width",
+        "height",
+        "points",
+        "stroke",
+        "fill",
+        "angle",
+        "scaleX",
+        "scaleY",
+        "radius",
+        "path",
+        "text",
+        "fontSize",
+    }
+
+    for item in value:
+        if not isinstance(item, dict):
+            # skip non-dict entries
+            continue
+        sanitized = {k: item[k] for k in item.keys() & allowed_keys}
+
+        # Normalize numeric-like fields to floats where appropriate
+        for num_key in ("left", "top", "width", "height", "angle", "scaleX", "scaleY", "radius", "fontSize"):
+            if num_key in sanitized:
+                try:
+                    sanitized[num_key] = float(sanitized[num_key])
+                except Exception:
+                    sanitized[num_key] = 0.0
+
+        out.append(sanitized)
+        if len(out) >= max_items:
+            logger.warning("initial_drawing truncated to %d items", max_items)
+            break
+
+    # Check approximate serialized size and fail if excessively large
+    try:
+        total_bytes = len(json.dumps(out))
+        if total_bytes > max_bytes:
+            raise ValueError(f"initialDrawing too large ({total_bytes} bytes)")
+    except TypeError:
+        # If serialization fails for unexpected types, raise
+        raise
+
+    return out
 
 class DrawingXBlock(ScorableXBlockMixin, XBlock):
 
@@ -57,6 +124,13 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     question = String(
         default="Question: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod auctor urna, vel tincidunt elit varius id. Nullam in lacus ac odio vehicula tempus a ac magna. Ut sit amet orci orci. Nulla posuere purus nec orci blandit, sed interdum libero interdum. Sed lacinia libero ac sem vehicula, nec facilisis purus pretium. Fusce accumsan, odio euismod laoreet porttitor, felis nunc maximus odio, nec aliquet erat neque in velit. Nam iaculis ut risus id lacinia. Maecenas id metus sed libero tincidunt tristique ac ac metus. Proin lacinia vestibulum nisi, ac cursus lorem efficitur id. Integer sed magna tincidunt, suscipit mi non, mollis elit. Donec sed nulla turpis. Cras varius neque in nisi eleifend, ac euismod felis fermentum. Quisque ut gravida felis. Nam et lacus dolor. Integer ac cursus urna. Donec aliquam, lectus a facilisis vestibulum, turpis libero pretium enim, non maximus ante elit vel libero. Aliquam erat volutpat. Etiam sit amet eros sed purus fermentum vehicula. ", scope=Scope.content,
         help="Quiz question",
+    )
+    
+    # print(LINE_INITIAL_DRAWING)
+    initial_drawing = List(
+        default= [], # CURVE, {}, LINE_INITIAL_DRAWING,  {}, EMPTY_INITIAL_DRAWING, RECTANGLE_INITIAL_DRAWING],
+        scope=Scope.content,
+        help="Initial drawing data for the canvas (Fabric.js format)",
     )
 
     # Removed MCQ fields: options, correct, user_answer
@@ -165,7 +239,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     visibleModes = List(
         display_name="Visible Modes",
         scope=Scope.settings,
-        default=["line", "circle"], # <-- whitelist these tools
+        default=["line", "circle", "point"], # <-- whitelist these tools
         help="List of drawing modes to show in the toolbar (mode keys). Empty by default to hide all tools.",
     )
 
@@ -183,11 +257,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         help="Whether to hide axis labels by default,",
     )
 
-    initial_drawing = List(
-        default= [], #LINE_INITIAL_DRAWING, #CURVE , #{}, #curve , LINE_INITIAL_DRAWING,  {}, #EMPTY_INITIAL_DRAWING, #RECTANGLE_INITIAL_DRAWING, #
-        scope=Scope.content,
-        help="Initial drawing data for the canvas (Fabric.js format)",
-    )
+    
 
     # TO-DO: change this view to display more interesting things.
     def student_view(self, context=None):
@@ -293,7 +363,13 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         except Exception:
             pass
         
-        self.initial_drawing = data.get('initialDrawing', self.initial_drawing)
+        # Validate and sanitize incoming initialDrawing from Studio before storing.
+        new_initial = data.get('initialDrawing', None)
+        if new_initial is not None:
+            try:
+                self.initial_drawing = validate_initial_drawing(new_initial)
+            except Exception:
+                logging.exception("Invalid initialDrawing provided in Studio; keeping previous value")
         
         return {"result": "success"}
 
