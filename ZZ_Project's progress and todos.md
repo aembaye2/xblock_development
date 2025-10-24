@@ -6,11 +6,13 @@ Main part of this is done such as sending the .json drawing to the backend, and 
 
 What is left according their importance
 
-1. Build the studioView so that you can edit all the fields (understand the basic xblock-react which has a working editable field and myxblock which has more fields and work well in openedx instance and then you can make the modification for the drawing studioView which is not working) --- > To the most part, the studioview edit is working but is throwing error. When "Save" button, it seems that html is sent instead of json file to the backend; so we need to fix that
+1. Editing the studioview is done perfectly; the only thing left is "initial_drawing" editing and being effective; Use the vectordraw in the openedx instance how such things are edited (json? string, etc) and how does drawing.py process them
    
 2. Having now able to process the .json drawing for line drawing, ask possible questions of drawing and have a function that processes different questions of drawing !!! Do this based on the visble coordinates and not pixels
    
 3. Test the xblock in openedx instance and if something doesn't work, get browser console errors and feed it to AI (Claude or GitHub Copilot)
+
+4. (less urgent) In the studioview, it is easier to make the "save and cancel" buttons to be side by side as the "close" button instead of being found by scrolling to the button
 
 Done and can be expanded!!! create many initial drawing .json file from the same canvas and put them in folder and use the as needed
 
