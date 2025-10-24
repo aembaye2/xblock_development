@@ -58975,7 +58975,13 @@
 	                }
 	            }
 	            convertCurvesToPaths(parsedInitialDrawing);
-	            canvasInstance.current.loadFromJSON(parsedInitialDrawing, () => {
+	            // Fabric.loadFromJSON expects either a full Fabric JSON object
+	            // (with an `objects` array) or a JSON string. If we receive a bare
+	            // array of objects, wrap it for compatibility.
+	            const jsonToLoad = Array.isArray(parsedInitialDrawing)
+	                ? { objects: parsedInitialDrawing }
+	                : parsedInitialDrawing;
+	            canvasInstance.current.loadFromJSON(jsonToLoad, () => {
 	                canvasInstance.current?.renderAll();
 	                resetState(parsedInitialDrawing);
 	            });

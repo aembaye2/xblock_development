@@ -25,7 +25,12 @@ for json_file in glob.glob(os.path.join(gallery_dir, "*.json")):
 def validate_initial_drawing(value, max_items=500, max_bytes=200_000):
     """Validate and lightly sanitize the `initial_drawing` payload received from Studio.
 
-    - Ensures the value is a list of dict-like objects.
+    Accepts either of the following shapes:
+    - A list[object] of Fabric object descriptors (preferred)
+    - A Fabric canvas JSON object with an `objects` list (e.g., {"version": "..", "objects": [...]})
+
+    Behavior:
+    - Ensures we end up with a list of dict-like objects.
     - Keeps only a small whitelist of keys per object.
     - Normalizes common numeric fields to float and clips item count/size.
     - Raises ValueError for irrecoverable issues so callers can handle safely.
@@ -35,8 +40,12 @@ def validate_initial_drawing(value, max_items=500, max_bytes=200_000):
     if value is None:
         return []
 
+    # Accept full Fabric JSON with `objects` list by unwrapping to the list.
+    if isinstance(value, dict) and "objects" in value and isinstance(value["objects"], list):
+        value = value["objects"]
+
     if not isinstance(value, list):
-        raise ValueError("initialDrawing must be a list")
+        raise ValueError("initialDrawing must be a list or an object with an 'objects' array")
 
     out = []
     allowed_keys = {
@@ -126,7 +135,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         help="Quiz question",
     )
     
-    # print(LINE_INITIAL_DRAWING)
+    print(LINE_INITIAL_DRAWING)
     initial_drawing = List(
         default= [], # CURVE, {}, LINE_INITIAL_DRAWING,  {}, EMPTY_INITIAL_DRAWING, RECTANGLE_INITIAL_DRAWING],
         scope=Scope.content,

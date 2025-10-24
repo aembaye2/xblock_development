@@ -84,7 +84,7 @@ const DrawableCanvas = ({
       })
 
       // Load initial drawing only once
-      let parsedInitialDrawing = initialDrawing
+  let parsedInitialDrawing = initialDrawing
       // If initialDrawing is a string (from Python), parse it
       if (typeof initialDrawing === 'string') {
         try {
@@ -107,7 +107,15 @@ const DrawableCanvas = ({
         }
       }
       convertCurvesToPaths(parsedInitialDrawing)
-      canvasInstance.current.loadFromJSON(parsedInitialDrawing, () => {
+
+      // Fabric.loadFromJSON expects either a full Fabric JSON object
+      // (with an `objects` array) or a JSON string. If we receive a bare
+      // array of objects, wrap it for compatibility.
+      const jsonToLoad = Array.isArray(parsedInitialDrawing)
+        ? { objects: parsedInitialDrawing }
+        : parsedInitialDrawing
+
+      canvasInstance.current.loadFromJSON(jsonToLoad as any, () => {
         canvasInstance.current?.renderAll()
         resetState(parsedInitialDrawing)
       })

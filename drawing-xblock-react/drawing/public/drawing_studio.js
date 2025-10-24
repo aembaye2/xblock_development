@@ -5612,6 +5612,9 @@
 	class BoundRuntime {
 	    runtime;
 	    element;
+	    notify(arg0, arg1) {
+	        throw new Error('Method not implemented.');
+	    }
 	    constructor(runtime, element) {
 	        this.runtime = runtime;
 	        this.element = element;
@@ -5640,10 +5643,10 @@
 	        return fetch(url, { headers, ...otherInit });
 	    }
 	    /**
-	       * A helper method to show a "saving..." toast while changes are being saved,
-	          * to handle errors, and to close the settings editor modal when complete.
-	             * @param savePromise
-	                */
+	     * A helper method to show a "saving..." toast while changes are being saved,
+	     * to handle errors, and to close the settings editor modal when complete.
+	     * @param savePromise
+	     */
 	    async studioSaveAndClose(savePromise) {
 	        this.runtime.notify('save', { state: 'start', element: this.element, message: "Saving..." });
 	        try {
@@ -5654,19 +5657,6 @@
 	        catch (error) {
 	            this.runtime.notify('error', { title: 'Failed to save changes', message: 'An error occurred.' });
 	            console.error(error);
-	        }
-	    }
-	    /**
-	       * Delegate notify calls to the underlying XBlock runtime.
-	          * This helper makes it convenient to call `runtime.notify(...)` on a BoundRuntime
-	             * instance and avoids consumers needing to reference the inner `.runtime` field.
-	                * We keep this intentionally permissive in typing because the XBlock runtime's
-	                   * notify method uses several overloads; callers should use the documented shapes.
-	                      */
-	    notify(name, data) {
-	        // Use a runtime call if available. Cast to any to keep the wrapper simple.
-	        if (this.runtime && typeof this.runtime.notify === 'function') {
-	            this.runtime.notify(name, data);
 	        }
 	    }
 	}
@@ -5904,15 +5894,14 @@
 	                initialDrawing: initialDraw,
 	            };
 	            console.log('Saving payload:', payload);
+	            // ✅ CORRECT: Pass the Promise itself, not the awaited result
 	            await runtime.studioSaveAndClose(runtime.postHandler('save_quiz', payload));
 	            console.log('Save successful');
-	            // Modal will close automatically via studioSaveAndClose
 	        }
 	        catch (error) {
 	            console.error('Save failed:', error);
 	            const errorMsg = error instanceof Error ? error.message : String(error);
 	            setErrors([`Failed to save: ${errorMsg}`]);
-	            // Modal stays open so user can see the error
 	        }
 	        finally {
 	            setIsSaving(false);
@@ -5921,7 +5910,35 @@
 	    const cancel = () => {
 	        runtime.notify('cancel', {});
 	    };
-	    return (jsxRuntimeExports.jsxs("div", { className: "myxblock-studio", style: { padding: '20px', maxWidth: '800px' }, children: [jsxRuntimeExports.jsx("h2", { style: { marginBottom: '20px', fontSize: '24px', fontWeight: 'bold' }, children: "Edit Drawing XBlock" }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Question:" }), jsxRuntimeExports.jsx("input", { type: "text", value: q, onChange: (e) => setQ(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Assessment Name:" }), jsxRuntimeExports.jsx("input", { type: "text", value: assessName, onChange: (e) => setAssessName(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Index:" }), jsxRuntimeExports.jsx("input", { type: "number", value: idx, onChange: (e) => setIdx(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }, children: [jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Canvas Width (px):" }), jsxRuntimeExports.jsx("input", { type: "number", value: cw, onChange: (e) => setCw(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Canvas Height (px):" }), jsxRuntimeExports.jsx("input", { type: "number", value: ch, onChange: (e) => setCh(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Scale Factors (comma-separated numbers):" }), jsxRuntimeExports.jsx("input", { type: "text", value: scale.join(', '), onChange: (e) => setScaleFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Format: xlim, ylim, bottom_margin, left_margin, top_margin, right_margin" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Background Number:" }), jsxRuntimeExports.jsx("input", { type: "number", value: bgNumber, onChange: (e) => setBgNumber(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Visible Modes (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: modes.join(', '), onChange: (e) => setModesFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Available: point, line, singlearrowhead, doublearrowhead, polygon, rect, circle, freedraw, coordinate, curve, curve4pts, text, transform, color, strokeWidth, download" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Axis Labels (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: axes.join(', '), onChange: (e) => setAxesFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Format: X-axis label, Y-axis label" })] }), jsxRuntimeExports.jsx("div", { style: { marginBottom: '15px' }, children: jsxRuntimeExports.jsxs("label", { style: { display: 'flex', alignItems: 'center', cursor: 'pointer' }, children: [jsxRuntimeExports.jsx("input", { type: "checkbox", checked: hideLbls, onChange: (e) => setHideLbls(e.target.checked), style: { marginRight: '8px' } }), jsxRuntimeExports.jsx("span", { style: { fontWeight: 'bold' }, children: "Hide Axis Labels" })] }) }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Initial Drawing (JSON):" }), jsxRuntimeExports.jsx("textarea", { value: initialDrawStr, onChange: handleInitialDrawChange, rows: 8, style: {
+	    return (jsxRuntimeExports.jsxs("div", { className: "myxblock-studio", style: { padding: '20px', maxWidth: '800px' }, children: [jsxRuntimeExports.jsxs("div", { style: {
+	                    display: 'flex',
+	                    justifyContent: 'space-between',
+	                    alignItems: 'center',
+	                    marginBottom: '20px',
+	                    position: 'sticky',
+	                    top: 0,
+	                    backgroundColor: 'white',
+	                    paddingTop: '6px',
+	                    paddingBottom: '6px',
+	                    zIndex: 2
+	                }, children: [jsxRuntimeExports.jsx("h2", { style: { margin: 0, fontSize: '24px', fontWeight: 'bold' }, children: "Edit Drawing XBlock" }), jsxRuntimeExports.jsxs("div", { style: { display: 'flex', gap: '10px' }, children: [jsxRuntimeExports.jsx("button", { onClick: save, disabled: isSaving, style: {
+	                                    padding: '8px 16px',
+	                                    backgroundColor: isSaving ? '#6c757d' : '#007bff',
+	                                    color: 'white',
+	                                    border: 'none',
+	                                    borderRadius: '4px',
+	                                    cursor: isSaving ? 'not-allowed' : 'pointer',
+	                                    fontWeight: 'bold',
+	                                    fontSize: '14px'
+	                                }, children: isSaving ? 'Saving...' : 'Save' }), jsxRuntimeExports.jsx("button", { onClick: cancel, disabled: isSaving, style: {
+	                                    padding: '8px 16px',
+	                                    backgroundColor: '#6c757d',
+	                                    color: 'white',
+	                                    border: 'none',
+	                                    borderRadius: '4px',
+	                                    cursor: isSaving ? 'not-allowed' : 'pointer',
+	                                    fontSize: '14px'
+	                                }, children: "Cancel" })] })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Question:" }), jsxRuntimeExports.jsx("input", { type: "text", value: q, onChange: (e) => setQ(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Assessment Name:" }), jsxRuntimeExports.jsx("input", { type: "text", value: assessName, onChange: (e) => setAssessName(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Index:" }), jsxRuntimeExports.jsx("input", { type: "number", value: idx, onChange: (e) => setIdx(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }, children: [jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Canvas Width (px):" }), jsxRuntimeExports.jsx("input", { type: "number", value: cw, onChange: (e) => setCw(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Canvas Height (px):" }), jsxRuntimeExports.jsx("input", { type: "number", value: ch, onChange: (e) => setCh(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Scale Factors (comma-separated numbers):" }), jsxRuntimeExports.jsx("input", { type: "text", value: scale.join(', '), onChange: (e) => setScaleFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Format: xlim, ylim, bottom_margin, left_margin, top_margin, right_margin" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Background Number:" }), jsxRuntimeExports.jsx("input", { type: "number", value: bgNumber, onChange: (e) => setBgNumber(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Visible Modes (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: modes.join(', '), onChange: (e) => setModesFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Available: point, line, singlearrowhead, doublearrowhead, polygon, rect, circle, freedraw, coordinate, curve, curve4pts, text, transform, color, strokeWidth, download" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Axis Labels (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: axes.join(', '), onChange: (e) => setAxesFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Format: X-axis label, Y-axis label" })] }), jsxRuntimeExports.jsx("div", { style: { marginBottom: '15px' }, children: jsxRuntimeExports.jsxs("label", { style: { display: 'flex', alignItems: 'center', cursor: 'pointer' }, children: [jsxRuntimeExports.jsx("input", { type: "checkbox", checked: hideLbls, onChange: (e) => setHideLbls(e.target.checked), style: { marginRight: '8px' } }), jsxRuntimeExports.jsx("span", { style: { fontWeight: 'bold' }, children: "Hide Axis Labels" })] }) }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Initial Drawing (JSON):" }), jsxRuntimeExports.jsx("textarea", { value: initialDrawStr, onChange: handleInitialDrawChange, rows: 8, style: {
 	                            width: '100%',
 	                            padding: '8px',
 	                            border: '1px solid #ccc',
