@@ -14,87 +14,6 @@ resource_loader = ResourceLoader(__name__)
 
 
 # Dynamically load all .json files in initialdrawing_gallery as variables
-import glob
-gallery_dir = os.path.join(os.path.dirname(__file__), "initialdrawing_gallery")
-for json_file in glob.glob(os.path.join(gallery_dir, "*.json")):
-    var_name = os.path.splitext(os.path.basename(json_file))[0].upper()
-    with open(json_file, "r") as f:
-        globals()[var_name] = json.load(f)
-
-
-def validate_initial_drawing(value, max_items=500, max_bytes=200_000):
-    """Validate and lightly sanitize the `initial_drawing` payload received from Studio.
-
-    Accepts either of the following shapes:
-    - A list[object] of Fabric object descriptors (preferred)
-    - A Fabric canvas JSON object with an `objects` list (e.g., {"version": "..", "objects": [...]})
-
-    Behavior:
-    - Ensures we end up with a list of dict-like objects.
-    - Keeps only a small whitelist of keys per object.
-    - Normalizes common numeric fields to float and clips item count/size.
-    - Raises ValueError for irrecoverable issues so callers can handle safely.
-    """
-    logger = logging.getLogger(__name__)
-
-    if value is None:
-        return []
-
-    # Accept full Fabric JSON with `objects` list by unwrapping to the list.
-    if isinstance(value, dict) and "objects" in value and isinstance(value["objects"], list):
-        value = value["objects"]
-
-    if not isinstance(value, list):
-        raise ValueError("initialDrawing must be a list or an object with an 'objects' array")
-
-    out = []
-    allowed_keys = {
-        "type",
-        "left",
-        "top",
-        "width",
-        "height",
-        "points",
-        "stroke",
-        "fill",
-        "angle",
-        "scaleX",
-        "scaleY",
-        "radius",
-        "path",
-        "text",
-        "fontSize",
-    }
-
-    for item in value:
-        if not isinstance(item, dict):
-            # skip non-dict entries
-            continue
-        sanitized = {k: item[k] for k in item.keys() & allowed_keys}
-
-        # Normalize numeric-like fields to floats where appropriate
-        for num_key in ("left", "top", "width", "height", "angle", "scaleX", "scaleY", "radius", "fontSize"):
-            if num_key in sanitized:
-                try:
-                    sanitized[num_key] = float(sanitized[num_key])
-                except Exception:
-                    sanitized[num_key] = 0.0
-
-        out.append(sanitized)
-        if len(out) >= max_items:
-            logger.warning("initial_drawing truncated to %d items", max_items)
-            break
-
-    # Check approximate serialized size and fail if excessively large
-    try:
-        total_bytes = len(json.dumps(out))
-        if total_bytes > max_bytes:
-            raise ValueError(f"initialDrawing too large ({total_bytes} bytes)")
-    except TypeError:
-        # If serialization fails for unexpected types, raise
-        raise
-
-    return out
 
 class DrawingXBlock(ScorableXBlockMixin, XBlock):
 
@@ -135,11 +54,55 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         help="Quiz question",
     )
     
-    print(LINE_INITIAL_DRAWING)
-    initial_drawing = List(
-        default= [], # CURVE, {}, LINE_INITIAL_DRAWING,  {}, EMPTY_INITIAL_DRAWING, RECTANGLE_INITIAL_DRAWING],
+    #print(LINE_INITIAL)
+    LINE = {
+        'version': '5.5.2',
+        'objects': [
+            {
+                'type': 'line',
+                'version': '5.5.2',
+                'originX': 'center',
+                'originY': 'center',
+                'left': 256.06,
+                'top': 248,
+                'width': 346,
+                'height': 150,
+                'fill': '#000000',
+                'stroke': '#000000',
+                'strokeWidth': 2,
+                'strokeDashArray': None,
+                'strokeLineCap': 'butt',
+                'strokeDashOffset': 0,
+                'strokeLineJoin': 'miter',
+                'strokeUniform': False,
+                'strokeMiterLimit': 4,
+                'scaleX': 1,
+                'scaleY': 1,
+                'angle': 0,
+                'flipX': False,
+                'flipY': False,
+                'opacity': 1,
+                'shadow': None,
+                'visible': True,
+                'backgroundColor': '',
+                'fillRule': 'nonzero',
+                'paintFirst': 'fill',
+                'globalCompositeOperation': 'source-over',
+                'skewX': 0,
+                'skewY': 0,
+                'x1': -173,
+                'x2': 173,
+                'y1': -75,
+                'y2': 75,
+            }
+        ],
+    }
+
+    # Store initial drawing as a JSON string to avoid List field type mismatches
+    initial_drawing = String(
+        default=json.dumps(LINE),
         scope=Scope.content,
-        help="Initial drawing data for the canvas (Fabric.js format)",
+        help="Initial drawing data for the canvas (Fabric.js format), stored as JSON string",
     )
 
     # Removed MCQ fields: options, correct, user_answer
@@ -283,7 +246,8 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "canvasHeight": self.canvasHeight,
             "scaleFactors": self.scaleFactors,
             "submitButtonClicked": self.submitButtonClicked,
-            "initialDrawing": self.initial_drawing,
+            # `initial_drawing` is stored as a JSON string; parse it for the frontend.
+            "initialDrawing": (json.loads(self.initial_drawing) if isinstance(self.initial_drawing, str) else self.initial_drawing),
             "visibleModes": self.visibleModes,
             "bgnumber": self.bgnumber,
             "axisLabels": self.axis_labels,
@@ -315,7 +279,8 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "visibleModes": self.visibleModes,
             "axisLabels": self.axis_labels,
             "hideLabels": self.hideLabels,
-            "initialDrawing": self.initial_drawing,
+            # send parsed JSON to the studio editor JS
+            "initialDrawing": (json.loads(self.initial_drawing) if isinstance(self.initial_drawing, str) else self.initial_drawing),
         }
         frag.initialize_js('initDrawingXBlockStudioView', init_data)
         return frag
@@ -376,11 +341,27 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         new_initial = data.get('initialDrawing', None)
         if new_initial is not None:
             try:
-                self.initial_drawing = validate_initial_drawing(new_initial)
+                # Accept either a JSON string or an object/list from the Studio JS.
+                if isinstance(new_initial, str):
+                    parsed = json.loads(new_initial)
+                else:
+                    parsed = new_initial
+
+                sanitized = validate_initial_drawing(parsed)
+                # Store as JSON string in the field
+                self.initial_drawing = json.dumps(sanitized)
+                saved_initial = sanitized
             except Exception:
                 logging.exception("Invalid initialDrawing provided in Studio; keeping previous value")
         
-        return {"result": "success"}
+        # Return saved/sanitized initial drawing to the Studio editor so the UI
+        # can update its preview / textarea with the canonical form.
+        try:
+            current_initial = json.loads(self.initial_drawing) if isinstance(self.initial_drawing, str) else self.initial_drawing
+        except Exception:
+            current_initial = None
+
+        return {"result": "success", "initialDrawing": current_initial}
 
 
     # Removed MCQ answer/grade logic. Drawing blocks may implement their own grading if needed.

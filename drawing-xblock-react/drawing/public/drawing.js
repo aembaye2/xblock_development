@@ -59565,7 +59565,7 @@
 	//export default modes
 
 	// Use the drawing canvas package from npm instead
-	//import { DrawingApp, modes } from 'ae-drawable-canvas';
+	// import { DrawingApp, modes } from 'ae-drawable-canvas';
 	const messages = {
 	    fa: faMessages,
 	    fr: frMessages,
@@ -59578,9 +59578,9 @@
 	    const canvasHeight = initData.canvasHeight ?? 400;
 	    const scaleFactors = initData.scaleFactors ?? [100, 200, 75, 84, 25, 35];
 	    const [submitButtonClicked, setSubmitButtonClicked] = reactExports.useState(initData.submitButtonClicked ?? false);
-	    const [summaryMsg, setSummaryMsg] = reactExports.useState("");
+	    const [summaryMsg, setSummaryMsg] = reactExports.useState('');
 	    const bgnumber = initData.bgnumber ?? 0;
-	    const axisLabels = initData.axisLabels ?? ["q", "p"];
+	    const axisLabels = initData.axisLabels ?? ['q', 'p'];
 	    const hideLabels = initData.hideLabels ?? false;
 	    const initialDrawing = initData.initialDrawing ?? {};
 	    const visibleModes = initData.visibleModes ?? undefined;
@@ -59601,20 +59601,20 @@
 	                    if (parsed) {
 	                        try {
 	                            const result = await runtime.postHandler('send_drawing_json', { drawing: parsed });
-	                            setSummaryMsg(result.summary || "No summary returned.");
+	                            setSummaryMsg(result.summary || 'No summary returned.');
 	                        }
 	                        catch (err) {
 	                            console.error('send_drawing_json error', err);
-	                            setSummaryMsg("Error sending drawing to backend.");
+	                            setSummaryMsg('Error sending drawing to backend.');
 	                        }
 	                    }
 	                    else {
-	                        setSummaryMsg("No drawing data found.");
+	                        setSummaryMsg('No drawing data found.');
 	                    }
 	                    setSubmitButtonClicked(false);
 	                }, 200);
 	            }, children: "Submit" }) }));
-	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px' }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, scaleFactors: scaleFactors, submitButtonClicked: submitButtonClicked, modes: modes, visibleModes: visibleModes, bgnumber: bgnumber, axisLabels: axisLabels, initialDrawing: initialDrawing, hideLabels: hideLabels }) })] }), renderSubmitButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Drawing Summary" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto', color: 'green', fontWeight: 'bold' }, children: summaryMsg ? summaryMsg : "Draw something and then Click Submit to check your answer." })] })] }));
+	    return (jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px' }, children: [jsxRuntimeExports.jsxs("div", { style: { display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }, children: [jsxRuntimeExports.jsx("div", { className: "block-info", style: { flex: 1, marginRight: '24px', minWidth: '300px' }, children: jsxRuntimeExports.jsx("p", { children: initData.question }) }), jsxRuntimeExports.jsx("div", { className: "drawing-container", style: { flex: 2, minWidth: '400px' }, children: jsxRuntimeExports.jsx(DrawingApp, { index: index, AssessName: AssessName, canvasWidth: canvasWidth, canvasHeight: canvasHeight, scaleFactors: scaleFactors, submitButtonClicked: submitButtonClicked, modes: modes, visibleModes: visibleModes, bgnumber: bgnumber, axisLabels: axisLabels, initialDrawing: initialDrawing, hideLabels: hideLabels }) })] }), renderSubmitButton(), jsxRuntimeExports.jsxs("div", { className: "block-info2", style: { marginTop: '24px', minWidth: '300px', width: '100%' }, children: [jsxRuntimeExports.jsx("h4", { children: "Drawing Summary" }), jsxRuntimeExports.jsx("div", { style: { overflowX: 'auto', color: 'green', fontWeight: 'bold' }, children: summaryMsg ? summaryMsg : 'Draw something and then Click Submit to check your answer.' })] })] }));
 	};
 	// Loader for XBlock React view
 	function initStudentView(runtime, container, initData) {

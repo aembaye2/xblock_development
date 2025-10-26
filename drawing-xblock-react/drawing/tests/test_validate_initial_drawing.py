@@ -1,5 +1,33 @@
 import json
 import pytest
+
+from drawing.drawing import validate_initial_drawing, LINE
+
+
+def test_validate_accepts_full_canvas_object():
+    canvas = {"version": "5.5.2", "objects": LINE.get('objects', [])}
+    out = validate_initial_drawing(canvas)
+    assert isinstance(out, list)
+    assert len(out) == len(canvas['objects'])
+
+
+def test_validate_accepts_list_of_objects():
+    obj_list = LINE.get('objects', [])
+    out = validate_initial_drawing(obj_list)
+    assert isinstance(out, list)
+
+
+def test_validate_rejects_invalid_type():
+    with pytest.raises(ValueError):
+        validate_initial_drawing('this-is-not-valid')
+
+
+def test_validate_truncates_large_number_of_items():
+    big = [LINE['objects'][0]] * 1000
+    out = validate_initial_drawing(big, max_items=10)
+    assert len(out) == 10
+import json
+import pytest
 import ast
 import logging
 import pathlib
