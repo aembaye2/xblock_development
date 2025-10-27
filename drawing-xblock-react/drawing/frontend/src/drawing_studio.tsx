@@ -454,39 +454,7 @@ const StudioView: React.FC<Props> = ({
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: '10px', paddingTop: '10px', borderTop: '1px solid #ddd' }}>
-        <button 
-          onClick={save} 
-          disabled={isSaving}
-          style={{ 
-            padding: '10px 20px', 
-            backgroundColor: isSaving ? '#6c757d' : '#007bff', 
-            color: 'white', 
-            border: 'none',
-            borderRadius: '4px',
-            cursor: isSaving ? 'not-allowed' : 'pointer',
-            fontWeight: 'bold',
-            fontSize: '14px'
-          }}
-        >
-          {isSaving ? 'Saving...' : 'Save'}
-        </button>
-        <button 
-          onClick={cancel}
-          disabled={isSaving}
-          style={{ 
-            padding: '10px 20px', 
-            backgroundColor: '#6c757d', 
-            color: 'white', 
-            border: 'none',
-            borderRadius: '4px',
-            cursor: isSaving ? 'not-allowed' : 'pointer',
-            fontSize: '14px'
-          }}
-        >
-          Cancel
-        </button>
-      </div>
+      {/* Bottom Save/Cancel removed to avoid duplicate controls; use the top toolbar */}
     </div>
   );
 };

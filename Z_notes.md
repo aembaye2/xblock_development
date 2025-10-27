@@ -25,17 +25,6 @@ pip uninstall xblockname
 source xblock-env/bin/activate && python xblock-sdk/manage.py runserver 
 
 
-## git commands
-
-git add .
-git commit -m "commited on 9/2/2025b"
-git push origin main
-
-
-npm install --legacy-peer-deps
-
-
-
 # Troubleshooting when xblock doesn't work or gives error:
 
 - try to fix it based on the error on build and then don't forget to reinstall the xblock; installing it many times doesn't hurt if things are not working
@@ -57,8 +46,8 @@ npm install --legacy-peer-deps
 
 ## pushing to repo
 git add . # drawing-xblock-react/setup.py  # if you change the version in the setup.py
-git commit -m "Bump drawing-xblock-react to V1.1.6"
-git tag -a V1.1.6 -m "Release V1.1.6"
+git commit -m "Bump drawing-xblock-react to V1.1.7"
+git tag -a V1.1.7 -m "Release V1.1.7"
 # push branch + any tags that point at pushed commits
 git push origin main --follow-tags
 

@@ -405,3 +405,71 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         return [
             ("DrawingXBlock based on react", "<drawing_xblock/>")
         ]
+
+
+# Validator for initial drawing data used by the Studio editor.
+def validate_initial_drawing(data, max_items=1000, max_bytes=100000):
+    """
+    Normalize and validate an initial drawing payload.
+
+    Accepts either a full Fabric.js canvas-like object (with an 'objects'
+    list) or a plain list of object dicts. Returns a sanitized list of
+    objects (with numeric fields converted to floats) and enforces a
+    maximum number of items and a maximum serialized size in bytes.
+
+    Raises ValueError on invalid input or if size limits are exceeded.
+    """
+    # If a full canvas object is provided, extract the objects list
+    if isinstance(data, dict) and 'objects' in data:
+        items = data.get('objects')
+    else:
+        items = data
+
+    if not isinstance(items, list):
+        raise ValueError('initial drawing must be a list or a canvas object with an "objects" list')
+
+    # Truncate to max_items
+    if max_items is not None and len(items) > max_items:
+        items = items[:max_items]
+
+    sanitized = []
+    for item in items:
+        if not isinstance(item, dict):
+            # skip non-dict items
+            continue
+        clean = {}
+        for k, v in item.items():
+            # Convert numeric-like values to floats
+            if isinstance(v, (int, float)):
+                clean[k] = float(v)
+            elif isinstance(v, str):
+                # try to parse numeric strings
+                try:
+                    if '.' in v or 'e' in v.lower():
+                        clean[k] = float(v)
+                    else:
+                        # preserve non-numeric strings like color codes
+                        maybe_int = int(v)
+                        clean[k] = float(maybe_int)
+                except Exception:
+                    clean[k] = v
+            else:
+                # preserve lists, dicts, booleans, None, etc.
+                clean[k] = v
+        sanitized.append(clean)
+
+    # Enforce serialized size limit
+    try:
+        s = json.dumps(sanitized)
+        if max_bytes is not None and len(s.encode('utf-8')) > max_bytes:
+            raise ValueError('initial drawing exceeds maximum allowed size')
+    except (TypeError, ValueError):
+        # If serialization fails, raise ValueError to signal invalid input
+        raise
+
+    return sanitized
+
+
+# Expose a module-level LINE constant for tests or external imports which
+# expect LINE at module scope. This mirrors the class-level default.
+LINE = getattr(globals().get('DrawingXBlock', object), 'LINE', None)
