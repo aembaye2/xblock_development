@@ -132,6 +132,12 @@ else
     echo "  ⚠️  Warning: manage.py not found, skipping migrations"
 fi
 
+# Ensure expected var/log directories exist so Django's logging handlers can open files
+# echo "📂 Ensuring var directories exist for logs..."
+# mkdir -p "${PWD}/var"
+# mkdir -p "${PWD}/drawing-xblock-react/drawing/frontend/var"
+
+
 echo "✅ Setup complete!"
 echo ""
 echo "🎯 To start the development server, run:"

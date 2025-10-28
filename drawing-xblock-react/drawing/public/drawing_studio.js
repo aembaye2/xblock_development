@@ -5877,6 +5877,9 @@
 	        }
 	        setIsSaving(true);
 	        try {
+	            // Build payload; send the initial drawing as a JSON string to be explicit
+	            // about the stored format. The backend accepts either an object or a JSON
+	            // string, sanitizes it, and returns the canonical/sanitized object.
 	            const payload = {
 	                question: q,
 	                max_attempts: maxAttempts,
@@ -5891,11 +5894,23 @@
 	                visibleModes: modes,
 	                axisLabels: axes,
 	                hideLabels: hideLbls,
-	                initialDrawing: initialDraw,
+	                // send the serialized JSON string to the backend
+	                initialDrawing: initialDrawStr,
 	            };
 	            console.log('Saving payload:', payload);
-	            // ✅ CORRECT: Pass the Promise itself, not the awaited result
-	            await runtime.studioSaveAndClose(runtime.postHandler('save_quiz', payload));
+	            // Call postHandler once and reuse the promise so we can both update the
+	            // UI from the server response and let the runtime close the editor when
+	            // the save completes.
+	            const savePromise = runtime.postHandler('save_quiz', payload);
+	            const response = await savePromise;
+	            if (response && response.initialDrawing) {
+	                // Update editor with server-sanitized JSON (pretty-printed)
+	                const pretty = JSON.stringify(response.initialDrawing, null, 2);
+	                setInitialDrawStr(pretty);
+	                setInitialDraw(response.initialDrawing);
+	            }
+	            // Let the runtime close the editor (pass the original promise)
+	            await runtime.studioSaveAndClose(savePromise);
 	            console.log('Save successful');
 	        }
 	        catch (error) {
@@ -5951,24 +5966,7 @@
 	                    backgroundColor: '#f8d7da',
 	                    border: '1px solid #f5c6cb',
 	                    borderRadius: '4px'
-	                }, children: errors.map((err, i) => (jsxRuntimeExports.jsxs("div", { style: { color: '#721c24', marginBottom: errors.length > 1 && i < errors.length - 1 ? '8px' : '0' }, children: ["\u2022 ", err] }, i))) })), jsxRuntimeExports.jsxs("div", { style: { display: 'flex', gap: '10px', paddingTop: '10px', borderTop: '1px solid #ddd' }, children: [jsxRuntimeExports.jsx("button", { onClick: save, disabled: isSaving, style: {
-	                            padding: '10px 20px',
-	                            backgroundColor: isSaving ? '#6c757d' : '#007bff',
-	                            color: 'white',
-	                            border: 'none',
-	                            borderRadius: '4px',
-	                            cursor: isSaving ? 'not-allowed' : 'pointer',
-	                            fontWeight: 'bold',
-	                            fontSize: '14px'
-	                        }, children: isSaving ? 'Saving...' : 'Save' }), jsxRuntimeExports.jsx("button", { onClick: cancel, disabled: isSaving, style: {
-	                            padding: '10px 20px',
-	                            backgroundColor: '#6c757d',
-	                            color: 'white',
-	                            border: 'none',
-	                            borderRadius: '4px',
-	                            cursor: isSaving ? 'not-allowed' : 'pointer',
-	                            fontSize: '14px'
-	                        }, children: "Cancel" })] })] }));
+	                }, children: errors.map((err, i) => (jsxRuntimeExports.jsxs("div", { style: { color: '#721c24', marginBottom: errors.length > 1 && i < errors.length - 1 ? '8px' : '0' }, children: ["\u2022 ", err] }, i))) }))] }));
 	};
 	function initStudioView(runtime, container, initData) {
 	    if ('jquery' in container)
