@@ -21,7 +21,7 @@ fi
 # 3. Activate virtual environment
 echo "🔧 Activating virtual environment..."
 source xblock-env/bin/activate
-
+mkdir var
 # 4. Upgrade pip
 echo "📦 Upgrading pip..."
 pip install --upgrade pip

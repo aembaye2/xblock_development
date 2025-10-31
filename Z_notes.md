@@ -35,23 +35,22 @@ source xblock-env/bin/activate && python xblock-sdk/manage.py runserver
 The main file for the XBlock's user interface is react_xblock_2/frontend/src/react_xblock_2.tsx. But in order to edit this file, you will first have to install the required Node packages and start the frontend compiler:
 
 cd drawing-xblock-react/drawing/frontend/ && npm install --legacy-peer-deps && npm run watch
+
 npm install --legacy-peer-deps
 npm run watch
 
 npm install --legacy-peer-deps
 
-# Next step on React/rollup based xblock:
-1. polish the xblock-sortable4 xblock so that it is grading correctly and then test it in the VPS
-2. Use this xblock as template to work on xblock-drawing
+## stage the changed files (prefer explicit path rather than `.`)
+git add drawing-xblock-react/setup.py
+# add any other files you intentionally changed (changelog, README, etc.)
+git add drawing-xblock-react/CHANGELOG.rst
 
-## pushing to repo
-git add . # drawing-xblock-react/setup.py  # if you change the version in the setup.py
-git commit -m "Bump drawing-xblock-react to V1.1.20"
-git tag -a V1.1.20 -m "Release V1.1.20"
-# push branch + any tags that point at pushed commits
-git push origin main --follow-tags
+git commit -m "Bump drawing-xblock-react to V2.0.0" \
+ && git tag -a V2.0.0 -m "Release V2.0.0" \
+ && git push origin main --follow-tags
 
 
 # then in openedx tutor:
 
-tutor config save --append OPENEDX_EXTRA_PIP_REQUIREMENTS="git+https://github.com/aembaye2/xblock_development.git@v1.0.3#subdirectory=drawing-xblock-react"
+tutor config save --append OPENEDX_EXTRA_PIP_REQUIREMENTS="git+https://github.com/aembaye2/xblock_development.git@V2.0.0#subdirectory=drawing-xblock-react"

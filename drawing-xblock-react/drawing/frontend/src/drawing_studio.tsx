@@ -173,11 +173,17 @@ const StudioView: React.FC<Props> = ({
     const savePromise = runtime.postHandler('save_quiz', payload);
     const response = await savePromise;
 
-    if (response && response.initialDrawing) {
-      // Update editor with server-sanitized JSON (pretty-printed)
-      const pretty = JSON.stringify(response.initialDrawing, null, 2);
+    // Update editor with server-sanitized JSON (pretty-printed) if the
+    // handler returned the `initialDrawing` key. Use a property check so
+    // we update even when the value is empty/null (and normalize to an
+    // empty object for the textarea/preview). This avoids leaving the
+    // studio textarea in an "undefined" state when the backend returns
+    // null/None for the field.
+    if (response && Object.prototype.hasOwnProperty.call(response, 'initialDrawing')) {
+      const serverInitial = response.initialDrawing ?? {};
+      const pretty = JSON.stringify(serverInitial, null, 2);
       setInitialDrawStr(pretty);
-      setInitialDraw(response.initialDrawing);
+      setInitialDraw(serverInitial);
     }
 
     // Let the runtime close the editor (pass the original promise)

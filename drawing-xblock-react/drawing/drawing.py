@@ -13,7 +13,9 @@ from xblock.utils.resources import ResourceLoader
 resource_loader = ResourceLoader(__name__)
 
 
-# Dynamically load all .json files in initialdrawing_gallery as variables
+"""
+TO-DO: document what your XBlock does.
+"""
 
 class DrawingXBlock(ScorableXBlockMixin, XBlock):
 
@@ -42,9 +44,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         summary = process_drawing_json(drawing, scaleFactors, canvasWidth, canvasHeight)
         return {"result": "success", "summary": summary}
     
-    """
-    TO-DO: document what your XBlock does.
-    """
+
 
     # Fields are defined on the class.  You can access them in your code as
     # self.<fieldname>.
@@ -54,53 +54,33 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         help="Quiz question",
     )
     
-    #print(LINE_INITIAL)
     LINE = {
-        'version': '5.5.2',
-        'objects': [
-            {
-                'type': 'line',
-                'version': '5.5.2',
-                'originX': 'center',
-                'originY': 'center',
-                'left': 256.06,
-                'top': 248,
-                'width': 346,
-                'height': 150,
-                'fill': '#000000',
-                'stroke': '#000000',
-                'strokeWidth': 2,
-                'strokeDashArray': None,
-                'strokeLineCap': 'butt',
-                'strokeDashOffset': 0,
-                'strokeLineJoin': 'miter',
-                'strokeUniform': False,
-                'strokeMiterLimit': 4,
-                'scaleX': 1,
-                'scaleY': 1,
-                'angle': 0,
-                'flipX': False,
-                'flipY': False,
-                'opacity': 1,
-                'shadow': None,
-                'visible': True,
-                'backgroundColor': '',
-                'fillRule': 'nonzero',
-                'paintFirst': 'fill',
-                'globalCompositeOperation': 'source-over',
-                'skewX': 0,
-                'skewY': 0,
-                'x1': -173,
-                'x2': 173,
-                'y1': -75,
-                'y2': 75,
-            }
-        ],
-    }
+    'version': '5.5.2',
+    'objects': [
+        {
+            'type': 'line',
+            'version': '5.5.2',
+            'originX': 'center',
+            'originY': 'center',
+            'left': 256.06,
+            'top': 248,
+            'width': 346,
+            'height': 150,
+            'x1': -173,
+            'y1': -75,
+            'x2': 173,
+            'y2': 75,
+            'stroke': '#000000',
+            'strokeWidth': 2,
+            'visible': True
+        }
+    ]
+}
+
 
     # Store initial drawing as a JSON string to avoid List field type mismatches
     initial_drawing = String(
-        default=json.dumps(LINE),
+        default= json.dumps(LINE), # changes dictionary to json string
         scope=Scope.content,
         help="Initial drawing data for the canvas (Fabric.js format), stored as JSON string",
     )
@@ -359,7 +339,12 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         try:
             current_initial = json.loads(self.initial_drawing) if isinstance(self.initial_drawing, str) else self.initial_drawing
         except Exception:
-            current_initial = None
+            # If parsing fails for any reason, return an empty list so the
+            # Studio UI receives a defined value instead of `None` which
+            # can cause the frontend to show "undefined". We still log
+            # the exception above when sanitization failed.
+            logging.exception("Failed to parse stored initial_drawing; returning empty list")
+            current_initial = []
 
         return {"result": "success", "initialDrawing": current_initial}
 

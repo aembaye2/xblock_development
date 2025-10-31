@@ -83,14 +83,14 @@ class VectorDrawXBlock(StudioEditableXBlockMixin, XBlock):
             "Enabling this option makes the exercise more accessible for users "
             "relying on the keyboard for manipulating vectors."
         ),
-        default=True,
+        default=False,
         scope=Scope.content
     )
 
     show_navigation = Boolean(
         display_name="Show navigation",
         help="Show navigation arrows and zoom controls",
-        default=False,
+        default=True,
         scope=Scope.content
     )
 
