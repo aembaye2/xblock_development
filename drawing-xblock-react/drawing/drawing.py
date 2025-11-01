@@ -80,7 +80,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
 
     # Store initial drawing as a JSON string to avoid List field type mismatches
     initial_drawing = String(
-        default= json.dumps(LINE), # changes dictionary to json string
+        default= "{}", #json.dumps(LINE), # changes dictionary to json string
         scope=Scope.content,
         help="Initial drawing data for the canvas (Fabric.js format), stored as JSON string",
     )
