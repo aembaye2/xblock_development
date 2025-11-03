@@ -58951,40 +58951,11 @@
 	            canvasInstance.current = new fabricExports.fabric.Canvas(canvasRef.current, {
 	                enableRetinaScaling: false,
 	            });
-	            // Load initial drawing only once
-	            let parsedInitialDrawing = initialDrawing;
-	            // If initialDrawing is a string (from Python), parse it
-	            if (typeof initialDrawing === 'string') {
-	                try {
-	                    parsedInitialDrawing = JSON.parse(initialDrawing.replace(/None/g, 'null').replace(/True/g, 'true').replace(/False/g, 'false'));
-	                }
-	                catch (e) {
-	                    console.error('Failed to parse initialDrawing JSON:', e);
-	                }
-	            }
-	            // Convert type 'curve4pts' and 'curve' to 'path' for Fabric.js compatibility
-	            function convertCurvesToPaths(obj) {
-	                if (Array.isArray(obj)) {
-	                    obj.forEach(convertCurvesToPaths);
-	                }
-	                else if (obj && typeof obj === 'object') {
-	                    if (obj.type === 'curve4pts' || obj.type === 'curve') {
-	                        obj.type = 'path';
-	                    }
-	                    Object.values(obj).forEach(convertCurvesToPaths);
-	                }
-	            }
-	            convertCurvesToPaths(parsedInitialDrawing);
-	            // Fabric.loadFromJSON expects either a full Fabric JSON object
-	            // (with an `objects` array) or a JSON string. If we receive a bare
-	            // array of objects, wrap it for compatibility.
-	            const jsonToLoad = Array.isArray(parsedInitialDrawing)
-	                ? { objects: parsedInitialDrawing }
-	                : parsedInitialDrawing;
-	            canvasInstance.current.loadFromJSON(jsonToLoad, () => {
-	                canvasInstance.current?.renderAll();
-	                resetState(parsedInitialDrawing);
-	            });
+	            // Do not load initial drawing here so that the canvas is created
+	            // only once.  Loading of `initialDrawing` is handled by a
+	            // separate effect below which watches the `initialDrawing` prop
+	            // and updates the canvas whenever it changes (for example when
+	            // Studio saves a new initial drawing).
 	        }
 	        if (backgroundCanvasRef.current) {
 	            backgroundCanvasInstance.current = new fabricExports.fabric.StaticCanvas(backgroundCanvasRef.current, {
@@ -59011,6 +58982,40 @@
 	            backgroundCanvasInstance.current?.dispose();
 	        };
 	    }, [resetState]); //[resetState])
+	    // Watch for changes to the `initialDrawing` prop and load the new
+	    // drawing into the existing canvas instance when it changes. This
+	    // ensures Studio updates to `initial_drawing` are reflected without
+	    // recreating the canvas.
+	    reactExports.useEffect(() => {
+	        if (!canvasInstance.current)
+	            return;
+	        let parsedInitialDrawing = initialDrawing;
+	        if (typeof initialDrawing === "string") {
+	            try {
+	                parsedInitialDrawing = JSON.parse(initialDrawing
+	                    .replace(/None/g, "null")
+	                    .replace(/True/g, "true")
+	                    .replace(/False/g, "false"));
+	            }
+	            catch (e) {
+	                console.error("Failed to parse initialDrawing JSON:", e);
+	                return;
+	            }
+	        }
+	        const jsonToLoad = Array.isArray(parsedInitialDrawing)
+	            ? { objects: parsedInitialDrawing }
+	            : parsedInitialDrawing;
+	        try {
+	            canvasInstance.current.loadFromJSON(jsonToLoad, () => {
+	                canvasInstance.current?.renderAll();
+	                // update the saved initial state used by the toolbar/reset
+	                resetState(parsedInitialDrawing);
+	            });
+	        }
+	        catch (err) {
+	            console.error("Error loading initialDrawing into canvas", err);
+	        }
+	    }, [initialDrawing, resetState]);
 	    reactExports.useEffect(() => {
 	        if (backgroundCanvasInstance.current && backgroundImageURL) {
 	            const bgImage = new Image();
@@ -59674,13 +59679,19 @@
 	            // Call postHandler once and reuse the promise so we can both update the
 	            // UI from the server response and let the runtime close the editor when
 	            // the save completes.
-	            const savePromise = runtime.postHandler('save_quiz', payload);
+	            const savePromise = runtime.postHandler('studio_save', payload);
 	            const response = await savePromise;
-	            if (response && response.initialDrawing) {
-	                // Update editor with server-sanitized JSON (pretty-printed)
-	                const pretty = JSON.stringify(response.initialDrawing, null, 2);
+	            // Update editor with server-sanitized JSON (pretty-printed) if the
+	            // handler returned the `initialDrawing` key. Use a property check so
+	            // we update even when the value is empty/null (and normalize to an
+	            // empty object for the textarea/preview). This avoids leaving the
+	            // studio textarea in an "undefined" state when the backend returns
+	            // null/None for the field.
+	            if (response && Object.prototype.hasOwnProperty.call(response, 'initialDrawing')) {
+	                const serverInitial = response.initialDrawing ?? {};
+	                const pretty = JSON.stringify(serverInitial, null, 2);
 	                setInitialDrawStr(pretty);
-	                setInitialDraw(response.initialDrawing);
+	                setInitialDraw(serverInitial);
 	            }
 	            // Let the runtime close the editor (pass the original promise)
 	            await runtime.studioSaveAndClose(savePromise);

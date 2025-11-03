@@ -147,7 +147,7 @@ CHANGELOG = open(os.path.join(os.path.dirname(__file__), 'CHANGELOG.rst'), encod
 
 setup(
     name='drawing',
-    version="V0.0.1",
+    version="V0.0.2",
     description="""React XBlock Demo""",
     long_description=README + '\n\n' + CHANGELOG,
     author='Braden TheAuthor 9',

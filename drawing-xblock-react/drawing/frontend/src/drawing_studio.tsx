@@ -170,7 +170,7 @@ const StudioView: React.FC<Props> = ({
     // Call postHandler once and reuse the promise so we can both update the
     // UI from the server response and let the runtime close the editor when
     // the save completes.
-    const savePromise = runtime.postHandler('save_quiz', payload);
+    const savePromise = runtime.postHandler('studio_save', payload);
     const response = await savePromise;
 
     // Update editor with server-sanitized JSON (pretty-printed) if the

@@ -55,32 +55,32 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     )
     
     LINE = {
-    'version': '5.5.2',
-    'objects': [
-        {
-            'type': 'line',
-            'version': '5.5.2',
-            'originX': 'center',
-            'originY': 'center',
-            'left': 256.06,
-            'top': 248,
-            'width': 346,
-            'height': 150,
-            'x1': -173,
-            'y1': -75,
-            'x2': 173,
-            'y2': 75,
-            'stroke': '#000000',
-            'strokeWidth': 2,
-            'visible': True
-        }
-    ]
+  "version": "5.5.2",
+  "objects": [
+    {
+      "type": "line",
+      "version": "5.5.2",
+      "originX": "center",
+      "originY": "center",
+      "left": 256.06,
+      "top": 248,
+      "width": 346,
+      "height": 150,
+      "x1": -173,
+      "y1": -75,
+      "x2": 173,
+      "y2": 75,
+      "stroke": "#000000",
+      "strokeWidth": 2,
+      "visible": True
+    }
+  ]
 }
 
 
     # Store initial drawing as a JSON string to avoid List field type mismatches
     initial_drawing = String(
-        default= "{}", #json.dumps(LINE), # changes dictionary to json string
+        default= json.dumps(LINE), # changes dictionary to json string
         scope=Scope.content,
         help="Initial drawing data for the canvas (Fabric.js format), stored as JSON string",
     )
@@ -266,7 +266,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         return frag
 
     @XBlock.json_handler
-    def save_quiz(self, data, suffix=''):
+    def studio_save(self, data, suffix=''):
     # Save question and drawing-related fields
         self.question = data.get('question', self.question)
         try:
@@ -455,6 +455,3 @@ def validate_initial_drawing(data, max_items=1000, max_bytes=100000):
     return sanitized
 
 
-# Expose a module-level LINE constant for tests or external imports which
-# expect LINE at module scope. This mirrors the class-level default.
-LINE = getattr(globals().get('DrawingXBlock', object), 'LINE', None)
