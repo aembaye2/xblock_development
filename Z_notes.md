@@ -8,8 +8,8 @@ cd drawing-xblock-react/drawing/frontend/ && npm install --legacy-peer-deps && n
 ## stage the changed files (prefer explicit path rather than `.`)
 git add .
 
-git commit -m "Bump drawing-xblock-react to V0.0.2" \
- && git tag -a V0.0.2 -m "Release V0.0.2" \
+git commit -m "Bump drawing-xblock-react to V0.0.3" \
+ && git tag -a V0.0.3 -m "Release V0.0.3" \
  && git push origin main --follow-tags
 
 

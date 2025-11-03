@@ -147,10 +147,10 @@ CHANGELOG = open(os.path.join(os.path.dirname(__file__), 'CHANGELOG.rst'), encod
 
 setup(
     name='drawing',
-    version="V0.0.2",
+    version="V0.0.3",
     description="""React XBlock Demo""",
     long_description=README + '\n\n' + CHANGELOG,
-    author='Braden TheAuthor 9',
+    author='Abel Embaye',
     author_email='braden@opencraft.com',
     url='https://github.com/open-craft/drawing',
     packages=find_packages(
