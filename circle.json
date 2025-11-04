@@ -1,0 +1,20 @@
+{
+"version": "5.5.2",https://github.com/aembaye2/xblock_development/tree/main
+"objects": [
+{
+"type": "circle",
+"version": "5.5.2",
+"originX": "center",
+"originY": "center",
+"left": 256.06,
+"top": 248,
+"width": 150,
+"height": 150,
+"radius": 75,
+"stroke": "#000000",
+"strokeWidth": 2,
+"fill": "rgba(0,0,0,0)",
+"visible": true
+}
+]
+}
