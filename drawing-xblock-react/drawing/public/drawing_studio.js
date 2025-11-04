@@ -5811,8 +5811,12 @@
 	    const [visibleModesState, setVisibleModesState] = React.useState(visibleModes ?? []);
 	    const [axes, setAxes] = React.useState(axisLabels ?? []);
 	    const [hideLbls, setHideLbls] = React.useState(hideLabels ?? false);
-	    const [initialDrawStr, setInitialDrawStr] = React.useState(JSON.stringify(initialDrawing ?? {}, null, 2));
+	    const [initialDrawStr, setInitialDrawStr] = React.useState(
+	    // If initialDrawing is an object, show it as pretty JSON. If it's a
+	    // URL string, leave the JSON textarea empty (the URL input is used).
+	    (typeof initialDrawing === 'object') ? JSON.stringify(initialDrawing ?? {}, null, 2) : (typeof initialDrawing === 'string' && /^https?:\/\//i.test(initialDrawing) ? '' : JSON.stringify(initialDrawing ?? {}, null, 2)));
 	    const [initialDraw, setInitialDraw] = React.useState(initialDrawing ?? {});
+	    const [initialDrawUrl, setInitialDrawUrl] = React.useState((typeof initialDrawing === 'string' && /^https?:\/\//i.test(initialDrawing)) ? initialDrawing : '');
 	    const [maxAttempts, setMaxAttempts] = React.useState(propsToNumber(max_attempts, 3));
 	    const [w, setW] = React.useState(propsToNumber(weight, 1));
 	    const [hasScore, setHasScore] = React.useState(has_score ?? true);
@@ -5848,6 +5852,11 @@
 	            });
 	        }
 	    };
+	    const handleInitialUrlChange = (e) => {
+	        setInitialDrawUrl(e.target.value);
+	        // When user starts editing URL, clear JSON errors related to initial drawing
+	        setErrors(prev => prev.filter(err => !err.includes('Initial Drawing')));
+	    };
 	    const validate = () => {
 	        const errs = [];
 	        if (!q || q.trim().length === 0)
@@ -5857,12 +5866,16 @@
 	        if (!Number.isFinite(ch) || ch <= 0)
 	            errs.push('Canvas height must be a positive number.');
 	        // Final validation of JSON
-	        try {
-	            JSON.parse(initialDrawStr);
-	        }
-	        catch {
-	            if (!errs.some(e => e.includes('Initial Drawing'))) {
-	                errs.push('Initial Drawing must be valid JSON');
+	        // Either a non-empty valid URL is provided, or the JSON textarea must be valid JSON.
+	        if (initialDrawUrl && /^https?:\/\//i.test(initialDrawUrl)) ;
+	        else {
+	            try {
+	                JSON.parse(initialDrawStr || '{}');
+	            }
+	            catch {
+	                if (!errs.some(e => e.includes('Initial Drawing'))) {
+	                    errs.push('Initial Drawing must be valid JSON or provide a valid URL');
+	                }
 	            }
 	        }
 	        return errs;
@@ -5894,8 +5907,9 @@
 	                visibleModes: visibleModesState,
 	                axisLabels: axes,
 	                hideLabels: hideLbls,
-	                // send the serialized JSON string to the backend
-	                initialDrawing: initialDrawStr,
+	                // If a URL is provided prefer sending that; otherwise send the
+	                // serialized JSON string (the backend will accept either).
+	                initialDrawing: (initialDrawUrl && initialDrawUrl.trim().length > 0) ? initialDrawUrl.trim() : initialDrawStr,
 	            };
 	            console.log('Saving payload:', payload);
 	            // Call postHandler once and reuse the promise so we can both update the
@@ -5910,10 +5924,18 @@
 	            // studio textarea in an "undefined" state when the backend returns
 	            // null/None for the field.
 	            if (response && Object.prototype.hasOwnProperty.call(response, 'initialDrawing')) {
-	                const serverInitial = response.initialDrawing ?? {};
-	                const pretty = JSON.stringify(serverInitial, null, 2);
-	                setInitialDrawStr(pretty);
-	                setInitialDraw(serverInitial);
+	                const serverInitial = response.initialDrawing;
+	                if (typeof serverInitial === 'string' && /^https?:\/\//i.test(serverInitial)) {
+	                    setInitialDrawUrl(serverInitial);
+	                    setInitialDrawStr('');
+	                    setInitialDraw({});
+	                }
+	                else {
+	                    const pretty = JSON.stringify(serverInitial ?? {}, null, 2);
+	                    setInitialDrawStr(pretty);
+	                    setInitialDraw(serverInitial ?? {});
+	                    setInitialDrawUrl('');
+	                }
 	            }
 	            // Let the runtime close the editor (pass the original promise)
 	            await runtime.studioSaveAndClose(savePromise);
@@ -5959,14 +5981,14 @@
 	                                    borderRadius: '4px',
 	                                    cursor: isSaving ? 'not-allowed' : 'pointer',
 	                                    fontSize: '14px'
-	                                }, children: "Cancel" })] })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Question:" }), jsxRuntimeExports.jsx("input", { type: "text", value: q, onChange: (e) => setQ(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Assessment Name:" }), jsxRuntimeExports.jsx("input", { type: "text", value: assessName, onChange: (e) => setAssessName(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Index:" }), jsxRuntimeExports.jsx("input", { type: "number", value: idx, onChange: (e) => setIdx(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }, children: [jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Canvas Width (px):" }), jsxRuntimeExports.jsx("input", { type: "number", value: cw, onChange: (e) => setCw(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Canvas Height (px):" }), jsxRuntimeExports.jsx("input", { type: "number", value: ch, onChange: (e) => setCh(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Scale Factors (comma-separated numbers):" }), jsxRuntimeExports.jsx("input", { type: "text", value: scale.join(', '), onChange: (e) => setScaleFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Format: xlim, ylim, bottom_margin, left_margin, top_margin, right_margin" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Background Number:" }), jsxRuntimeExports.jsx("input", { type: "number", value: bgNumber, onChange: (e) => setBgNumber(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Visible Modes (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: visibleModesState.join(', '), onChange: (e) => setModesFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Available: point, line, singlearrowhead, doublearrowhead, polygon, rect, circle, freedraw, coordinate, curve, curve4pts, text, transform, color, strokeWidth, download" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Axis Labels (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: axes.join(', '), onChange: (e) => setAxesFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Format: X-axis label, Y-axis label" })] }), jsxRuntimeExports.jsx("div", { style: { marginBottom: '15px' }, children: jsxRuntimeExports.jsxs("label", { style: { display: 'flex', alignItems: 'center', cursor: 'pointer' }, children: [jsxRuntimeExports.jsx("input", { type: "checkbox", checked: hideLbls, onChange: (e) => setHideLbls(e.target.checked), style: { marginRight: '8px' } }), jsxRuntimeExports.jsx("span", { style: { fontWeight: 'bold' }, children: "Hide Axis Labels" })] }) }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Initial Drawing (JSON):" }), jsxRuntimeExports.jsx("textarea", { value: initialDrawStr, onChange: handleInitialDrawChange, rows: 8, style: {
+	                                }, children: "Cancel" })] })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Question:" }), jsxRuntimeExports.jsx("input", { type: "text", value: q, onChange: (e) => setQ(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Assessment Name:" }), jsxRuntimeExports.jsx("input", { type: "text", value: assessName, onChange: (e) => setAssessName(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Index:" }), jsxRuntimeExports.jsx("input", { type: "number", value: idx, onChange: (e) => setIdx(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }, children: [jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Canvas Width (px):" }), jsxRuntimeExports.jsx("input", { type: "number", value: cw, onChange: (e) => setCw(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Canvas Height (px):" }), jsxRuntimeExports.jsx("input", { type: "number", value: ch, onChange: (e) => setCh(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Scale Factors (comma-separated numbers):" }), jsxRuntimeExports.jsx("input", { type: "text", value: scale.join(', '), onChange: (e) => setScaleFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Format: xlim, ylim, bottom_margin, left_margin, top_margin, right_margin" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Background Number:" }), jsxRuntimeExports.jsx("input", { type: "number", value: bgNumber, onChange: (e) => setBgNumber(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Visible Modes (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: visibleModesState.join(', '), onChange: (e) => setModesFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Available: point, line, singlearrowhead, doublearrowhead, polygon, rect, circle, freedraw, coordinate, curve, curve4pts, text, transform, color, strokeWidth, download" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Axis Labels (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: axes.join(', '), onChange: (e) => setAxesFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Format: X-axis label, Y-axis label" })] }), jsxRuntimeExports.jsx("div", { style: { marginBottom: '15px' }, children: jsxRuntimeExports.jsxs("label", { style: { display: 'flex', alignItems: 'center', cursor: 'pointer' }, children: [jsxRuntimeExports.jsx("input", { type: "checkbox", checked: hideLbls, onChange: (e) => setHideLbls(e.target.checked), style: { marginRight: '8px' } }), jsxRuntimeExports.jsx("span", { style: { fontWeight: 'bold' }, children: "Hide Axis Labels" })] }) }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Initial Drawing URL (optional):" }), jsxRuntimeExports.jsx("input", { type: "text", value: initialDrawUrl, onChange: handleInitialUrlChange, placeholder: "https://example.com/my-drawing.json", style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "If provided, the URL will be used as the initial drawing source. Otherwise you may paste JSON below." }), jsxRuntimeExports.jsx("label", { style: { display: 'block', marginTop: '12px', marginBottom: '5px', fontWeight: 'bold' }, children: "Initial Drawing (JSON, optional):" }), jsxRuntimeExports.jsx("textarea", { value: initialDrawStr, onChange: handleInitialDrawChange, rows: 8, style: {
 	                            width: '100%',
 	                            padding: '8px',
 	                            border: '1px solid #ccc',
 	                            borderRadius: '4px',
 	                            fontFamily: 'monospace',
 	                            fontSize: '13px'
-	                        } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Enter valid JSON for initial canvas objects (Fabric.js format)" })] }), jsxRuntimeExports.jsxs("div", { style: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginBottom: '15px' }, children: [jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Max Attempts:" }), jsxRuntimeExports.jsx("input", { type: "number", value: maxAttempts, onChange: (e) => setMaxAttempts(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Weight (points):" }), jsxRuntimeExports.jsx("input", { type: "number", value: w, onChange: (e) => setW(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsx("div", { children: jsxRuntimeExports.jsxs("label", { style: { display: 'flex', alignItems: 'center', cursor: 'pointer', height: '100%', paddingTop: '30px' }, children: [jsxRuntimeExports.jsx("input", { type: "checkbox", checked: hasScore, onChange: (e) => setHasScore(e.target.checked), style: { marginRight: '8px' } }), jsxRuntimeExports.jsx("span", { style: { fontWeight: 'bold' }, children: "Graded" })] }) })] }), errors.length > 0 && (jsxRuntimeExports.jsx("div", { style: {
+	                        } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Enter valid JSON for initial canvas objects (Fabric.js format). This is ignored if an Initial Drawing URL is provided." })] }), jsxRuntimeExports.jsxs("div", { style: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginBottom: '15px' }, children: [jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Max Attempts:" }), jsxRuntimeExports.jsx("input", { type: "number", value: maxAttempts, onChange: (e) => setMaxAttempts(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Weight (points):" }), jsxRuntimeExports.jsx("input", { type: "number", value: w, onChange: (e) => setW(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsx("div", { children: jsxRuntimeExports.jsxs("label", { style: { display: 'flex', alignItems: 'center', cursor: 'pointer', height: '100%', paddingTop: '30px' }, children: [jsxRuntimeExports.jsx("input", { type: "checkbox", checked: hasScore, onChange: (e) => setHasScore(e.target.checked), style: { marginRight: '8px' } }), jsxRuntimeExports.jsx("span", { style: { fontWeight: 'bold' }, children: "Graded" })] }) })] }), errors.length > 0 && (jsxRuntimeExports.jsx("div", { style: {
 	                    marginBottom: '15px',
 	                    padding: '12px',
 	                    backgroundColor: '#f8d7da',

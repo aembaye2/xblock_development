@@ -4,7 +4,7 @@
 // npm run build       or      npm run watch
 ////////////////////////////////////////////////////////////////////////////////
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { IntlProvider } from 'react-intl';
 import { BoundRuntime, type JQueryWrappedDiv, type XBlockRuntime } from './xblock-utils';
@@ -34,7 +34,8 @@ interface InitData {
   scaleFactors?: number[];
   submitButtonClicked?: boolean;
   bgnumber?: number;
-  initialDrawing?: object;
+  // Can be an object (Fabric canvas data) or a URL string pointing to a .json file
+  initialDrawing?: object | string;
   visibleModes?: string[];
   axisLabels?: [string, string];
   hideLabels?: boolean;
@@ -53,7 +54,50 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   const bgnumber = initData.bgnumber ?? 0;
   const axisLabels = initData.axisLabels ?? ['q', 'p'];
   const hideLabels = initData.hideLabels ?? false;
-  const initialDrawing = initData.initialDrawing ?? {};
+  const initialDrawingFromInit = initData.initialDrawing ?? {};
+  const [initialDrawing, setInitialDrawing] = useState<any>(
+    typeof initialDrawingFromInit === 'string' ? initialDrawingFromInit : initialDrawingFromInit
+  );
+
+  // If initialDrawingFromInit is a URL string, fetch it and parse json.
+  useEffect(() => {
+    let cancelled = false;
+    async function maybeFetch() {
+      if (typeof initialDrawingFromInit === 'string' && /^https?:\/\//i.test(initialDrawingFromInit)) {
+        // Convert GitHub blob URL to raw.githubusercontent.com so fetch gets JSON
+        let fetchUrl = initialDrawingFromInit;
+        try {
+          const ghMatch = initialDrawingFromInit.match(/^https:\/\/github.com\/(.+?)\/(.+?)\/blob\/(.+?)\/(.+)$/i);
+          if (ghMatch) {
+            const owner = ghMatch[1];
+            const repo = ghMatch[2];
+            const branch = ghMatch[3];
+            const path = ghMatch[4];
+            fetchUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+          }
+        } catch (e) {
+          // if conversion fails, fallback to original URL
+          fetchUrl = initialDrawingFromInit;
+        }
+        
+        try {
+          const res = await fetch(fetchUrl);
+          if (!res.ok) throw new Error(`Failed to fetch initial drawing: ${res.status}`);
+          const json = await res.json();
+          if (!cancelled) setInitialDrawing(json);
+        } catch (err) {
+          console.error('Error fetching initial drawing URL', err);
+          // keep the URL string in state so DrawingApp can decide what to do
+          if (!cancelled) setInitialDrawing(initialDrawingFromInit);
+        }
+      } else {
+        // not a URL: use the provided object/JSON value
+        setInitialDrawing(initialDrawingFromInit);
+      }
+    }
+    maybeFetch();
+    return () => { cancelled = true; };
+  }, [initialDrawingFromInit]);
   const visibleModes = initData.visibleModes ?? undefined;
 
   const renderSubmitButton = () => (

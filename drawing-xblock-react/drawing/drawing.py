@@ -78,11 +78,15 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
 }
 
 
-    # Store initial drawing as a JSON string to avoid List field type mismatches
+    # Store initial drawing as a simple string. Historically this field
+    # contained a JSON string of the Fabric.js canvas; to avoid storing
+    # large JSON objects in Studio we now default to a URL that points to
+    # a JSON file. Studio can save either a URL (string) or a JSON object
+    # (stored as a JSON string). Frontend will fetch the URL when needed.
     initial_drawing = String(
-        default= json.dumps(LINE), # changes dictionary to json string
+        default='https://github.com/aembaye2/xblock_development/blob/main/circle.json',
         scope=Scope.content,
-        help="Initial drawing data for the canvas (Fabric.js format), stored as JSON string",
+        help="Initial drawing source: either a URL (string) pointing to a .json file or a JSON string/object representing Fabric.js data",
     )
 
     # Removed MCQ fields: options, correct, user_answer
@@ -226,8 +230,10 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "canvasHeight": self.canvasHeight,
             "scaleFactors": self.scaleFactors,
             "submitButtonClicked": self.submitButtonClicked,
-            # `initial_drawing` is stored as a JSON string; parse it for the frontend.
-            "initialDrawing": (json.loads(self.initial_drawing) if isinstance(self.initial_drawing, str) else self.initial_drawing),
+            # `initial_drawing` may be a URL string (http/https) or a JSON
+            # string/object. Send it to the frontend as-is so the client can
+            # decide whether to fetch the URL or use the provided JSON.
+            "initialDrawing": self.initial_drawing,
             "visibleModes": self.visibleModes,
             "bgnumber": self.bgnumber,
             "axisLabels": self.axis_labels,
@@ -259,8 +265,10 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             "visibleModes": self.visibleModes,
             "axisLabels": self.axis_labels,
             "hideLabels": self.hideLabels,
-            # send parsed JSON to the studio editor JS
-            "initialDrawing": (json.loads(self.initial_drawing) if isinstance(self.initial_drawing, str) else self.initial_drawing),
+            # send stored value to the studio editor JS. This may be a URL
+            # (string) or a JSON string/object. Studio will present a URL
+            # input and/or a JSON editor depending on the stored value.
+            "initialDrawing": self.initial_drawing,
         }
         frag.initialize_js('initDrawingXBlockStudioView', init_data)
         return frag
@@ -318,31 +326,44 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
             pass
         
         # Validate and sanitize incoming initialDrawing from Studio before storing.
+        # Accept either:
+        #  - a URL string (http/https) which we store directly as a string, or
+        #  - a JSON string/object which we sanitize and store as a JSON string.
         new_initial = data.get('initialDrawing', None)
         if new_initial is not None:
             try:
-                # Accept either a JSON string or an object/list from the Studio JS.
-                if isinstance(new_initial, str):
-                    parsed = json.loads(new_initial)
+                # If it's a string that looks like a URL, store as-is.
+                if isinstance(new_initial, str) and new_initial.strip().lower().startswith(('http://', 'https://')):
+                    self.initial_drawing = new_initial.strip()
+                    saved_initial = new_initial.strip()
                 else:
-                    parsed = new_initial
+                    # Accept either a JSON string or an object/list from Studio.
+                    if isinstance(new_initial, str):
+                        parsed = json.loads(new_initial)
+                    else:
+                        parsed = new_initial
 
-                sanitized = validate_initial_drawing(parsed)
-                # Store as JSON string in the field
-                self.initial_drawing = json.dumps(sanitized)
-                saved_initial = sanitized
+                    sanitized = validate_initial_drawing(parsed)
+                    # Store as JSON string in the field
+                    self.initial_drawing = json.dumps(sanitized)
+                    saved_initial = sanitized
             except Exception:
                 logging.exception("Invalid initialDrawing provided in Studio; keeping previous value")
         
         # Return saved/sanitized initial drawing to the Studio editor so the UI
         # can update its preview / textarea with the canonical form.
+        # Return the raw stored value to the Studio editor so it can decide
+        # whether to show it as a URL or JSON. If the stored value is a
+        # JSON string we attempt to parse it so the editor receives a
+        # canonical object; otherwise return the string (URL) as-is.
         try:
-            current_initial = json.loads(self.initial_drawing) if isinstance(self.initial_drawing, str) else self.initial_drawing
+            if isinstance(self.initial_drawing, str) and self.initial_drawing.strip().lower().startswith(('http://', 'https://')):
+                current_initial = self.initial_drawing.strip()
+            elif isinstance(self.initial_drawing, str):
+                current_initial = json.loads(self.initial_drawing)
+            else:
+                current_initial = self.initial_drawing
         except Exception:
-            # If parsing fails for any reason, return an empty list so the
-            # Studio UI receives a defined value instead of `None` which
-            # can cause the frontend to show "undefined". We still log
-            # the exception above when sanitization failed.
             logging.exception("Failed to parse stored initial_drawing; returning empty list")
             current_initial = []
 

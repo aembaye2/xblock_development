@@ -70,9 +70,14 @@ const StudioView: React.FC<Props> = ({
   const [axes, setAxes] = React.useState<string[]>(axisLabels ?? []);
   const [hideLbls, setHideLbls] = React.useState<boolean>(hideLabels ?? false);
   const [initialDrawStr, setInitialDrawStr] = React.useState<string>(
-    JSON.stringify(initialDrawing ?? {}, null, 2)
+    // If initialDrawing is an object, show it as pretty JSON. If it's a
+    // URL string, leave the JSON textarea empty (the URL input is used).
+    (typeof initialDrawing === 'object') ? JSON.stringify(initialDrawing ?? {}, null, 2) : (typeof initialDrawing === 'string' && /^https?:\/\//i.test(initialDrawing) ? '' : JSON.stringify(initialDrawing ?? {}, null, 2))
   );
   const [initialDraw, setInitialDraw] = React.useState<any>(initialDrawing ?? {});
+  const [initialDrawUrl, setInitialDrawUrl] = React.useState<string>(
+    (typeof initialDrawing === 'string' && /^https?:\/\//i.test(initialDrawing)) ? initialDrawing : ''
+  );
   const [maxAttempts, setMaxAttempts] = React.useState<number>(propsToNumber(max_attempts, 3));
   const [w, setW] = React.useState<number>(propsToNumber(weight, 1));
   const [hasScore, setHasScore] = React.useState<boolean>(has_score ?? true);
@@ -112,6 +117,12 @@ const StudioView: React.FC<Props> = ({
     }
   };
 
+  const handleInitialUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInitialDrawUrl(e.target.value);
+    // When user starts editing URL, clear JSON errors related to initial drawing
+    setErrors(prev => prev.filter(err => !err.includes('Initial Drawing')));
+  };
+
   const validate = (): string[] => {
     const errs: string[] = [];
     if (!q || q.trim().length === 0) errs.push('Question is required.');
@@ -119,11 +130,16 @@ const StudioView: React.FC<Props> = ({
     if (!Number.isFinite(ch) || ch <= 0) errs.push('Canvas height must be a positive number.');
     
     // Final validation of JSON
-    try {
-      JSON.parse(initialDrawStr);
-    } catch {
-      if (!errs.some(e => e.includes('Initial Drawing'))) {
-        errs.push('Initial Drawing must be valid JSON');
+    // Either a non-empty valid URL is provided, or the JSON textarea must be valid JSON.
+    if (initialDrawUrl && /^https?:\/\//i.test(initialDrawUrl)) {
+      // basic URL sanity check passed
+    } else {
+      try {
+        JSON.parse(initialDrawStr || '{}');
+      } catch {
+        if (!errs.some(e => e.includes('Initial Drawing'))) {
+          errs.push('Initial Drawing must be valid JSON or provide a valid URL');
+        }
       }
     }
     
@@ -159,8 +175,9 @@ const StudioView: React.FC<Props> = ({
       visibleModes: visibleModesState,
       axisLabels: axes,
       hideLabels: hideLbls,
-      // send the serialized JSON string to the backend
-      initialDrawing: initialDrawStr,
+      // If a URL is provided prefer sending that; otherwise send the
+      // serialized JSON string (the backend will accept either).
+      initialDrawing: (initialDrawUrl && initialDrawUrl.trim().length > 0) ? initialDrawUrl.trim() : initialDrawStr,
     };
 
     console.log('Saving payload:', payload);
@@ -178,10 +195,17 @@ const StudioView: React.FC<Props> = ({
     // studio textarea in an "undefined" state when the backend returns
     // null/None for the field.
     if (response && Object.prototype.hasOwnProperty.call(response, 'initialDrawing')) {
-      const serverInitial = response.initialDrawing ?? {};
-      const pretty = JSON.stringify(serverInitial, null, 2);
-      setInitialDrawStr(pretty);
-      setInitialDraw(serverInitial);
+      const serverInitial = response.initialDrawing;
+      if (typeof serverInitial === 'string' && /^https?:\/\//i.test(serverInitial)) {
+        setInitialDrawUrl(serverInitial);
+        setInitialDrawStr('');
+        setInitialDraw({});
+      } else {
+        const pretty = JSON.stringify(serverInitial ?? {}, null, 2);
+        setInitialDrawStr(pretty);
+        setInitialDraw(serverInitial ?? {});
+        setInitialDrawUrl('');
+      }
     }
 
     // Let the runtime close the editor (pass the original promise)
@@ -386,7 +410,21 @@ const StudioView: React.FC<Props> = ({
 
       <div style={{ marginBottom: '15px' }}>
         <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-          Initial Drawing (JSON):
+          Initial Drawing URL (optional):
+        </label>
+        <input
+          type="text"
+          value={initialDrawUrl}
+          onChange={handleInitialUrlChange}
+          placeholder="https://example.com/my-drawing.json"
+          style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+        />
+        <small style={{ color: '#666', fontSize: '12px' }}>
+          If provided, the URL will be used as the initial drawing source. Otherwise you may paste JSON below.
+        </small>
+
+        <label style={{ display: 'block', marginTop: '12px', marginBottom: '5px', fontWeight: 'bold' }}>
+          Initial Drawing (JSON, optional):
         </label>
         <textarea 
           value={initialDrawStr} 
@@ -402,7 +440,7 @@ const StudioView: React.FC<Props> = ({
           }}
         />
         <small style={{ color: '#666', fontSize: '12px' }}>
-          Enter valid JSON for initial canvas objects (Fabric.js format)
+          Enter valid JSON for initial canvas objects (Fabric.js format). This is ignored if an Initial Drawing URL is provided.
         </small>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginBottom: '15px' }}>

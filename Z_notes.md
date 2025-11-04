@@ -3,13 +3,13 @@
 
 # Run the frontend Rollup build in another terminal:
 
-cd drawing-xblock-react/drawing/frontend/ && npm install --legacy-peer-deps && npm run watch
+cd drawing-xblock-react/drawing/frontend/ && npm install --legacy-peer-deps && && npm run build && npm run watch
 
 ## stage the changed files (prefer explicit path rather than `.`)
 git add .
 
-git commit -m "Bump drawing-xblock-react to V0.0.3" \
- && git tag -a V0.0.3 -m "Release V0.0.3" \
+git commit -m "Bump drawing-xblock-react to V0.0.4" \
+ && git tag -a V0.0.4 -m "Release V0.0.4" \
  && git push origin main --follow-tags
 
 
