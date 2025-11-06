@@ -84,7 +84,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     # a JSON file. Studio can save either a URL (string) or a JSON object
     # (stored as a JSON string). Frontend will fetch the URL when needed.
     initial_drawing = String(
-        default='https://github.com/aembaye2/xblock_development/blob/main/circle.json',
+        default="", #'https://github.com/aembaye2/xblock_development/blob/main/circle.json',
         scope=Scope.content,
         help="Initial drawing source: either a URL (string) pointing to a .json file or a JSON string/object representing Fabric.js data",
     )

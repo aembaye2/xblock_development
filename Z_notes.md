@@ -8,9 +8,7 @@ cd drawing-xblock-react/drawing/frontend/ && npm install --legacy-peer-deps && &
 ## stage the changed files (prefer explicit path rather than `.`)
 git add .
 
-git commit -m "Bump drawing-xblock-react to V0.0.4" \
- && git tag -a V0.0.4 -m "Release V0.0.4" \
- && git push origin main --follow-tags
+git commit -m "Bump drawing-xblock-react to V1.0.0"  && git tag -a V1.0.0 -m "Release V1.0.0"  && git push origin main --follow-tags
 
 
 # then in openedx tutor:
