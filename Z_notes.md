@@ -3,7 +3,7 @@
 
 # Run the frontend Rollup build in another terminal:
 
-cd drawing-xblock-react/drawing/frontend/ && npm install --legacy-peer-deps && && npm run build && npm run watch
+cd drawing-xblock-react/drawing/frontend/ && npm install --legacy-peer-deps && npm run build && npm run watch
 
 ## stage the changed files (prefer explicit path rather than `.`)
 git add .

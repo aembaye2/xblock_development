@@ -9,6 +9,7 @@ import FreedrawTool from "./freedraw"
 import LineTool from "./line"
 import PointTool from "./point"
 import PolygonTool from "./polygon"
+import TriangleTool from "./triangle"
 import RectTool from "./rect"
 import TextTool from "./text"
 import TransformTool from "./transform"
@@ -22,6 +23,7 @@ const tools: any = {
   text: TextTool,
   freedraw: FreedrawTool,
   line: LineTool,
+  triangle: TriangleTool,
   polygon: PolygonTool,
   rect: RectTool,
   singlearrowhead: SingleArrowHeadTool,

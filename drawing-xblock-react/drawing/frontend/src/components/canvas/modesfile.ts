@@ -11,6 +11,7 @@ import {
   MoveDiagonal,
   Type,
   MousePointer2,
+  Triangle,
 } from "lucide-react"
 
 //import CoordIcon from "./coordicon.svg" // Import the SVG file as a React component
@@ -21,8 +22,7 @@ import coordicon from "./coordicon.png"
 export const modes: any = [
   { mode: "point", icon: Dot, description: "Draw a point" },
   { mode: "line", icon: Slash, description: "Draw a line" },
-  {
-    mode: "singlearrowhead",
+  {mode: "singlearrowhead",
     icon: MoveUpRight,
     description: "Draw a single arrowhead",
   },
@@ -31,6 +31,7 @@ export const modes: any = [
     icon: MoveDiagonal,
     description: "Draw a double arrowhead",
   },
+  { mode: "triangle", icon: Triangle, description: "Draw a triangle" },
   { mode: "polygon", icon: Hexagon, description: "Draw a polygon" },
   { mode: "rect", icon: RectangleHorizontal, description: "Draw a rectangle" },
   { mode: "circle", icon: Circle, description: "Draw a circle" },

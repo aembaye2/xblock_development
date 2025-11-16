@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import DrawableCanvas, { ComponentArgs } from "./DrawableCanvas"
 import DrawingModeSelector from "./DrawingModeSelector"
 import { CanvasStateProvider } from "./DrawableCanvasState"
@@ -47,11 +47,33 @@ export function DrawingApp({
   const [drawingMode, setDrawingMode] = useState(defaultMode)
   const [strokeColor, setStrokeColor] = useState("#000000")
   const [strokeWidth, setStrokeWidth] = useState(2)
+  const [fillColor, setFillColor] = useState("yellow")
+
+  // Helper: return a random rgba color like 'rgba(161,178,195,0.25)'
+  function randomRGBA(alpha = 0.25) {
+    const r = Math.floor(Math.random() * 256)
+    const g = Math.floor(Math.random() * 256)
+    const b = Math.floor(Math.random() * 256)
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+  }
+
+  // When drawing mode changes, pick an appropriate fill color.
+  // Fillable shapes get a "thin" (semi-transparent) color so underlying
+  // drawings remain visible. Non-fillable shapes use fully transparent fill.
+  useEffect(() => {
+    const fillable = new Set(["triangle", "polygon", "rect", "circle"])
+    if (fillable.has(drawingMode)) {
+      setFillColor(randomRGBA(0.22))
+    } else {
+      // lines and arrows default to fully transparent fill
+      setFillColor("rgba(0,0,0,0)")
+    }
+  }, [drawingMode])
 
   const canvasProps: ComponentArgs = {
     AssessName: AssessName,
     index: index,
-    fillColor: "transparent",
+    fillColor: fillColor,
     strokeWidth: strokeWidth,
     strokeColor: strokeColor,
     backgroundColor: "blue",

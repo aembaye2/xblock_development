@@ -58616,6 +58616,168 @@
 	    }
 	}
 
+	class TriangleTool extends FabricTool {
+	    // State
+	    fillColor = "";
+	    strokeWidth = 1;
+	    strokeColor = "#ffffff";
+	    startCircle = null;
+	    points = [];
+	    currentLine = null;
+	    currentTriangle = null;
+	    configureCanvas({ strokeWidth, strokeColor, fillColor, }) {
+	        this._canvas.isDrawingMode = false;
+	        this._canvas.selection = false;
+	        this._canvas.forEachObject((o) => (o.selectable = (o.evented = false)));
+	        this.strokeWidth = strokeWidth;
+	        this.strokeColor = strokeColor;
+	        this.fillColor = fillColor;
+	        this._canvas.on("mouse:down", (e) => this.onMouseDown(e));
+	        this._canvas.on("mouse:move", (e) => this.onMouseMove(e));
+	        this._canvas.on("mouse:up", (e) => this.onMouseUp(e));
+	        this._canvas.on("mouse:out", (e) => this.onMouseOut(e));
+	        this._canvas.on("mouse:dblclick", (e) => this.onMouseDoubleClick(e));
+	        return () => {
+	            this._canvas.off("mouse:down");
+	            this._canvas.off("mouse:move");
+	            this._canvas.off("mouse:up");
+	            this._canvas.off("mouse:out");
+	            this._canvas.off("mouse:dblclick");
+	        };
+	    }
+	    onMouseDown(o) {
+	        const canvas = this._canvas;
+	        const button = o.e["button"];
+	        if (button !== 0)
+	            return; // only handle left-clicks
+	        const pointer = canvas.getPointer(o.e);
+	        // First click: set first vertex
+	        if (this.points.length === 0) {
+	            this.points.push({ x: pointer.x, y: pointer.y });
+	            this.startCircle = new fabricExports.fabric.Circle({
+	                left: pointer.x,
+	                top: pointer.y,
+	                originX: "center",
+	                originY: "center",
+	                strokeWidth: this.strokeWidth,
+	                stroke: this.strokeColor,
+	                fill: this.strokeColor,
+	                selectable: false,
+	                evented: false,
+	                radius: Math.max(2, this.strokeWidth),
+	            });
+	            canvas.add(this.startCircle);
+	            // preview line from first point to cursor
+	            const pts = [pointer.x, pointer.y, pointer.x, pointer.y];
+	            this.currentLine = new fabricExports.fabric.Line(pts, {
+	                strokeWidth: this.strokeWidth,
+	                fill: this.strokeColor,
+	                stroke: this.strokeColor,
+	                originX: "center",
+	                originY: "center",
+	                selectable: false,
+	                evented: false,
+	            });
+	            canvas.add(this.currentLine);
+	            return;
+	        }
+	        // Second click: set second vertex and start triangle preview
+	        if (this.points.length === 1) {
+	            this.points.push({ x: pointer.x, y: pointer.y });
+	            // remove preview line
+	            if (this.currentLine) {
+	                try {
+	                    canvas.remove(this.currentLine);
+	                }
+	                catch (e) { }
+	                this.currentLine = null;
+	            }
+	            // create triangle preview using current mouse as third vertex
+	            const triPoints = [
+	                { x: this.points[0].x, y: this.points[0].y },
+	                { x: this.points[1].x, y: this.points[1].y },
+	                { x: pointer.x, y: pointer.y },
+	            ];
+	            this.currentTriangle = new fabricExports.fabric.Polygon(triPoints, {
+	                strokeWidth: this.strokeWidth,
+	                fill: this.fillColor,
+	                stroke: this.strokeColor,
+	                selectable: false,
+	                evented: false,
+	                objectCaching: false,
+	            });
+	            canvas.add(this.currentTriangle);
+	            return;
+	        }
+	        // Third click: finalize triangle
+	        if (this.points.length === 2) {
+	            this.points.push({ x: pointer.x, y: pointer.y });
+	            // remove preview triangle and start circle
+	            if (this.currentTriangle) {
+	                try {
+	                    canvas.remove(this.currentTriangle);
+	                }
+	                catch (e) { }
+	                this.currentTriangle = null;
+	            }
+	            if (this.startCircle) {
+	                try {
+	                    canvas.remove(this.startCircle);
+	                }
+	                catch (e) { }
+	                this.startCircle = null;
+	            }
+	            const final = new fabricExports.fabric.Polygon(this.points.map((p) => ({ x: p.x, y: p.y })), {
+	                strokeWidth: this.strokeWidth,
+	                fill: this.fillColor,
+	                stroke: this.strokeColor,
+	                selectable: false,
+	                evented: true,
+	            });
+	            canvas.add(final);
+	            // reset state for next triangle
+	            this.points = [];
+	            this.currentLine = null;
+	            this.currentTriangle = null;
+	            this.startCircle = null;
+	            return;
+	        }
+	    }
+	    onMouseMove(o) {
+	        const canvas = this._canvas;
+	        const pointer = canvas.getPointer(o.e);
+	        // If we have only the first point, update preview line
+	        if (this.points.length === 1) {
+	            if (this.currentLine) {
+	                this.currentLine.set({ x2: pointer.x, y2: pointer.y });
+	                this.currentLine.setCoords();
+	                canvas.renderAll();
+	            }
+	            return;
+	        }
+	        // If we have two fixed points, update the preview triangle using cursor as third
+	        if (this.points.length === 2) {
+	            if (this.currentTriangle) {
+	                const pts = [
+	                    { x: this.points[0].x, y: this.points[0].y },
+	                    { x: this.points[1].x, y: this.points[1].y },
+	                    { x: pointer.x, y: pointer.y },
+	                ];
+	                this.currentTriangle.set({ points: pts });
+	                this.currentTriangle.setCoords();
+	                canvas.renderAll();
+	            }
+	            return;
+	        }
+	    }
+	    onMouseUp(o) {
+	        // nothing special on mouse up for click-based triangle creation
+	    }
+	    onMouseOut(o) {
+	        // keep state — we want preview to follow cursor while over canvas only
+	    }
+	}
+
 	class RectTool extends FabricTool {
 	    isMouseDown = false;
 	    fillColor = "#ffffff";
@@ -58762,6 +58924,7 @@
 	    text: TextTool,
 	    freedraw: FreedrawTool,
 	    line: LineTool,
+	    triangle: TriangleTool,
 	    polygon: PolygonTool,
 	    rect: RectTool,
 	    singlearrowhead: SingleArrowHeadTool,
@@ -59219,10 +59382,31 @@
 	    const [drawingMode, setDrawingMode] = reactExports.useState(defaultMode);
 	    const [strokeColor, setStrokeColor] = reactExports.useState("#000000");
 	    const [strokeWidth, setStrokeWidth] = reactExports.useState(2);
+	    const [fillColor, setFillColor] = reactExports.useState("yellow");
+	    // Helper: return a random rgba color like 'rgba(161,178,195,0.25)'
+	    function randomRGBA(alpha = 0.25) {
+	        const r = Math.floor(Math.random() * 256);
+	        const g = Math.floor(Math.random() * 256);
+	        const b = Math.floor(Math.random() * 256);
+	        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+	    }
+	    // When drawing mode changes, pick an appropriate fill color.
+	    // Fillable shapes get a "thin" (semi-transparent) color so underlying
+	    // drawings remain visible. Non-fillable shapes use fully transparent fill.
+	    reactExports.useEffect(() => {
+	        const fillable = new Set(["triangle", "polygon", "rect", "circle"]);
+	        if (fillable.has(drawingMode)) {
+	            setFillColor(randomRGBA(0.22));
+	        }
+	        else {
+	            // lines and arrows default to fully transparent fill
+	            setFillColor("rgba(0,0,0,0)");
+	        }
+	    }, [drawingMode]);
 	    const canvasProps = {
 	        AssessName: AssessName,
 	        index: index,
-	        fillColor: "transparent",
+	        fillColor: fillColor,
 	        strokeWidth: strokeWidth,
 	        strokeColor: strokeColor,
 	        backgroundColor: "blue",
@@ -59365,11 +59549,11 @@
 	 */
 
 
-	const __iconNode$b = [
+	const __iconNode$c = [
 	  ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
 	  ["path", { d: "M7 16c.5-2 1.5-7 4-7 2 0 2 3 4 3 2.5 0 4.5-5 5-7", key: "lw07rv" }]
 	];
-	const ChartSpline = createLucideIcon("chart-spline", __iconNode$b);
+	const ChartSpline = createLucideIcon("chart-spline", __iconNode$c);
 
 	/**
 	 * @license lucide-react v0.543.0 - ISC
@@ -59379,8 +59563,8 @@
 	 */
 
 
-	const __iconNode$a = [["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]];
-	const Circle = createLucideIcon("circle", __iconNode$a);
+	const __iconNode$b = [["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]];
+	const Circle = createLucideIcon("circle", __iconNode$b);
 
 	/**
 	 * @license lucide-react v0.543.0 - ISC
@@ -59390,8 +59574,27 @@
 	 */
 
 
-	const __iconNode$9 = [["circle", { cx: "12.1", cy: "12.1", r: "1", key: "18d7e5" }]];
-	const Dot = createLucideIcon("dot", __iconNode$9);
+	const __iconNode$a = [["circle", { cx: "12.1", cy: "12.1", r: "1", key: "18d7e5" }]];
+	const Dot = createLucideIcon("dot", __iconNode$a);
+
+	/**
+	 * @license lucide-react v0.543.0 - ISC
+	 *
+	 * This source code is licensed under the ISC license.
+	 * See the LICENSE file in the root directory of this source tree.
+	 */
+
+
+	const __iconNode$9 = [
+	  [
+	    "path",
+	    {
+	      d: "M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z",
+	      key: "yt0hxn"
+	    }
+	  ]
+	];
+	const Hexagon = createLucideIcon("hexagon", __iconNode$9);
 
 	/**
 	 * @license lucide-react v0.543.0 - ISC
@@ -59405,12 +59608,12 @@
 	  [
 	    "path",
 	    {
-	      d: "M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z",
-	      key: "yt0hxn"
+	      d: "M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z",
+	      key: "edeuup"
 	    }
 	  ]
 	];
-	const Hexagon = createLucideIcon("hexagon", __iconNode$8);
+	const MousePointer2 = createLucideIcon("mouse-pointer-2", __iconNode$8);
 
 	/**
 	 * @license lucide-react v0.543.0 - ISC
@@ -59421,15 +59624,11 @@
 
 
 	const __iconNode$7 = [
-	  [
-	    "path",
-	    {
-	      d: "M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z",
-	      key: "edeuup"
-	    }
-	  ]
+	  ["path", { d: "M11 19H5v-6", key: "8awifj" }],
+	  ["path", { d: "M13 5h6v6", key: "7voy1q" }],
+	  ["path", { d: "M19 5 5 19", key: "wwaj1z" }]
 	];
-	const MousePointer2 = createLucideIcon("mouse-pointer-2", __iconNode$7);
+	const MoveDiagonal = createLucideIcon("move-diagonal", __iconNode$7);
 
 	/**
 	 * @license lucide-react v0.543.0 - ISC
@@ -59440,11 +59639,10 @@
 
 
 	const __iconNode$6 = [
-	  ["path", { d: "M11 19H5v-6", key: "8awifj" }],
-	  ["path", { d: "M13 5h6v6", key: "7voy1q" }],
-	  ["path", { d: "M19 5 5 19", key: "wwaj1z" }]
+	  ["path", { d: "M13 5H19V11", key: "1n1gyv" }],
+	  ["path", { d: "M19 5L5 19", key: "72u4yj" }]
 	];
-	const MoveDiagonal = createLucideIcon("move-diagonal", __iconNode$6);
+	const MoveUpRight = createLucideIcon("move-up-right", __iconNode$6);
 
 	/**
 	 * @license lucide-react v0.543.0 - ISC
@@ -59455,10 +59653,16 @@
 
 
 	const __iconNode$5 = [
-	  ["path", { d: "M13 5H19V11", key: "1n1gyv" }],
-	  ["path", { d: "M19 5L5 19", key: "72u4yj" }]
+	  [
+	    "path",
+	    {
+	      d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
+	      key: "1a8usu"
+	    }
+	  ],
+	  ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
 	];
-	const MoveUpRight = createLucideIcon("move-up-right", __iconNode$5);
+	const Pencil = createLucideIcon("pencil", __iconNode$5);
 
 	/**
 	 * @license lucide-react v0.543.0 - ISC
@@ -59469,29 +59673,9 @@
 
 
 	const __iconNode$4 = [
-	  [
-	    "path",
-	    {
-	      d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
-	      key: "1a8usu"
-	    }
-	  ],
-	  ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
-	];
-	const Pencil = createLucideIcon("pencil", __iconNode$4);
-
-	/**
-	 * @license lucide-react v0.543.0 - ISC
-	 *
-	 * This source code is licensed under the ISC license.
-	 * See the LICENSE file in the root directory of this source tree.
-	 */
-
-
-	const __iconNode$3 = [
 	  ["rect", { width: "20", height: "12", x: "2", y: "6", rx: "2", key: "9lu3g6" }]
 	];
-	const RectangleHorizontal = createLucideIcon("rectangle-horizontal", __iconNode$3);
+	const RectangleHorizontal = createLucideIcon("rectangle-horizontal", __iconNode$4);
 
 	/**
 	 * @license lucide-react v0.543.0 - ISC
@@ -59501,8 +59685,23 @@
 	 */
 
 
-	const __iconNode$2 = [["path", { d: "M22 2 2 22", key: "y4kqgn" }]];
-	const Slash = createLucideIcon("slash", __iconNode$2);
+	const __iconNode$3 = [["path", { d: "M22 2 2 22", key: "y4kqgn" }]];
+	const Slash = createLucideIcon("slash", __iconNode$3);
+
+	/**
+	 * @license lucide-react v0.543.0 - ISC
+	 *
+	 * This source code is licensed under the ISC license.
+	 * See the LICENSE file in the root directory of this source tree.
+	 */
+
+
+	const __iconNode$2 = [
+	  ["circle", { cx: "19", cy: "5", r: "2", key: "mhkx31" }],
+	  ["circle", { cx: "5", cy: "19", r: "2", key: "v8kfzx" }],
+	  ["path", { d: "M5 17A12 12 0 0 1 17 5", key: "1okkup" }]
+	];
+	const Spline = createLucideIcon("spline", __iconNode$2);
 
 	/**
 	 * @license lucide-react v0.543.0 - ISC
@@ -59513,11 +59712,12 @@
 
 
 	const __iconNode$1 = [
-	  ["circle", { cx: "19", cy: "5", r: "2", key: "mhkx31" }],
-	  ["circle", { cx: "5", cy: "19", r: "2", key: "v8kfzx" }],
-	  ["path", { d: "M5 17A12 12 0 0 1 17 5", key: "1okkup" }]
+	  [
+	    "path",
+	    { d: "M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z", key: "14u9p9" }
+	  ]
 	];
-	const Spline = createLucideIcon("spline", __iconNode$1);
+	const Triangle = createLucideIcon("triangle", __iconNode$1);
 
 	/**
 	 * @license lucide-react v0.543.0 - ISC
@@ -59539,8 +59739,7 @@
 	const modes = [
 	    { mode: "point", icon: Dot, description: "Draw a point" },
 	    { mode: "line", icon: Slash, description: "Draw a line" },
-	    {
-	        mode: "singlearrowhead",
+	    { mode: "singlearrowhead",
 	        icon: MoveUpRight,
 	        description: "Draw a single arrowhead",
 	    },
@@ -59549,6 +59748,7 @@
 	        icon: MoveDiagonal,
 	        description: "Draw a double arrowhead",
 	    },
+	    { mode: "triangle", icon: Triangle, description: "Draw a triangle" },
 	    { mode: "polygon", icon: Hexagon, description: "Draw a polygon" },
 	    { mode: "rect", icon: RectangleHorizontal, description: "Draw a rectangle" },
 	    { mode: "circle", icon: Circle, description: "Draw a circle" },

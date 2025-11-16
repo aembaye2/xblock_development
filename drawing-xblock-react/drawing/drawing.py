@@ -54,29 +54,29 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
         help="Quiz question",
     )
     
-    LINE = {
-  "version": "5.5.2",
-  "objects": [
-    {
-      "type": "line",
-      "version": "5.5.2",
-      "originX": "center",
-      "originY": "center",
-      "left": 256.06,
-      "top": 248,
-      "width": 346,
-      "height": 150,
-      "x1": -173,
-      "y1": -75,
-      "x2": 173,
-      "y2": 75,
-      "stroke": "#000000",
-      "strokeWidth": 2,
-      "visible": True
-    }
-  ]
-}
-
+#     LINE = {
+#   "version": "5.5.2",
+#   "objects": [
+#     {
+#       "type": "line",
+#       "version": "5.5.2",
+#       "originX": "center",
+#       "originY": "center",
+#       "left": 256.06,
+#       "top": 248,
+#       "width": 346,
+#       "height": 150,
+#       "x1": -173,
+#       "y1": -75,
+#       "x2": 173,
+#       "y2": 75,
+#       "stroke": "#000000",
+#       "strokeWidth": 2,
+#       "visible": True
+#     }
+#   ]
+# }
+    LINE = '{"version": "5.5.2", "objects": [{"type": "line", "version": "5.5.2", "originX": "center", "originY": "center", "left": 256.06, "top": 248, "width": 346, "height": 150, "x1": -173, "y1": -75, "x2": 173, "y2": 75, "stroke": "#000000", "strokeWidth": 2, "visible": true}]}'
 
     # Store initial drawing as a simple string. Historically this field
     # contained a JSON string of the Fabric.js canvas; to avoid storing
@@ -84,7 +84,7 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     # a JSON file. Studio can save either a URL (string) or a JSON object
     # (stored as a JSON string). Frontend will fetch the URL when needed.
     initial_drawing = String(
-        default="", #'https://github.com/aembaye2/xblock_development/blob/main/circle.json',
+        default=LINE, #"", #'https://github.com/aembaye2/xblock_development/blob/main/circle.json',
         scope=Scope.content,
         help="Initial drawing source: either a URL (string) pointing to a .json file or a JSON string/object representing Fabric.js data",
     )
@@ -195,7 +195,8 @@ class DrawingXBlock(ScorableXBlockMixin, XBlock):
     visibleModes = List(
         display_name="Visible Modes",
         scope=Scope.settings,
-        default=["line", "circle", "point"], # <-- whitelist these tools
+        default=["point","line","triangle","singlearrowhead","doublearrowhead","polygon","rect","circle",
+     "freedraw","coordinate","curve","curve4pts","text","transform", "color", "strokeWidth", "download"], # <-- whitelist these tools
         help="List of drawing modes to show in the toolbar (mode keys). Empty by default to hide all tools.",
     )
 
