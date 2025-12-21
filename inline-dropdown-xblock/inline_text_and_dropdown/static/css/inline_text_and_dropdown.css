@@ -1,0 +1,211 @@
+.xblock-studio_view-inline-text-and-dropdown .content {
+  max-width: 100%;
+}
+
+.xblock-studio_view-inline-text-and-dropdown .editor-with-buttons {
+  margin-bottom: 0;
+}
+
+.modal-type-inline-text-and-dropdown.modal-lg.modal-editor .modal-content {
+  overflow: visible;
+}
+
+.xblock-studio_view-inline-text-and-dropdown .list-input.settings-list .field.comp-setting-entry:last-child {
+  padding-bottom: 20px;
+}
+
+.xblock-studio_view-inline-text-and-dropdown .editor-list {
+  padding: 0 10px;
+}
+
+.xblock-studio_view-inline-text-and-dropdown .xblock-actions {
+  box-sizing: border-box;
+}
+
+.xblock-studio_view-inline-text-and-dropdown .editor-list .CodeMirror {
+  height: 342px;
+}
+
+.modal-type-inline-text-and-dropdown .action-list {
+  display: flex;
+  padding: 8px 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  position: absolute;
+  top: -49px;
+  z-index: 4;
+  right: 0;
+}
+
+.modal-type-inline-text-and-dropdown .action-item {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.modal-type-inline-text-and-dropdown .mode-button {
+  border: 0;
+  color: #666;
+  padding: 5px 10px;
+  text-transform: uppercase;
+  font-size: 1.4rem;
+  line-height: 2.072rem;
+  border-radius: 4px;
+}
+
+.modal-type-inline-text-and-dropdown .mode-button.is-set {
+  background-color: #666;
+  color: #fff;
+}
+
+.modal-type-inline-text-and-dropdown .mode-button:hover {
+  background: #ccc;
+  color: #4c4c4c;
+}
+
+.inline-text-and-dropdown .question-prompt {
+  text-align: left;
+  padding-bottom: 20px;
+}
+
+.inline-text-and-dropdown .feedback {
+  text-align: left;
+  padding-bottom: 20px;
+}
+
+.inline-text-and-dropdown .hint {
+  text-align: left;
+  padding-bottom: 20px;
+}
+
+.inline-text-and-dropdown .hint-button {
+  height: 40px;
+  border: 1px;
+  border-radius: 0.1875rem;
+  box-shadow: none;
+  padding: 0.625rem 1.25rem;
+  font-size: 14px;
+  font-weight: normal;
+  text-shadow: none;
+  background-color: transparent;
+  text-transform: capitalize;
+}
+
+.inline-text-and-dropdown .problem-progress {
+  display: inline-block;
+  padding-left: 5px;
+  color: #666;
+  font-weight: 100;
+  font-size: 1em;
+}
+
+.inline-text-and-dropdown .problem-header {
+  display: inline-block;
+}
+
+.inline-text-and-dropdown .correct {
+  color: #1d9348;
+}
+
+.inline-text-and-dropdown .incorrect {
+  color: #b2060e;
+}
+
+.inline-text-and-dropdown .feedback-number-correct {
+  color: #1d9348;
+  position: relative;
+  top: -0.5em;
+  font-size: 80%;
+  font-weight: bold;
+}
+
+.inline-text-and-dropdown .feedback-number-incorrect {
+  color: #b2060e;
+  position: relative;
+  top: -0.5em;
+  font-size: 80%;
+  font-weight: bold;
+}
+
+.inline-text-and-dropdown .button-holder {
+  margin-top: 20px;
+  min-height: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.inline-text-and-dropdown .submit-attempt-container {
+  padding-bottom: 20px;
+  flex-grow: 1;
+}
+
+.inline-text-and-dropdown .problem-action-buttons-wrapper{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+.inline-text-and-dropdown .problem-action-button-wrapper {
+  display: inline-block;
+}
+
+.inline-text-and-dropdown .problem-action-btn .icon {
+  margin-bottom: 2px;
+  display: block;
+}
+
+.inline-text-and-dropdown .action .problem-action-btn {
+  margin-right: 4px;
+  max-width: 110px;
+  display: inline-block;
+}
+
+.inline-text-and-dropdown .hidden {
+  display: none;
+}
+
+.inline-text-and-dropdown select {
+  margin: 1px;
+}
+
+.inline-text-and-dropdown input {
+  margin: 1px;
+  min-width: 25px;
+  width: 25px;
+  max-width: 110px;
+  font-size: 15px;
+  padding: 2px 5px;
+  border-radius: 2px !important;
+  border: 1px solid #767676;
+}
+
+.inline-text-and-dropdown .question-prompt select {
+  height: 26px !important;
+  border-radius: 2px !important;
+}
+
+.inline-text-and-dropdown .notification.general {
+  border-top: 3px solid #0075b4;
+}
+
+.inline-text-and-dropdown .notification.general.notification-submit .icon {
+  margin-right: 15px;
+  color: #0075b4;
+}
+
+.inline-text-and-dropdown .notification {
+  float: left;
+  margin-top: 10px;
+  padding: 8px 10px 4px 10px;
+  line-height: 1.5em;
+}
+
+.inline-text-and-dropdown .question-prompt p {
+  line-height: 2;
+}

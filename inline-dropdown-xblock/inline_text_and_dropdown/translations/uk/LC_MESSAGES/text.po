@@ -1,0 +1,197 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-22 09:13+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:30
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_edit.html:7
+msgid "Display Name"
+msgstr "Назва, що відображається"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:31
+msgid "Inline Text and Dropdown"
+msgstr "Вбудований текст і випадаюче меню"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:33
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_edit.html:10
+msgid "This name appears in the horizontal navigation at the top of the page"
+msgstr "Ця назва відображається в горизонтальній навігації вгорі сторінки"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:38
+msgid "Hints for the question"
+msgstr "Підказки для питання"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:42
+msgid "Default question content "
+msgstr "Зміст запитання за замовчуванням"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:78
+msgid "Correctness of input values"
+msgstr "Правильність введених значень"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:84
+msgid "Order of selections in body"
+msgstr "Порядок виділень в тексті"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:90
+msgid "Saved student input values"
+msgstr "Збережені вхідні значення студента"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:96
+msgid "Saved student correctness values"
+msgstr "Збережені значення правильності студента"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:102
+msgid "Feedback for input values"
+msgstr "Відгук про введені значення"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:108
+msgid "Current feedback state"
+msgstr "Поточний стан зворотного зв'язку"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:114
+msgid "Indicates whether the learner has completed the problem at least once"
+msgstr "Вказує на те, що учень хоча б раз виконував завдання."
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:120
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_edit.html:15
+msgid "Weight"
+msgstr "Вага"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:121
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_edit.html:18
+msgid "This assigns an integer value representing the weight of this problem"
+msgstr "Це присвоює ціле значення, що представляє вагу цієї проблеми"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:126
+msgid "Randomize"
+msgstr "Випадково"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:127
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_edit.html:31
+msgid "Enable randomization of the dropdown values."
+msgstr "Увімкнути рандомізацію випадаючих значень."
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:132
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_edit.html:35
+msgid "Show Correctness"
+msgstr "Показати коректність"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:133
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_edit.html:43
+msgid "Enable displaying grades and correctness for answers"
+msgstr "Увімкніть показ оцінок та правильність відповідей"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:138
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_edit.html:47
+msgid "Show Reset Button"
+msgstr "Показати кнопку скидання"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:139
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_edit.html:55
+msgid ""
+"Determines whether a 'Reset' button is shown so the user may reset their "
+"answer."
+msgstr ""
+"Визначає, чи відображається кнопка 'Скинути', щоб користувач міг скинути "
+"свою відповідь."
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:144
+msgid "Random seed for this student"
+msgstr "Випадкове зерно для цього учня"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:227
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:231
+msgid "Correct"
+msgstr "Правильно"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:239
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:243
+msgid "Incorrect"
+msgstr "Невірно"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:251
+msgid "Answer submitted."
+msgstr "Відповідь відправлено."
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:377
+msgid "Missing event_type in JSON data"
+msgstr "У даних JSON відсутній event_type"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:487
+#, python-brace-format
+msgid "{weight} point possible"
+msgid_plural "{weight} points possible"
+msgstr[0] "можливо балів {weight}"
+msgstr[1] "можливо балів {weight}"
+
+#: inline_text_and_dropdown/inline_text_and_dropdown.py:496
+#, python-brace-format
+msgid "/{weight} point"
+msgid_plural "/{weight} points"
+msgstr[0] "/{weight} бали"
+msgstr[1] "/{weight} балів"
+
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_edit.html:23
+#, fuzzy
+msgid "Randomization"
+msgstr "Рандомізація"
+
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_edit.html:59
+msgid "Definition"
+msgstr "Визначення"
+
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_edit.html:60
+msgid "The definition for the problem"
+msgstr "Визначення проблеми"
+
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_view.html:18
+msgid "Submitting"
+msgstr "Відправлення на перевірку"
+
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_view.html:18
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_view.html:19
+msgid "Submit answer"
+msgstr ""
+
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_view.html:25
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_view.html:27
+msgid "Hint"
+msgstr "Підказка"
+
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_view.html:28
+msgid "Use Hint"
+msgstr "Використати підказку"
+
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_view.html:30
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_view.html:32
+msgid "Reset"
+msgstr "Скинути"
+
+#: inline_text_and_dropdown/static/html/inline_text_and_dropdown_view.html:33
+msgid "Reset your answer"
+msgstr "Скинути відповідь"
+
+msgid "Save"
+msgstr "Зберегти"
+
+msgid "Cancel"
+msgstr "Скасувати"

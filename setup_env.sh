@@ -11,11 +11,11 @@ echo "📁 Current directory: $(pwd)"
 
 # 1. Navigate to project directory (we're already here)
 
-if [ -d "aecondraw-xblock-react" ]; then
-    echo "  - Installing aecondraw-xblock-react ..."
-    pip install -e ./aecondraw-xblock-react
+if [ -d "diagram-xblock" ]; then
+    echo "  - Installing diagram-xblock ..."
+    pip install -e ./diagram-xblock
 else
-    echo "  ⚠️  Warning: aecondraw-xblock-react directory not found"
+    echo "  ⚠️  Warning: diagram-xblock directory not found"
 fi
 
 # 2. Create virtual environment if it doesn't exist

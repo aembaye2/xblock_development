@@ -1,0 +1,48 @@
+{% load i18n %}
+
+<div class='inline-text-and-dropdown' data-show-reset-button='{{show_reset_button|lower}}'
+     data-show-correctness='{{show_correctness|lower}}'>
+    <h2 class='problem-header'>{{display_name}}</h2>
+    {% if show_correctness %}
+        <div class='problem-progress'>({{problem_progress}})</div>
+    {% else %}
+        <div class='problem-progress'></div>
+    {% endif %}
+        <div class='question-prompt'>{prompt}</div>
+    {% if show_correctness %}
+        <div class='feedback' style='display:none'>{{feedback}}</div>
+    {% endif %}
+    <div class='hint' style='display:none'>{{hint}}</div>
+    <div class='button-holder'>
+        <div class='submit-attempt-container'>
+            <button type='button' class='submit btn-brand' disabled data-submitting='{% trans "Submitting" %}'
+                    data-value='{% trans "Submit" %}' data-should-enable-submit-button='True'>
+                <span class='submit-label'>{% trans "Submit answer" %}</span>
+            </button>
+        </div>
+        <div class='problem-action-buttons-wrapper'>
+          <span class='problem-action-button-wrapper'>
+              <div class='hint-button-holder' style='display:none'>
+                    <button type='button' class='hint-button problem-action-btn btn-default btn-small'
+                            data-value='{% trans "Hint" %}'>
+                      <span class='icon fa fa-info-circle' aria-hidden='true'></span>
+                      <span aria-hidden='true'>{% trans "Hint" %}</span>
+                      <span class='sr'>{% trans "Use Hint" %}</span>
+                    </button>
+                </div>
+              <button type='button' class='reset problem-action-btn btn-default btn-small hidden'
+                      data-value='{% trans "Reset" %}>'>
+                  <span class='icon fa fa-refresh' aria-hidden='true'></span>
+                  <span aria-hidden='true'>{% trans "Reset" %}</span>
+                  <span class='sr'>{% trans "Reset your answer" %}</span>
+              </button>
+          </span>
+        </div>
+    </div>
+    {% if not show_correctness %}
+        <div class="feedback notification general notification-submit" style="display:none" tabindex="-1">
+            <span class="icon fa fa-info-circle" aria-hidden="true"></span>
+            <span class="notification-message" aria-describedby="problem-title">{% trans "{{feedback}}" %})</span>
+        </div>
+    {% endif %}
+</div>
