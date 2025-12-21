@@ -165,9 +165,9 @@ class TriangleTool extends FabricTool {
     if (this.points.length === 2) {
       if (this.currentTriangle) {
         const pts = [
-          new fabric.Point(this.points[0].x, this.points[0].y),
-          new fabric.Point(this.points[1].x, this.points[1].y),
-          new fabric.Point(pointer.x, pointer.y),
+          { x: this.points[0].x, y: this.points[0].y },
+          { x: this.points[1].x, y: this.points[1].y },
+          { x: pointer.x, y: pointer.y },
         ]
         this.currentTriangle.set({ points: pts })
         this.currentTriangle.setCoords()
@@ -183,10 +183,6 @@ class TriangleTool extends FabricTool {
 
   onMouseOut(o: any) {
     // keep state — we want preview to follow cursor while over canvas only
-  }
-
-  onMouseDoubleClick(o: any) {
-    // Handle double-click if needed (currently no special behavior)
   }
 }
 

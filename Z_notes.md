@@ -1,7 +1,7 @@
 # Run the Backend
 ./setup_env.sh && source xblock-env/bin/activate && python xblock-sdk/manage.py runserver 
 
-# Run the frontend Rollup build in another terminal:
+# Run the frontend Rollup build in another terminal if you want to update the static files:
 
 cd drawing-xblock-react/drawing/frontend/ && npm install --legacy-peer-deps && npm run build && npm run watch
 

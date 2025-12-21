@@ -58759,9 +58759,9 @@
 	        if (this.points.length === 2) {
 	            if (this.currentTriangle) {
 	                const pts = [
-	                    new fabricExports.fabric.Point(this.points[0].x, this.points[0].y),
-	                    new fabricExports.fabric.Point(this.points[1].x, this.points[1].y),
-	                    new fabricExports.fabric.Point(pointer.x, pointer.y),
+	                    { x: this.points[0].x, y: this.points[0].y },
+	                    { x: this.points[1].x, y: this.points[1].y },
+	                    { x: pointer.x, y: pointer.y },
 	                ];
 	                this.currentTriangle.set({ points: pts });
 	                this.currentTriangle.setCoords();
@@ -58775,9 +58775,6 @@
 	    }
 	    onMouseOut(o) {
 	        // keep state — we want preview to follow cursor while over canvas only
-	    }
-	    onMouseDoubleClick(o) {
-	        // Handle double-click if needed (currently no special behavior)
 	    }
 	}
 
@@ -59877,7 +59874,7 @@
 	    const root = ReactDOM.createRoot(container);
 	    root.render(jsxRuntimeExports.jsx(IntlProvider, { messages: messages[languageCode], locale: languageCode, defaultLocale: "en", children: jsxRuntimeExports.jsx(StudentView, { runtime: new BoundRuntime(runtime, container), initData: initData }) }));
 	}
-	globalThis.initDrawingXBlockStudentView = initStudentView;
+	globalThis.initAecondrawXBlockStudentView = initStudentView;
 
 })();
 //# sourceMappingURL=drawing.js.map

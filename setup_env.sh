@@ -7,8 +7,16 @@ set -e  # Exit on any error
 
 echo "🚀 Starting XBlock Development Environment Setup..."
 
-# 1. Navigate to project directory (we're already here)
 echo "📁 Current directory: $(pwd)"
+
+# 1. Navigate to project directory (we're already here)
+
+if [ -d "aecondraw-xblock-react" ]; then
+    echo "  - Installing aecondraw-xblock-react ..."
+    pip install -e ./aecondraw-xblock-react
+else
+    echo "  ⚠️  Warning: aecondraw-xblock-react directory not found"
+fi
 
 # 2. Create virtual environment if it doesn't exist
 if [ ! -d "xblock-env" ]; then
@@ -53,12 +61,12 @@ else
 fi
 
 
-if [ -d "drawing-xblock-react" ]; then
-    echo "  - Installing drawing-xblock-react ..."
-    pip install -e ./drawing-xblock-react
-else
-    echo "  ⚠️  Warning: drawing-xblock-react directory not found"
-fi
+# if [ -d "drawing-xblock-react" ]; then
+#     echo "  - Installing drawing-xblock-react ..."
+#     pip install -e ./drawing-xblock-react
+# else
+#     echo "  ⚠️  Warning: drawing-xblock-react directory not found"
+# fi
 
 # if [ -d "xblock-vectordraw2" ]; then
 #     echo "  - Installing xblock-vectordraw2..."
