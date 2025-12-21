@@ -9,9 +9,10 @@
     "module": "ES2022",
     "rootDir": "./",                                     /* Specify the root folder within your source files. */
     "moduleResolution": "bundler",                       /* Specify how TypeScript looks up a file from a given module specifier. */
-    // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
-    // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
-    // "allowImportingTsExtensions": true,               /* Allow imports to include TypeScript file extensions. Requires '--moduleResolution bundler' and either '--noEmit' or '--emitDeclarationOnly' to be set. */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "resolveJsonModule": true,                           /* Enable importing .json files. */
     /* Emit */
     "declaration": false,                                /* Generate .d.ts files from TypeScript and JavaScript files in your project. */

@@ -8,6 +8,7 @@ import { IntlProvider, FormattedMessage } from 'react-intl';
 import { BoundRuntime, type JQueryWrappedDiv, type XBlockRuntime } from './xblock-utils';
 import faMessages from '../lang/compiled/fa.json';
 import frMessages from '../lang/compiled/fr.json';
+import './styles.css';
 
 const messages = {
   fa: faMessages,
@@ -377,7 +378,7 @@ const StudioView: React.FC<Props> = ({
           style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
         />
         <small style={{ color: '#666', fontSize: '12px' }}>
-          Available: point, line, singlearrowhead, doublearrowhead, polygon, rect, circle, freedraw, coordinate, curve, curve4pts, text, transform, color, strokeWidth, download
+          JSXGraph modes: point, line, singlearrowhead, doublearrowhead, triangle, rect, circle, curve, curve4pts
         </small>
       </div>
 

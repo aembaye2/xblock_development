@@ -19,7 +19,8 @@ export default (commandLineArgs) => {
       dir: '../public',
       format: 'iife',
       entryFileNames: '[name].js',
-      sourcemap: true,  
+      sourcemap: true,
+      inlineDynamicImports: true,  // Prevent code splitting for IIFE format
     },
     plugins: [
       postcss(),

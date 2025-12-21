@@ -17,9 +17,6 @@ resource_loader = ResourceLoader(__name__)
 TO-DO: document what your XBlock does.
 """
 
-# Default LINE shape for initial drawing
-LINE = '{"version": "5.5.2", "objects": [{"type": "line", "version": "5.5.2", "originX": "center", "originY": "center", "left": 256.06, "top": 248, "width": 346, "height": 150, "x1": -173, "y1": -75, "x2": 173, "y2": 75, "stroke": "#000000", "strokeWidth": 2, "visible": true}]}'
-
 class AecondrawXBlock(ScorableXBlockMixin, XBlock):
 
     @XBlock.json_handler
@@ -56,37 +53,14 @@ class AecondrawXBlock(ScorableXBlockMixin, XBlock):
         default="Question: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod auctor urna, vel tincidunt elit varius id. Nullam in lacus ac odio vehicula tempus a ac magna. Ut sit amet orci orci. Nulla posuere purus nec orci blandit, sed interdum libero interdum. Sed lacinia libero ac sem vehicula, nec facilisis purus pretium. Fusce accumsan, odio euismod laoreet porttitor, felis nunc maximus odio, nec aliquet erat neque in velit. Nam iaculis ut risus id lacinia. Maecenas id metus sed libero tincidunt tristique ac ac metus. Proin lacinia vestibulum nisi, ac cursus lorem efficitur id. Integer sed magna tincidunt, suscipit mi non, mollis elit. Donec sed nulla turpis. Cras varius neque in nisi eleifend, ac euismod felis fermentum. Quisque ut gravida felis. Nam et lacus dolor. Integer ac cursus urna. Donec aliquam, lectus a facilisis vestibulum, turpis libero pretium enim, non maximus ante elit vel libero. Aliquam erat volutpat. Etiam sit amet eros sed purus fermentum vehicula. ", scope=Scope.content,
         help="Quiz question",
     )
-    
-#     LINE = {
-#   "version": "5.5.2",
-#   "objects": [
-#     {
-#       "type": "line",
-#       "version": "5.5.2",
-#       "originX": "center",
-#       "originY": "center",
-#       "left": 256.06,
-#       "top": 248,
-#       "width": 346,
-#       "height": 150,
-#       "x1": -173,
-#       "y1": -75,
-#       "x2": 173,
-#       "y2": 75,
-#       "stroke": "#000000",
-#       "strokeWidth": 2,
-#       "visible": True
-#     }
-#   ]
-# }
-
+  
     # Store initial drawing as a simple string. Historically this field
     # contained a JSON string of the Fabric.js canvas; to avoid storing
     # large JSON objects in Studio we now default to a URL that points to
     # a JSON file. Studio can save either a URL (string) or a JSON object
     # (stored as a JSON string). Frontend will fetch the URL when needed.
     initial_drawing = String(
-        default=LINE, #"", #'https://github.com/aembaye2/xblock_development/blob/main/circle.json',
+        default="", #'https://github.com/aembaye2/xblock_development/blob/main/circle.json',
         scope=Scope.content,
         help="Initial drawing source: either a URL (string) pointing to a .json file or a JSON string/object representing Fabric.js data",
     )
@@ -197,8 +171,8 @@ class AecondrawXBlock(ScorableXBlockMixin, XBlock):
     visibleModes = List(
         display_name="Visible Modes",
         scope=Scope.settings,
-        default=["point","line","triangle","singlearrowhead","doublearrowhead","polygon","rect","circle",
-     "freedraw","coordinate","curve","curve4pts","text","transform", "color", "strokeWidth", "download"], # <-- whitelist these tools
+        default=["point","line","triangle","singlearrowhead","doublearrowhead","rect","circle",
+     "freedraw","coordinate","curve","text","transform", "color", "strokeWidth", "download"], # <-- whitelist these tools
         help="List of drawing modes to show in the toolbar (mode keys). Empty by default to hide all tools.",
     )
 

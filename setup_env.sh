@@ -61,12 +61,12 @@ else
 fi
 
 
-# if [ -d "drawing-xblock-react" ]; then
-#     echo "  - Installing drawing-xblock-react ..."
-#     pip install -e ./drawing-xblock-react
-# else
-#     echo "  ⚠️  Warning: drawing-xblock-react directory not found"
-# fi
+if [ -d "drawing-xblock-react" ]; then
+    echo "  - Installing drawing-xblock-react ..."
+    pip install -e ./drawing-xblock-react
+else
+    echo "  ⚠️  Warning: drawing-xblock-react directory not found"
+fi
 
 # if [ -d "xblock-vectordraw2" ]; then
 #     echo "  - Installing xblock-vectordraw2..."

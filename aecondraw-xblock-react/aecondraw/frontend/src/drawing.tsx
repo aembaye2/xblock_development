@@ -10,12 +10,9 @@ import { IntlProvider } from 'react-intl';
 import { BoundRuntime, type JQueryWrappedDiv, type XBlockRuntime } from './xblock-utils';
 import faMessages from '../lang/compiled/fa.json';
 import frMessages from '../lang/compiled/fr.json';
-// import "./App.css"
-// use the drawing canvas package from local files instead
-import { DrawingApp } from './components/canvas/DrawingApp';
-import { modes } from './components/canvas/modesfile';
-// Use the drawing canvas package from npm instead
-// import { DrawingApp, modes } from 'ae-drawable-canvas';
+import DrawingBoard, { type BoardState } from './components/DrawingBoard';
+import type { DrawingMode } from './lib/drawingModes';
+import './styles.css';
 
 const messages = {
   fa: faMessages,
@@ -34,14 +31,26 @@ interface InitData {
   scaleFactors?: number[];
   submitButtonClicked?: boolean;
   bgnumber?: number;
-  // Can be an object (Fabric canvas data) or a URL string pointing to a .json file
+  // Can be an object (JSXGraph board state) or a URL string pointing to a .json file
   initialDrawing?: object | string;
   visibleModes?: string[];
   axisLabels?: [string, string];
   hideLabels?: boolean;
 }
 
-// No MCQ Props needed
+// Map old FabricJS mode names to JSXGraph mode names
+const modeMapping: Record<string, DrawingMode> = {
+  'point': 'point',
+  'line': 'segment',
+  'singlearrowhead': 'arrow',
+  'doublearrowhead': 'doubleArrow',
+  'triangle': 'triangle',
+  'rect': 'rectangle',
+  'circle': 'circle',
+  'polygon': 'triangle', // Map polygon to triangle for now
+  'curve': 'curve',
+  'curve4pts': 'curve',
+};
 
 const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ runtime, initData }) => {
   const index = initData.index ?? 1;
@@ -49,15 +58,30 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   const canvasWidth = initData.canvasWidth ?? 500;
   const canvasHeight = initData.canvasHeight ?? 400;
   const scaleFactors = initData.scaleFactors ?? [100, 200, 75, 84, 25, 35];
-  const [submitButtonClicked, setSubmitButtonClicked] = useState<boolean>(initData.submitButtonClicked ?? false);
   const [summaryMsg, setSummaryMsg] = useState<string>('');
   const bgnumber = initData.bgnumber ?? 0;
   const axisLabels = initData.axisLabels ?? ['q', 'p'];
   const hideLabels = initData.hideLabels ?? false;
   const initialDrawingFromInit = initData.initialDrawing ?? {};
-  const [initialDrawing, setInitialDrawing] = useState<any>(
-    typeof initialDrawingFromInit === 'string' ? initialDrawingFromInit : initialDrawingFromInit
-  );
+  const [initialDrawing, setInitialDrawing] = useState<any>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentBoardState, setCurrentBoardState] = useState<BoardState | null>(null);
+
+  // Map visible modes from old format to new format
+  const visibleModesRaw = initData.visibleModes ?? [];
+  const visibleModes: DrawingMode[] = visibleModesRaw
+    .map(mode => modeMapping[mode])
+    .filter((mode): mode is DrawingMode => mode !== null && mode !== undefined);
+
+  // Calculate bounding box from scaleFactors
+  // scaleFactors = [xlim, ylim, bottom_margin, left_margin, top_margin, right_margin]
+  const [xlim, ylim, bottomMargin, leftMargin, topMargin, rightMargin] = scaleFactors;
+  const boundingBox: [number, number, number, number] = [
+    -leftMargin / 10,  // xMin
+    ylim + topMargin / 10, // yMax
+    xlim + rightMargin / 10, // xMax
+    -bottomMargin / 10 // yMin
+  ];
 
   // If initialDrawingFromInit is a URL string, fetch it and parse json.
   useEffect(() => {
@@ -87,57 +111,40 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
           if (!cancelled) setInitialDrawing(json);
         } catch (err) {
           console.error('Error fetching initial drawing URL', err);
-          // keep the URL string in state so DrawingApp can decide what to do
-          if (!cancelled) setInitialDrawing(initialDrawingFromInit);
+          if (!cancelled) setInitialDrawing(null);
         }
-      } else {
-        // not a URL: use the provided object/JSON value
+      } else if (typeof initialDrawingFromInit === 'object' && initialDrawingFromInit !== null) {
+        // It's already an object, use it directly
         setInitialDrawing(initialDrawingFromInit);
+      } else {
+        setInitialDrawing(null);
       }
     }
     maybeFetch();
     return () => { cancelled = true; };
   }, [initialDrawingFromInit]);
-  const visibleModes = initData.visibleModes ?? undefined;
 
-  const renderSubmitButton = () => (
-    <div style={{ marginTop: '8px' }}>
-      <button
-        type="button"
-        onClick={async () => {
-          setSubmitButtonClicked(true);
-          setTimeout(async () => {
-            const key = `${AssessName}-canvasDrawing-${index}`;
-            const raw = localStorage.getItem(key);
-            let parsed = null;
-            if (raw) {
-              try {
-                parsed = JSON.parse(raw);
-              } catch (e) {
-                parsed = raw;
-              }
-            }
+  const handleSubmit = async (state: BoardState) => {
+    setIsSubmitting(true);
+    
+    try {
+      // Send the board state to the backend
+      const result = await runtime.postHandler('send_drawing_json', { 
+        drawing: JSON.stringify(state)
+      });
+      
+      setSummaryMsg(result.summary || 'Submission successful!');
+    } catch (err) {
+      console.error('send_drawing_json error', err);
+      setSummaryMsg('Error sending drawing to backend.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-            if (parsed) {
-              try {
-                const result = await runtime.postHandler('send_drawing_json', { drawing: parsed });
-                setSummaryMsg(result.summary || 'No summary returned.');
-              } catch (err) {
-                console.error('send_drawing_json error', err);
-                setSummaryMsg('Error sending drawing to backend.');
-              }
-            } else {
-              setSummaryMsg('No drawing data found.');
-            }
-
-            setSubmitButtonClicked(false);
-          }, 200);
-        }}
-      >
-        Submit
-      </button>
-    </div>
-  );
+  const handleStateChange = (state: BoardState) => {
+    setCurrentBoardState(state);
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', marginBottom: '24px' }}>
@@ -147,28 +154,25 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
         </div>
 
         <div className="drawing-container" style={{ flex: 2, minWidth: '400px' }}>
-          <DrawingApp
-            index={index}
-            AssessName={AssessName}
+          <DrawingBoard
+            tools={visibleModes.length > 0 ? visibleModes : "all"}
+            buttons={["undo", "redo", "clear", "downloadPNG", "downloadJSON", "submit"]}
+            initialState={initialDrawing}
+            readOnlyInitial={true}
+            onSubmit={handleSubmit}
+            onStateChange={handleStateChange}
             canvasWidth={canvasWidth}
             canvasHeight={canvasHeight}
-            scaleFactors={scaleFactors}
-            submitButtonClicked={submitButtonClicked}
-            modes={modes}
-            visibleModes={visibleModes}
-            bgnumber={bgnumber}
+            boundingBox={boundingBox}
             axisLabels={axisLabels}
-            initialDrawing={initialDrawing}
             hideLabels={hideLabels}
           />
         </div>
       </div>
 
-      {renderSubmitButton()}
-
       <div className="block-info2" style={{ marginTop: '24px', minWidth: '300px', width: '100%' }}>
         <h4>Drawing Summary</h4>
-        <div style={{ overflowX: 'auto', color: 'green', fontWeight: 'bold' }}>
+        <div style={{ overflowX: 'auto', color: summaryMsg ? 'green' : 'black', fontWeight: summaryMsg ? 'bold' : 'normal' }}>
           {summaryMsg ? summaryMsg : 'Draw something and then Click Submit to check your answer.'}
         </div>
       </div>
