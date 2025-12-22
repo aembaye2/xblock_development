@@ -1,6 +1,6 @@
 import { useState } from "react";
-import DrawingBoard, { type BoardState } from "@/components/DrawingBoard";
-import { questionText, expectedDrawing } from "@/data/segmentQuestion";
+import DrawingBoard, { type BoardState } from "../components/DrawingBoard";
+import { questionText, expectedDrawing } from "../data/segmentQuestion";
 
 // Type definitions for DrawingBoard configuration
 type ToolType = "point" | "segment" | "triangle" | "circle" | "arrow" | "curve";
