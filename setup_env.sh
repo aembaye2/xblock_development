@@ -11,13 +11,6 @@ echo "📁 Current directory: $(pwd)"
 
 # 1. Navigate to project directory (we're already here)
 
-if [ -d "diagram-xblock" ]; then
-    echo "  - Installing diagram-xblock ..."
-    pip install -e ./diagram-xblock
-else
-    echo "  ⚠️  Warning: diagram-xblock directory not found"
-fi
-
 # 2. Create virtual environment if it doesn't exist
 if [ ! -d "xblock-env" ]; then
     echo "🐍 Creating virtual environment..."
@@ -131,6 +124,12 @@ else
     echo "  ⚠️  Warning: xblock-myxblock directory not found"
 fi
 
+if [ -d "diagram-xblock" ]; then
+    echo "  - Installing diagram-xblock ..."
+    pip install -e ./diagram-xblock
+else
+    echo "  ⚠️  Warning: diagram-xblock directory not found"
+fi
 
 # 7. Run database migrations
 echo "🗄️  Running database migrations..."
