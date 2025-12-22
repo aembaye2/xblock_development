@@ -6,8 +6,8 @@ import {
   type DrawingMode, 
   type Point,
   type DrawingContext 
-} from "@/lib/drawingModes";
-import { ALL_DRAWING_TOOLS, TOOL_SETS, getToolsByIds } from "@/lib/drawingTools";
+} from "@/libs/drawingModes";
+import { ALL_DRAWING_TOOLS, TOOL_SETS, getToolsByIds } from "@/libs/drawingTools";
 import DrawingToolbar from "@/components/DrawingToolbar";
 
 type ActionButton = "undo" | "redo" | "clear" | "downloadPNG" | "downloadJSON" | "submit";

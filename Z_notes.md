@@ -13,7 +13,7 @@ cd diagram-xblock/diagram/frontend/ && npm install --legacy-peer-deps && npm run
 ## update first the version in __init__.py and in the setup.py 
 git add .
 
-git commit -m "Bump aecondraw-xblock-react to V1.0.4"  && git tag -a V1.0.4 -m "Release V1.0.4"  && git push origin main --follow-tags
+git commit -m "Bump to V1.0.5"  && git tag -a V1.0.5 -m "Release V1.0.5"  && git push origin main --follow-tags
 
 
 # then in openedx tutor:
