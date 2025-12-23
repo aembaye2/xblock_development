@@ -1,7 +1,7 @@
 import { Button } from "@/canvas/components/ui/button";
 import { Undo, Redo, Trash2, Download, FileJson } from "lucide-react";
-import type { DrawingMode } from "@/lib/drawingModes";
-import type { DrawingTool } from "@/lib/drawingTools";
+import type { DrawingMode } from "@/canvas/libs/drawingModes/types";
+import type { DrawingTool } from "@/canvas/libs/drawingTools";
 
 type ActionButton = "undo" | "redo" | "clear" | "downloadPNG" | "downloadJSON" | "submit";
 

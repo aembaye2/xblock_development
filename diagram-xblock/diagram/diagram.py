@@ -12,7 +12,6 @@ from xblock.utils.resources import ResourceLoader
 
 resource_loader = ResourceLoader(__name__)
 
-
 """
 TO-DO: document what your XBlock does.
 """
@@ -54,29 +53,6 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
         help="Quiz question",
     )
     
-#     LINE = {
-#   "version": "5.5.2",
-#   "objects": [
-#     {
-#       "type": "line",
-#       "version": "5.5.2",
-#       "originX": "center",
-#       "originY": "center",
-#       "left": 256.06,
-#       "top": 248,
-#       "width": 346,
-#       "height": 150,
-#       "x1": -173,
-#       "y1": -75,
-#       "x2": 173,
-#       "y2": 75,
-#       "stroke": "#000000",
-#       "strokeWidth": 2,
-#       "visible": True
-#     }
-#   ]
-# }
-    LINE = '{"version": "5.5.2", "objects": [{"type": "line", "version": "5.5.2", "originX": "center", "originY": "center", "left": 256.06, "top": 248, "width": 346, "height": 150, "x1": -173, "y1": -75, "x2": 173, "y2": 75, "stroke": "#000000", "strokeWidth": 2, "visible": true}]}'
 
     # Store initial diagram as a simple string. Historically this field
     # contained a JSON string of the Fabric.js canvas; to avoid storing
@@ -84,7 +60,7 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
     # a JSON file. Studio can save either a URL (string) or a JSON object
     # (stored as a JSON string). Frontend will fetch the URL when needed.
     initial_diagram = String(
-        default=LINE, #"", #'https://github.com/aembaye2/xblock_development/blob/main/circle.json',
+        default="", #'https://github.com/aembaye2/xblock_development/blob/main/circle.json',
         scope=Scope.content,
         help="Initial diagram source: either a URL (string) pointing to a .json file or a JSON string/object representing Fabric.js data",
     )
@@ -214,6 +190,49 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
         help="Whether to hide axis labels by default,",
     )
 
+    # DrawingBoard component configuration
+    questionText = String(
+        display_name="Question Text",
+        scope=Scope.settings,
+        default="Draw a line segment connecting the points (0, 0) and (9, 9). Draw a line segment connecting the points (0, 0) and (9, 9).Draw a line segment connecting the points (0, 0) and (9, 9).Draw a line segment connecting the points (0, 0) and (9, 9).Draw a line segment connecting the points (0, 0) and (9, 9).Draw a line segment connecting the points (0, 0) and (9, 9).",
+        help="Question text displayed to the student for the drawing task",
+    )
+
+    visibleTools = List(
+        display_name="Visible Tools",
+        scope=Scope.settings,
+        default=["point", "segment", "triangle", "circle", "arrow", "curve"],
+        help="List of drawing tools to show in the DrawingBoard toolbar",
+    )
+
+    visibleButtons = List(
+        display_name="Visible Buttons",
+        scope=Scope.settings,
+        default=["undo", "redo", "clear", "downloadPNG", "downloadJSON", "submit"],
+        help="List of buttons to show in the DrawingBoard toolbar",
+    )
+
+    expectedDrawing = String(
+        display_name="Expected Drawing",
+        scope=Scope.settings,
+        default='{"version":"1.0","boardSettings":{"boundingBox":[-1,11,11,-1]},"objects":[{"id":"expected_segment_1","type":"segment","point1":{"x":0,"y":0},"point2":{"x":9,"y":9},"properties":{"strokeColor":"#059669","strokeWidth":2},"isInitial":true}]}',
+        help="Expected drawing for grading comparison (BoardState JSON)",
+    )
+
+    initialDrawingState = String(
+        display_name="Initial Drawing State",
+        scope=Scope.settings,
+        default='{"version":"1.0","boardSettings":{"boundingBox":[-1,11,11,-1]},"objects":[{"id":"initial_segment_1","type":"segment","point1":{"x":0,"y":8},"point2":{"x":8,"y":0},"properties":{"strokeColor":"#2563eb","strokeWidth":2},"isInitial":true}]}',
+        help="Initial drawing state with pre-drawn objects (BoardState JSON)",
+    )
+
+    gradingTolerance = Float(
+        display_name="Grading Tolerance",
+        scope=Scope.settings,
+        default=0.8,
+        help="Grading tolerance for point matching",
+    )
+
     
 
     # TO-DO: change this view to display more interesting things.
@@ -227,18 +246,14 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
             "question": self.question,
             "index": self.index,
             "AssessName": self.AssessName,
-            "canvasWidth": self.canvasWidth,
-            "canvasHeight": self.canvasHeight,
-            "scaleFactors": self.scaleFactors,
             "submitButtonClicked": self.submitButtonClicked,
-            # `initial_diagram` may be a URL string (http/https) or a JSON
-            # string/object. Send it to the frontend as-is so the client can
-            # decide whether to fetch the URL or use the provided JSON.
-            "initialDiagram": self.initial_diagram,
-            "visibleModes": self.visibleModes,
-            "bgnumber": self.bgnumber,
-            "axisLabels": self.axis_labels,
-            "hideLabels": self.hideLabels,
+            # DrawingBoard component props
+            "questionText": self.questionText,
+            "visibleTools": self.visibleTools,
+            "visibleButtons": self.visibleButtons,
+            "expectedDrawing": self.expectedDrawing,
+            "initialDrawingState": self.initialDrawingState,
+            "gradingTolerance": self.gradingTolerance,
         }
         init_data["attempts"] = self.attempts
         init_data["remaining_attempts"] = self.remaining_attempts
@@ -259,17 +274,13 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
             "has_score": self.has_score,
             "index": self.index,
             "AssessName": self.AssessName,
-            "canvasWidth": self.canvasWidth,
-            "canvasHeight": self.canvasHeight,
-            "scaleFactors": self.scaleFactors,
-            "bgnumber": self.bgnumber,
-            "visibleModes": self.visibleModes,
-            "axisLabels": self.axis_labels,
-            "hideLabels": self.hideLabels,
-            # send stored value to the studio editor JS. This may be a URL
-            # (string) or a JSON string/object. Studio will present a URL
-            # input and/or a JSON editor depending on the stored value.
-            "initialDiagram": self.initial_diagram,
+            # DrawingBoard component props
+            "questionText": self.questionText,
+            "visibleTools": self.visibleTools,
+            "visibleButtons": self.visibleButtons,
+            "expectedDrawing": self.expectedDrawing,
+            "initialDrawingState": self.initialDrawingState,
+            "gradingTolerance": self.gradingTolerance,
         }
         frag.initialize_js('initDiagramXBlockStudioView', init_data)
         return frag
@@ -295,34 +306,17 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
         except Exception:
             pass
         
-        self.AssessName = data.get('AssessName', self.AssessName)  # ✅ Fixed indentation
+        self.AssessName = data.get('AssessName', self.AssessName)
+        
+        # Save DrawingBoard component fields
+        self.questionText = data.get('questionText', self.questionText)
+        self.visibleTools = data.get('visibleTools', self.visibleTools)
+        self.visibleButtons = data.get('visibleButtons', self.visibleButtons)
+        self.expectedDrawing = data.get('expectedDrawing', self.expectedDrawing)
+        self.initialDrawingState = data.get('initialDrawingState', self.initialDrawingState)
         
         try:
-            self.canvasWidth = int(data.get('canvasWidth', self.canvasWidth))
-        except Exception:
-            pass
-        try:
-            self.canvasHeight = int(data.get('canvasHeight', self.canvasHeight))
-        except Exception:
-            pass
-        
-        self.scaleFactors = data.get('scaleFactors', self.scaleFactors)
-        
-        try:
-            self.bgnumber = int(data.get('bgnumber', self.bgnumber))
-        except Exception:
-            pass
-        
-    # `visibleModes` is the field defined on this XBlock (camelCase).
-    # Previously this line used `visible_modes` (snake_case) which does not
-    # match the declared field name and could raise AttributeError when
-    # trying to access the fallback value. Use the correct field name so
-    # changes persist to the XBlock settings.
-        self.visibleModes = data.get('visibleModes', self.visibleModes)
-        self.axis_labels = data.get('axisLabels', self.axis_labels)
-        
-        try:
-            self.hideLabels = bool(data.get('hideLabels', self.hideLabels))
+            self.gradingTolerance = float(data.get('gradingTolerance', self.gradingTolerance))
         except Exception:
             pass
         

@@ -10,6 +10,40 @@ import postcss from 'rollup-plugin-postcss';
 import image from '@rollup/plugin-image';
 import tailwindcss from '@tailwindcss/postcss';
 import autoprefixer from 'autoprefixer';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Custom plugin to resolve @ alias
+function aliasPlugin() {
+  return {
+    name: 'alias',
+    resolveId(source, importer) {
+      if (source.startsWith('@/')) {
+        const relativePath = source.slice(2);
+        const basePath = path.resolve(__dirname, 'src', relativePath);
+        
+        // Try different extensions
+        const extensions = ['.tsx', '.ts', '.jsx', '.js', '/index.tsx', '/index.ts', '/index.jsx', '/index.js', ''];
+        for (const ext of extensions) {
+          const fullPath = basePath + ext;
+          try {
+            if (fs.existsSync(fullPath)) {
+              return fullPath;
+            }
+          } catch (e) {
+            // Continue trying
+          }
+        }
+        return basePath; // Return base path as fallback
+      }
+      return null;
+    }
+  };
+}
 
 export default (commandLineArgs) => {
   // Get input from command line, default to diagram.tsx
@@ -37,6 +71,7 @@ export default (commandLineArgs) => {
       warn(warning);
     },
     plugins: [
+      aliasPlugin(),
       postcss({
         plugins: [
           tailwindcss(),
@@ -57,12 +92,17 @@ export default (commandLineArgs) => {
         transformers: () => ({
           before: [intlTransform({ overrideIdFn: '[sha512:contenthash:base64:6]', ast: true })],
         }),
+        tsconfig: './tsconfig.json',
       }),
       replace({
         'process.env.NODE_ENV': JSON.stringify('production'),
         preventAssignment: true,
       }),
-      nodeResolve({ browser: true, preferBuiltins: false }),
+      nodeResolve({ 
+        browser: true, 
+        preferBuiltins: false,
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+      }),
       commonjs({ transformMixedEsModules: true }),
     ]
   };

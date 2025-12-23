@@ -13,7 +13,7 @@ cd diagram-xblock/diagram/frontend/ && npm install --legacy-peer-deps && npm run
 ## update first the version in __init__.py and in the setup.py 
 git add .
 
-git commit -m "Bump to V1.0.6"  && git tag -a V1.0.6 -m "Release V1.0.6"  && git push origin main --follow-tags
+git commit -m "Bump to V1.0.7"  && git tag -a V1.0.7 -m "Release V1.0.7"  && git push origin main --follow-tags
 
 
 # then in openedx tutor:
