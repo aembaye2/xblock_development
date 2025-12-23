@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef, useState } from "react";
 import { 
   drawingModeHandlers, 
@@ -5,9 +6,9 @@ import {
   type DrawingMode, 
   type Point,
   type DrawingContext 
-} from "../lib/drawingModes";
-import { ALL_DRAWING_TOOLS, TOOL_SETS, getToolsByIds } from "../lib/drawingTools";
-import DrawingToolbar from "./DrawingToolbar";
+} from "@/canvas/libs/drawingModes";
+import { ALL_DRAWING_TOOLS, TOOL_SETS, getToolsByIds } from "@/canvas/libs/drawingTools";
+import DrawingToolbar from "@/canvas/components/DrawingToolbar";
 
 type ActionButton = "undo" | "redo" | "clear" | "downloadPNG" | "downloadJSON" | "submit";
 
@@ -43,6 +44,9 @@ interface DrawingBoardProps {
   
   // Callback when board state changes
   onStateChange?: (state: BoardState) => void;
+
+  // Optional container id for the JSXGraph board (allows multiple boards)
+  containerId?: string;
 }
 
 export default function DrawingBoard({ 
@@ -52,6 +56,7 @@ export default function DrawingBoard({
   readOnlyInitial = false,
   onSubmit,
   onStateChange,
+  containerId = "jxgbox",
 }: DrawingBoardProps) {
   const boardRef = useRef<HTMLDivElement>(null);
   const [board, setBoard] = useState<any>(null);
@@ -105,7 +110,7 @@ export default function DrawingBoard({
         link.href = "https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css";
         document.head.appendChild(link);
 
-        const newBoard = JSXGraph.initBoard("jxgbox", {
+        const newBoard = JSXGraph.initBoard(containerId, {
           boundingbox: boundingBox,
           axis: true,
           showCopyright: false,
@@ -452,7 +457,7 @@ export default function DrawingBoard({
       JSXGraphRef.current.freeBoard(board);
       
       // Reinitialize the board
-      const newBoard = JSXGraphRef.current.initBoard("jxgbox", {
+      const newBoard = JSXGraphRef.current.initBoard(containerId, {
         boundingbox: boundingBox,
         axis: true,
         showCopyright: false,
@@ -756,7 +761,7 @@ export default function DrawingBoard({
       )} */}
 
       <div
-        id="jxgbox"
+        id={containerId}
         ref={boardRef}
         className="border-2 border-gray-300 rounded-lg shadow-lg"
         style={{ width: "600px", height: "500px" }}

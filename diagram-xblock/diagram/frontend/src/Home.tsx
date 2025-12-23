@@ -1,40 +1,19 @@
 import { useState } from "react";
-import DrawingBoard, { type BoardState } from "../components/DrawingBoard";
-import { questionText, expectedDrawing } from "../data/segmentQuestion";
+import DrawingBoard, { type BoardState } from "./canvas/components/DrawingBoard";
 
-// Type definitions for DrawingBoard configuration
-type ToolType = "point" | "segment" | "triangle" | "circle" | "arrow" | "curve";
-type ButtonType = "undo" | "redo" | "clear" | "downloadPNG" | "downloadJSON" | "submit";
+import { 
+  questionText, 
+  expectedDrawing, 
+  initialDrawing,
+  visibleTools,
+  visibleButtons,
+  gradingTolerance
+} from "./canvas/data/backendlike";
 
 export default function Home() {
   const [gradeResult, setGradeResult] = useState<string | null>(null);
   const [score, setScore] = useState<number | null>(null);
   const [showExpected, setShowExpected] = useState<boolean>(false);
-
-  // Configure visible tools and buttons
-  const visibleTools: ToolType[] = ["point", "segment", "triangle", "circle", "arrow", "curve"];
-  const visibleButtons: ButtonType[] = ["undo", "redo", "clear", "downloadPNG", "downloadJSON", "submit"];
-
-  // Initial drawing with a segment
-  const initialDrawing: BoardState = {
-    version: "1.0",
-    boardSettings: {
-      boundingBox: [-1, 11, 11, -1],
-    },
-    objects: [
-      {
-        id: "initial_segment_1",
-        type: "segment",
-        point1: { x: 0, y: 8 },
-        point2: { x: 8, y: 0 },
-        properties: {
-          strokeColor: "#2563eb",
-          strokeWidth: 2,
-        },
-        isInitial: true,
-      },
-    ],
-  };
 
   // Grading helpers
   const dist = (a: { x: number; y: number }, b: { x: number; y: number }) =>
@@ -64,7 +43,7 @@ export default function Home() {
   };
 
   const handleSubmit = (state: BoardState) => {
-    const result = gradeSegment(state, expectedDrawing, 0.8);
+    const result = gradeSegment(state, expectedDrawing, gradingTolerance);
     setScore(result);
     setGradeResult(result === 1 ? "✅ Correct" : "❌ Incorrect");
     setShowExpected(true);

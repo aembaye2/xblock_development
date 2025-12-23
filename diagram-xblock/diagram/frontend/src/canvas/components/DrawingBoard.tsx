@@ -6,9 +6,9 @@ import {
   type DrawingMode, 
   type Point,
   type DrawingContext 
-} from "@/libs/drawingModes";
-import { ALL_DRAWING_TOOLS, TOOL_SETS, getToolsByIds } from "@/libs/drawingTools";
-import DrawingToolbar from "@/components/DrawingToolbar";
+} from "@/canvas/libs/drawingModes";
+import { ALL_DRAWING_TOOLS, TOOL_SETS, getToolsByIds } from "@/canvas/libs/drawingTools";
+import DrawingToolbar from "@/canvas/components/DrawingToolbar";
 
 type ActionButton = "undo" | "redo" | "clear" | "downloadPNG" | "downloadJSON" | "submit";
 

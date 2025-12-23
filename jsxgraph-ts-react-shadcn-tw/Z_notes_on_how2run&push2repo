@@ -1,4 +1,5 @@
 # To run the app
+cd jsxgraph-ts-react-shadcn-tw
 npm i && npm run dev
 
 git add .

@@ -11,7 +11,16 @@ import { IntlProvider } from 'react-intl';
 import { BoundRuntime, type JQueryWrappedDiv, type XBlockRuntime } from './xblock-utils';
 import faMessages from '../lang/compiled/fa.json';
 import frMessages from '../lang/compiled/fr.json';
-import DrawingBoard from "./components/DrawingBoard";
+import DrawingBoard, { type BoardState } from "./canvas/components/DrawingBoard";
+
+import { 
+  questionText, 
+  expectedDrawing, 
+  initialDrawing,
+  visibleTools,
+  visibleButtons,
+  gradingTolerance
+} from "./canvas/data/backendlike";
 
 const messages = {
   fa: faMessages,
