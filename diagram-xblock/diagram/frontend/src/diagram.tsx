@@ -12,29 +12,39 @@ import { BoundRuntime, type JQueryWrappedDiv, type XBlockRuntime } from './xbloc
 import faMessages from '../lang/compiled/fa.json';
 import frMessages from '../lang/compiled/fr.json';
 import DrawingBoard, { type BoardState } from "./canvas/components/DrawingBoard";
-
 import { 
-  questionText as defaultQuestionText, 
-  expectedDrawing as defaultExpectedDrawing, 
-  initialDrawing as defaultInitialDrawing,
-  visibleTools as defaultVisibleTools,
-  visibleButtons as defaultVisibleButtons,
-  gradingTolerance as defaultGradingTolerance
-} from "./canvas/data/backendlike";
+  type GradingConfig, 
+  gradeDrawing, 
+  generateFeedbackMessage 
+} from './diagram_grading_logic';
 
 const messages = {
   fa: faMessages,
   fr: frMessages,
 };
 
+// Frontend fallback defaults (used only if backend omits fields)
+const DEFAULT_QUESTION_TEXT = 'Frontend fallback question: draw a line from (0,0) to (9,9).';
+const DEFAULT_VISIBLE_TOOLS = ['point', 'segment', 'triangle', 'circle', 'arrow', 'curve'];
+const DEFAULT_VISIBLE_BUTTONS = ['undo', 'redo', 'clear', 'downloadPNG', 'downloadJSON', 'submit'];
+const DEFAULT_GRADING_TOLERANCE = 0.8;
+const DEFAULT_EXPECTED_DRAWING: BoardState = {
+  version: '1.0',
+  boardSettings: { boundingBox: [-1, 11, 11, -1] },
+  objects: []
+};
+const DEFAULT_INITIAL_DRAWING: BoardState = {
+  version: '1.0',
+  boardSettings: { boundingBox: [-1, 11, 11, -1] },
+  objects: []
+};
+
 interface InitData {
-  question: string;
   attempts?: number;
   remaining_attempts?: number;
   // Identifiers for localStorage
   index?: number;
   AssessName?: string;
-  submitButtonClicked?: boolean;
   // DrawingBoard component props
   questionText?: string;
   visibleTools?: string[];
@@ -42,19 +52,19 @@ interface InitData {
   expectedDrawing?: string;
   initialDrawingState?: string;
   gradingTolerance?: number;
+  gradingConfig?: GradingConfig;
 }
 
 const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ runtime, initData }) => {
   const index = initData.index ?? 1;
   const AssessName = initData.AssessName ?? 'quiz1';
-  const [submitButtonClicked, setSubmitButtonClicked] = useState<boolean>(initData.submitButtonClicked ?? false);
   const [summaryMsg, setSummaryMsg] = useState<string>('');
 
-  // DrawingBoard props - use backend values if provided, otherwise fallback to backendlike defaults
-  const questionText = initData.questionText ?? defaultQuestionText;
-  const visibleTools = initData.visibleTools ?? defaultVisibleTools;
-  const visibleButtons = initData.visibleButtons ?? defaultVisibleButtons;
-  const gradingTolerance = initData.gradingTolerance ?? defaultGradingTolerance;
+  // DrawingBoard props - backend should supply these; otherwise we fall back to obvious frontend defaults
+  const questionText = initData.questionText ?? DEFAULT_QUESTION_TEXT;
+  const visibleTools = initData.visibleTools ?? DEFAULT_VISIBLE_TOOLS;
+  const visibleButtons = initData.visibleButtons ?? DEFAULT_VISIBLE_BUTTONS;
+  const gradingTolerance = initData.gradingTolerance ?? DEFAULT_GRADING_TOLERANCE;
   
   // Parse expected and initial drawing states
   const [expectedDrawing, setExpectedDrawing] = useState<BoardState | null>(null);
@@ -74,10 +84,10 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
         setExpectedDrawing(parsed);
       } catch (e) {
         console.error('Failed to parse expectedDrawing:', e);
-        setExpectedDrawing(defaultExpectedDrawing);
+        setExpectedDrawing(DEFAULT_EXPECTED_DRAWING);
       }
     } else {
-      setExpectedDrawing(defaultExpectedDrawing);
+      setExpectedDrawing(DEFAULT_EXPECTED_DRAWING);
     }
 
     // Parse initialDrawingState
@@ -89,10 +99,10 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
         setInitialDrawingState(parsed);
       } catch (e) {
         console.error('Failed to parse initialDrawingState:', e);
-        setInitialDrawingState(defaultInitialDrawing);
+        setInitialDrawingState(DEFAULT_INITIAL_DRAWING);
       }
     } else {
-      setInitialDrawingState(defaultInitialDrawing);
+      setInitialDrawingState(DEFAULT_INITIAL_DRAWING);
     }
   }, [initData.expectedDrawing, initData.initialDrawingState]);
 
@@ -110,103 +120,91 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
     }
   }, [expectedDrawing, initialDrawingState]);
 
-  // Grading helpers
-  const dist = (a: { x: number; y: number }, b: { x: number; y: number }) =>
-    Math.hypot(a.x - b.x, a.y - b.y);
 
-  const gradeSegment = (
-    state: BoardState,
-    expected: BoardState,
-    tolerance = 0.6
-  ): number => {
-    const studentObjects = state.objects.filter((o: any) => !o.isInitial);
-    const seg = studentObjects.find((o: any) => o.type === "segment" || o.type === "line");
-    if (!seg) return 0;
-    const s1 = seg.point1;
-    const s2 = seg.point2;
-    if (!s1 || !s2) return 0;
-
-    const exp = expected.objects.find((o: any) => o.type === "segment" || o.type === "line");
-    if (!exp) return 0;
-    const e1 = exp.point1;
-    const e2 = exp.point2;
-    if (!e1 || !e2) return 0;
-
-    const directMatch = dist(s1, e1) <= tolerance && dist(s2, e2) <= tolerance;
-    const swappedMatch = dist(s1, e2) <= tolerance && dist(s2, e1) <= tolerance;
-    return directMatch || swappedMatch ? 1 : 0;
-  };
 
   const handleSubmit = async (state: BoardState) => {
     if (expectedDrawing) {
-      const result = gradeSegment(state, expectedDrawing, gradingTolerance);
-      setScore(result);
-      setGradeResult(result === 1 ? "✅ Correct" : "❌ Incorrect");
+      // Use the comprehensive grading function
+      const gradingConfig: GradingConfig = initData.gradingConfig ?? {
+        mode: 'tolerance',
+        tolerance: gradingTolerance,
+        partialCredit: true,
+        requireAll: false
+      };
+      
+      const result = gradeDrawing(state, expectedDrawing, gradingConfig);
+      setScore(result.score);
+      
+      // Generate feedback message
+      const resultMessage = generateFeedbackMessage(result.score);
+      
+      setGradeResult(`${resultMessage} - ${result.details}`);
       setShowExpected(true);
+      
+      // Send grade and details to backend
+      try {
+        const res = await runtime.postHandler('submit_grade', { 
+          grade: result.score,
+          breakdown: result.breakdown,
+          details: result.details
+        });
+        const serverSummary = res?.summary || res?.message;
+        setSummaryMsg(serverSummary || `Submitted grade: ${(result.score * 100).toFixed(1)}%`);
+      } catch (err) {
+        console.error('submit_grade error', err);
+        setSummaryMsg(`Submitted grade: ${(result.score * 100).toFixed(1)}% (backend error)`);
+      }
+      return;
     }
 
-    // Send to backend
-    setSubmitButtonClicked(true);
-    setTimeout(async () => {
-      const key = `${AssessName}-canvasDiagram-${index}`;
-      const raw = localStorage.getItem(key);
-      let parsed = null;
-      if (raw) {
-        try {
-          parsed = JSON.parse(raw);
-        } catch (e) {
-          parsed = raw;
-        }
-      }
-
-      if (parsed) {
-        try {
-          const result = await runtime.postHandler('send_diagram_json', { diagram: parsed });
-          setSummaryMsg(result.summary || 'No summary returned.');
-        } catch (err) {
-          console.error('send_diagram_json error', err);
-          setSummaryMsg('Error sending diagram to backend.');
-        }
-      } else {
-        setSummaryMsg('No diagram data found.');
-      }
-
-      setSubmitButtonClicked(false);
-    }, 200);
+    // If no expectedDrawing, still send a neutral grade
+    const fallbackGrade = 0;
+    try {
+      const res = await runtime.postHandler('submit_grade', { grade: fallbackGrade });
+      const serverSummary = res?.summary || res?.message;
+      setSummaryMsg(serverSummary || 'Submitted (no expected drawing set).');
+    } catch (err) {
+      console.error('submit_grade error', err);
+      setSummaryMsg('Submitted (backend error, no expected drawing set).');
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-black">
       <main className="container mx-auto py-8 px-4 max-w-[1800px]">
-        {/* Three columns side by side */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
-          {/* Column 1: Question and Summary */}
-          <div className="space-y-4">
+        <div className="space-y-6">
+          {/* Row 1: Question and Summary */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="p-4 bg-white dark:bg-zinc-800 rounded-lg shadow-md">
               <h2 className="text-base font-semibold mb-2 text-zinc-900 dark:text-zinc-50">Question</h2>
               <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">{questionText}</p>
               {gradeResult && (
                 <div className="mt-3 pt-3 border-t border-zinc-200 dark:border-zinc-700">
                   <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-50">
-                    Result: {gradeResult} {score !== null && `(score: ${score})`}
+                    Result: {gradeResult}
                   </p>
+                  {score !== null && (
+                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
+                      Score: {(score * 100).toFixed(1)}%
+                    </p>
+                  )}
                 </div>
               )}
             </div>
 
             <div className="p-4 bg-white dark:bg-zinc-800 rounded-lg shadow-md">
-              <h3 className="text-base font-semibold mb-2 text-zinc-900 dark:text-zinc-50">Diagram Summary</h3>
+              <h3 className="text-base font-semibold mb-2 text-zinc-900 dark:text-zinc-50">Message from Server: </h3>
               <div className="text-green-600 dark:text-green-400 font-medium text-xs">
                 {summaryMsg ? summaryMsg : 'Draw something and submit to check your answer.'}
               </div>
             </div>
           </div>
 
-          {/* Column 2: Your Drawing */}
-          <div>
-            <h2 className="text-base font-semibold mb-2 text-zinc-900 dark:text-zinc-50">Your Drawing</h2>
-            {initialDrawingState && (
-              <div className="scale-90 origin-top-left">
+          {/* Row 2: Two canvases side by side */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Your Drawing */}
+            <div>
+              {initialDrawingState && (
                 <DrawingBoard
                   tools={visibleTools as any}
                   buttons={visibleButtons as any}
@@ -215,20 +213,18 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
                   onSubmit={handleSubmit}
                   containerId="jxgbox-student"
                 />
-              </div>
-            )}
-          </div>
+              )}
+            </div>
 
-          {/* Column 3: Expected Drawing */}
-          <div>
-            <h2 className="text-base font-semibold mb-2 text-zinc-900 dark:text-zinc-50">Expected Drawing</h2>
-            {!showExpected ? (
-              <div className="w-full h-[400px] border-2 border-dashed border-gray-300 dark:border-zinc-600 rounded-lg flex items-center justify-center text-zinc-500 dark:text-zinc-400 bg-white dark:bg-zinc-800">
-                <p className="text-center px-4 text-xs">Expected drawing will be revealed after submission</p>
-              </div>
-            ) : (
-              combinedExpectedDrawing && (
-                <div className="scale-90 origin-top-left">
+            {/* Expected Drawing */}
+            <div>
+              <h2 className="text-base font-semibold mb-2 text-zinc-900 dark:text-zinc-50">Expected Drawing</h2>
+              {!showExpected ? (
+                <div className="w-full h-[400px] border-2 border-dashed border-gray-300 dark:border-zinc-600 rounded-lg flex items-center justify-center text-zinc-500 dark:text-zinc-400 bg-white dark:bg-zinc-800">
+                  <p className="text-center px-4 text-xs">Expected drawing will be revealed after submission</p>
+                </div>
+              ) : (
+                combinedExpectedDrawing && (
                   <DrawingBoard
                     tools={[]}
                     buttons={[]}
@@ -236,9 +232,9 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
                     readOnlyInitial={true}
                     containerId="jxgbox-expected"
                   />
-                </div>
-              )
-            )}
+                )
+              )}
+            </div>
           </div>
         </div>
       </main>

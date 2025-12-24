@@ -233,6 +233,62 @@ export default function DrawingBoard({
             fixed: readOnlyInitial,
           });
           initialObjectsRef.current.add(center.id);
+        } else if (objData.type === 'triangle') {
+          const p1 = board.create('point', [objData.point1.x, objData.point1.y], {
+            visible: false,
+            fixed: readOnlyInitial,
+          });
+          const p2 = board.create('point', [objData.point2.x, objData.point2.y], {
+            visible: false,
+            fixed: readOnlyInitial,
+          });
+          const p3 = board.create('point', [objData.point3.x, objData.point3.y], {
+            visible: false,
+            fixed: readOnlyInitial,
+          });
+          createdObj = board.create('polygon', [p1, p2, p3], {
+            ...objData.properties,
+            fixed: readOnlyInitial,
+          });
+          initialObjectsRef.current.add(p1.id);
+          initialObjectsRef.current.add(p2.id);
+          initialObjectsRef.current.add(p3.id);
+        } else if (objData.type === 'rectangle') {
+          const p1 = board.create('point', [objData.point1.x, objData.point1.y], {
+            visible: false,
+            fixed: readOnlyInitial,
+          });
+          const p2 = board.create('point', [objData.point2.x, objData.point2.y], {
+            visible: false,
+            fixed: readOnlyInitial,
+          });
+          const p3 = board.create('point', [objData.point3.x, objData.point3.y], {
+            visible: false,
+            fixed: readOnlyInitial,
+          });
+          const p4 = board.create('point', [objData.point4.x, objData.point4.y], {
+            visible: false,
+            fixed: readOnlyInitial,
+          });
+          createdObj = board.create('polygon', [p1, p2, p3, p4], {
+            ...objData.properties,
+            fixed: readOnlyInitial,
+          });
+          initialObjectsRef.current.add(p1.id);
+          initialObjectsRef.current.add(p2.id);
+          initialObjectsRef.current.add(p3.id);
+          initialObjectsRef.current.add(p4.id);
+        } else if (objData.type === 'curve') {
+          if (objData.points && objData.points.length >= 2) {
+            const points = objData.points.map((pt: any) => [pt.x, pt.y]);
+            createdObj = board.create('curve', [
+              points.map((p: any) => p[0]),
+              points.map((p: any) => p[1])
+            ], {
+              ...objData.properties,
+              fixed: readOnlyInitial,
+            });
+          }
         } else if (objData.type === 'polygon') {
           const points = objData.vertices.map((v: any) =>
             board.create('point', [v.x, v.y], {
