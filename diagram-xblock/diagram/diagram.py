@@ -9,6 +9,7 @@ from xblock.fields import Integer, Scope, String, List, Float, Boolean
 from xblock.exceptions import JsonHandlerError
 from xblock.scorable import ScorableXBlockMixin, Score
 from xblock.utils.resources import ResourceLoader
+from xblockutils.studio_editable import StudioEditableXBlockMixin
 
 resource_loader = ResourceLoader(__name__)
 
@@ -16,7 +17,7 @@ resource_loader = ResourceLoader(__name__)
 TO-DO: document what your XBlock does.
 """
 
-class DiagramXBlock(ScorableXBlockMixin, XBlock):
+class DiagramXBlock(StudioEditableXBlockMixin, ScorableXBlockMixin, XBlock):
 
     @XBlock.json_handler
     def submit_grade(self, data, suffix=''):
@@ -58,26 +59,7 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
     # Fields are defined on the class.  You can access them in your code as
     # self.<fieldname>.
 
-    question = String(
-        default="Question: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod auctor urna, vel tincidunt elit varius id. Nullam in lacus ac odio vehicula tempus a ac magna. Ut sit amet orci orci. Nulla posuere purus nec orci blandit, sed interdum libero interdum. Sed lacinia libero ac sem vehicula, nec facilisis purus pretium. Fusce accumsan, odio euismod laoreet porttitor, felis nunc maximus odio, nec aliquet erat neque in velit. Nam iaculis ut risus id lacinia. Maecenas id metus sed libero tincidunt tristique ac ac metus. Proin lacinia vestibulum nisi, ac cursus lorem efficitur id. Integer sed magna tincidunt, suscipit mi non, mollis elit. Donec sed nulla turpis. Cras varius neque in nisi eleifend, ac euismod felis fermentum. Quisque ut gravida felis. Nam et lacus dolor. Integer ac cursus urna. Donec aliquam, lectus a facilisis vestibulum, turpis libero pretium enim, non maximus ante elit vel libero. Aliquam erat volutpat. Etiam sit amet eros sed purus fermentum vehicula. ", scope=Scope.content,
-        help="Quiz question",
-    )
-    
-
-    # Store initial diagram as a simple string. Historically this field
-    # contained a JSON string of the Fabric.js canvas; to avoid storing
-    # large JSON objects in Studio we now default to a URL that points to
-    # a JSON file. Studio can save either a URL (string) or a JSON object
-    # (stored as a JSON string). Frontend will fetch the URL when needed.
-    initial_diagram = String(
-        default="", #'https://github.com/aembaye2/xblock_development/blob/main/circle.json',
-        scope=Scope.content,
-        help="Initial diagram source: either a URL (string) pointing to a .json file or a JSON string/object representing Fabric.js data",
-    )
-
-    # Removed MCQ fields: options, correct, user_answer
-    # Score stored per-user
-    # Raw score storage (ScorableXBlockMixin pattern)
+    # Raw score storage (ScorableXBlockMixin pattern) - internal only, not passed to frontend
     raw_earned = Float(
         default=0.0, scope=Scope.user_state,
         help="Raw earned score (0..1)",
@@ -86,11 +68,6 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
     raw_possible = Float(
         default=1.0, scope=Scope.user_state,
         help="Raw possible score (usually 1)",
-    )
-
-    completed = Boolean(
-        default=False, scope=Scope.user_state,
-        help="Whether the user has submitted an answer",
     )
 
     # Block-level settings for grading
@@ -126,78 +103,19 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
         """Remaining number of attempts"""
         return max(self.max_attempts - self.attempts, 0)
 
-    
     AssessName = String(
-        display_name="quiz1",
+        display_name="Assessment Name",
         scope=Scope.settings,
         default="quiz1",
+        help="Unique name for this assessment",
     )
 
     # Diagram-specific configuration fields
     index = Integer(
+        display_name="Diagram Index",
         default=0,
         scope=Scope.content,
         help="Diagram index",
-    )
-
-    canvasWidth = Integer(
-        default=500,
-        scope=Scope.settings,
-        help="Canvas width in pixels",
-    )
-
-    canvasHeight = Integer(
-        default=400,
-        scope=Scope.settings,
-        help="Canvas height in pixels",
-    )
-
-    scaleFactors = List(
-        #scaleFactors = [xlim, ylim, bottom_margin, left_margin, top_margin, right_margin]
-        default=[10, 20, 75, 84, 25, 35],
-        scope=Scope.settings,
-        help="Scale factors for the canvas",
-    )
-
-    submitButtonClicked = Boolean(
-        default=False,
-        scope=Scope.user_state,
-        help="Whether the submit button has been clicked",
-    )
-
-    bgnumber = Integer(
-        display_name="Background Number",
-        scope=Scope.settings,
-        default=0,
-        help="Background image number (0-1) for selecting different backgrounds",
-    )
-
-    # Which diagram modes should be visible in the toolbar.
-    # This is a list of mode keys (strings) that the frontend will use to
-    # determine which tools to display. If empty or not provided, frontend  may choose to display all available modes.
-    # Tools available:
-    # "point","line","singlearrowhead","doublearrowhead","polygon","rect","circle",
-    # "freedraw","coordinate","curve","curve4pts","text","transform", "color", "strokeWidth", "download"]
-    visibleModes = List(
-        display_name="Visible Modes",
-        scope=Scope.settings,
-        default=["point","line","triangle","singlearrowhead","doublearrowhead","polygon","rect","circle",
-     "freedraw","coordinate","curve","curve4pts","text","transform", "color", "strokeWidth", "download"], # <-- whitelist these tools
-        help="List of diagram modes to show in the toolbar (mode keys). Empty by default to hide all tools.",
-    )
-
-    axis_labels = List(
-        display_name="Axis Labels",
-        scope=Scope.settings,
-        default=["Quantity, Q", "Price, P"], # Example with long label and newline
-        help="Labels for the X and Y axes",
-    )
-
-    hideLabels = Boolean(
-        display_name="Hide Axis Labels",
-        scope=Scope.settings,
-        default=False,
-        help="Whether to hide axis labels by default,",
     )
 
     # DrawingBoard component configuration
@@ -270,12 +188,10 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
             logging.exception("Failed to parse initialDrawingState; sending as empty object")
             initial_obj = {}
 
-        # Only diagram-related fields are sent to the frontend
+        # Only fields actually used by the drawing board are sent to the frontend
         init_data = {
-            "question": self.question,
             "index": self.index,
             "AssessName": self.AssessName,
-            "submitButtonClicked": self.submitButtonClicked,
             # DrawingBoard component props
             "questionText": self.questionText,
             "visibleTools": self.visibleTools,
@@ -283,115 +199,11 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
             "expectedDrawing": expected_obj,
             "initialDrawingState": initial_obj,
             "gradingTolerance": self.gradingTolerance,
+            "attempts": self.attempts,
+            "remaining_attempts": self.remaining_attempts,
         }
-        init_data["attempts"] = self.attempts
-        init_data["remaining_attempts"] = self.remaining_attempts
         frag.initialize_js('initDiagramXBlockStudentView', init_data)
         return frag
-
-
-    def studio_view(self, context=None):
-        frag = Fragment()
-        frag.add_css_url(self.runtime.local_resource_url(self, 'public/diagram.css'))
-        frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/diagram_studio.js'))
-
-        # Only diagram-related fields for editing in Studio
-        init_data = {
-            "question": self.question,
-            "max_attempts": self.max_attempts,
-            "weight": self.weight,
-            "has_score": self.has_score,
-            "index": self.index,
-            "AssessName": self.AssessName,
-            # DrawingBoard component props
-            "questionText": self.questionText,
-            "visibleTools": self.visibleTools,
-            "visibleButtons": self.visibleButtons,
-            "expectedDrawing": self.expectedDrawing,
-            "initialDrawingState": self.initialDrawingState,
-            "gradingTolerance": self.gradingTolerance,
-        }
-        frag.initialize_js('initDiagramXBlockStudioView', init_data)
-        return frag
-
-    @XBlock.json_handler
-    def studio_save(self, data, suffix=''):
-    # Save question and diagram-related fields
-        self.question = data.get('question', self.question)
-        try:
-            self.max_attempts = int(data.get('max_attempts', self.max_attempts))
-        except Exception:
-            pass
-        try:
-            self.weight = float(data.get('weight', self.weight))
-        except Exception:
-            pass
-        try:
-            self.has_score = bool(data.get('has_score', self.has_score))
-        except Exception:
-            pass
-        try:
-            self.index = int(data.get('index', self.index))
-        except Exception:
-            pass
-        
-        self.AssessName = data.get('AssessName', self.AssessName)
-        
-        # Save DrawingBoard component fields
-        self.questionText = data.get('questionText', self.questionText)
-        self.visibleTools = data.get('visibleTools', self.visibleTools)
-        self.visibleButtons = data.get('visibleButtons', self.visibleButtons)
-        self.expectedDrawing = data.get('expectedDrawing', self.expectedDrawing)
-        self.initialDrawingState = data.get('initialDrawingState', self.initialDrawingState)
-        
-        try:
-            self.gradingTolerance = float(data.get('gradingTolerance', self.gradingTolerance))
-        except Exception:
-            pass
-        
-        # Validate and sanitize incoming initialDiagram from Studio before storing.
-        # Accept either:
-        #  - a URL string (http/https) which we store directly as a string, or
-        #  - a JSON string/object which we sanitize and store as a JSON string.
-        new_initial = data.get('initialDiagram', None)
-        if new_initial is not None:
-            try:
-                # If it's a string that looks like a URL, store as-is.
-                if isinstance(new_initial, str) and new_initial.strip().lower().startswith(('http://', 'https://')):
-                    self.initial_diagram = new_initial.strip()
-                    saved_initial = new_initial.strip()
-                else:
-                    # Accept either a JSON string or an object/list from Studio.
-                    if isinstance(new_initial, str):
-                        parsed = json.loads(new_initial)
-                    else:
-                        parsed = new_initial
-
-                    sanitized = validate_initial_diagram(parsed)
-                    # Store as JSON string in the field
-                    self.initial_diagram = json.dumps(sanitized)
-                    saved_initial = sanitized
-            except Exception:
-                logging.exception("Invalid initialDiagram provided in Studio; keeping previous value")
-        
-        # Return saved/sanitized initial diagram to the Studio editor so the UI
-        # can update its preview / textarea with the canonical form.
-        # Return the raw stored value to the Studio editor so it can decide
-        # whether to show it as a URL or JSON. If the stored value is a
-        # JSON string we attempt to parse it so the editor receives a
-        # canonical object; otherwise return the string (URL) as-is.
-        try:
-            if isinstance(self.initial_diagram, str) and self.initial_diagram.strip().lower().startswith(('http://', 'https://')):
-                current_initial = self.initial_diagram.strip()
-            elif isinstance(self.initial_diagram, str):
-                current_initial = json.loads(self.initial_diagram)
-            else:
-                current_initial = self.initial_diagram
-        except Exception:
-            logging.exception("Failed to parse stored initial_diagram; returning empty list")
-            current_initial = []
-
-        return {"result": "success", "initialDiagram": current_initial}
 
 
     # Removed MCQ answer/grade logic. Diagram blocks may implement their own grading if needed.
@@ -435,68 +247,5 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
         return [
             ("DiagramXBlock based on react", "<diagram_xblock/>")
         ]
-
-
-# Validator for initial diagram data used by the Studio editor.
-def validate_initial_diagram(data, max_items=1000, max_bytes=100000):
-    """
-    Normalize and validate an initial diagram payload.
-
-    Accepts either a full Fabric.js canvas-like object (with an 'objects'
-    list) or a plain list of object dicts. Returns a sanitized list of
-    objects (with numeric fields converted to floats) and enforces a
-    maximum number of items and a maximum serialized size in bytes.
-
-    Raises ValueError on invalid input or if size limits are exceeded.
-    """
-    # If a full canvas object is provided, extract the objects list
-    if isinstance(data, dict) and 'objects' in data:
-        items = data.get('objects')
-    else:
-        items = data
-
-    if not isinstance(items, list):
-        raise ValueError('initial diagram must be a list or a canvas object with an "objects" list')
-
-    # Truncate to max_items
-    if max_items is not None and len(items) > max_items:
-        items = items[:max_items]
-
-    sanitized = []
-    for item in items:
-        if not isinstance(item, dict):
-            # skip non-dict items
-            continue
-        clean = {}
-        for k, v in item.items():
-            # Convert numeric-like values to floats
-            if isinstance(v, (int, float)):
-                clean[k] = float(v)
-            elif isinstance(v, str):
-                # try to parse numeric strings
-                try:
-                    if '.' in v or 'e' in v.lower():
-                        clean[k] = float(v)
-                    else:
-                        # preserve non-numeric strings like color codes
-                        maybe_int = int(v)
-                        clean[k] = float(maybe_int)
-                except Exception:
-                    clean[k] = v
-            else:
-                # preserve lists, dicts, booleans, None, etc.
-                clean[k] = v
-        sanitized.append(clean)
-
-    # Enforce serialized size limit
-    try:
-        s = json.dumps(sanitized)
-        if max_bytes is not None and len(s.encode('utf-8')) > max_bytes:
-            raise ValueError('initial diagram exceeds maximum allowed size')
-    except (TypeError, ValueError):
-        # If serialization fails, raise ValueError to signal invalid input
-        raise
-
-    return sanitized
 
 
