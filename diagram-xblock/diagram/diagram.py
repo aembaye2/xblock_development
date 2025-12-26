@@ -9,7 +9,6 @@ from xblock.fields import Integer, Scope, String, List, Float, Boolean
 from xblock.exceptions import JsonHandlerError
 from xblock.scorable import ScorableXBlockMixin, Score
 from xblock.utils.resources import ResourceLoader
-from xblockutils.studio_editable import StudioEditableXBlockMixin
 
 resource_loader = ResourceLoader(__name__)
 
@@ -17,7 +16,7 @@ resource_loader = ResourceLoader(__name__)
 TO-DO: document what your XBlock does.
 """
 
-class DiagramXBlock(StudioEditableXBlockMixin, ScorableXBlockMixin, XBlock):
+class DiagramXBlock(ScorableXBlockMixin, XBlock):
 
     @XBlock.json_handler
     def submit_grade(self, data, suffix=''):
@@ -205,7 +204,135 @@ class DiagramXBlock(StudioEditableXBlockMixin, ScorableXBlockMixin, XBlock):
         frag.initialize_js('initDiagramXBlockStudentView', init_data)
         return frag
 
+    def studio_view(self, context=None):
+        frag = Fragment()
+        frag.add_css_url(self.runtime.local_resource_url(self, 'public/diagram.css'))
+        frag.add_javascript_url(self.runtime.local_resource_url(self, 'public/diagram_studio.js'))
 
+        # Normalize JSON fields so the frontend gets objects (not raw strings)
+        try:
+            expected_obj = (
+                json.loads(self.expectedDrawing)
+                if isinstance(self.expectedDrawing, str) else self.expectedDrawing
+            )
+        except Exception:
+            logging.exception("Failed to parse expectedDrawing; sending as empty object")
+            expected_obj = {}
+
+        try:
+            initial_obj = (
+                json.loads(self.initialDrawingState)
+                if isinstance(self.initialDrawingState, str) else self.initialDrawingState
+            )
+        except Exception:
+            logging.exception("Failed to parse initialDrawingState; sending as empty object")
+            initial_obj = {}
+
+        # Only fields actually used by the diagram board
+        init_data = {
+            "questionText": self.questionText,
+            "max_attempts": self.max_attempts,
+            "weight": self.weight,
+            "has_score": self.has_score,
+            "index": self.index,
+            "AssessName": self.AssessName,
+            "visibleTools": self.visibleTools,
+            "visibleButtons": self.visibleButtons,
+            "expectedDrawing": expected_obj,
+            "initialDrawingState": initial_obj,
+            "gradingTolerance": self.gradingTolerance,
+        }
+        frag.initialize_js('initDiagramXBlockStudioView', init_data)
+        return frag
+
+    @XBlock.json_handler
+    def studio_save(self, data, suffix=''):
+        # Save question and drawing-related fields
+        self.questionText = data.get('questionText', self.questionText)
+        
+        try:
+            self.max_attempts = int(data.get('max_attempts', self.max_attempts))
+        except Exception:
+            pass
+        
+        try:
+            self.weight = float(data.get('weight', self.weight))
+        except Exception:
+            pass
+        
+        try:
+            self.has_score = bool(data.get('has_score', self.has_score))
+        except Exception:
+            pass
+        
+        try:
+            self.index = int(data.get('index', self.index))
+        except Exception:
+            pass
+        
+        self.AssessName = data.get('AssessName', self.AssessName)
+        
+        # Save array fields
+        self.visibleTools = data.get('visibleTools', self.visibleTools)
+        self.visibleButtons = data.get('visibleButtons', self.visibleButtons)
+        
+        # Save JSON fields (expectedDrawing, initialDrawingState)
+        expected = data.get('expectedDrawing', None)
+        if expected is not None:
+            try:
+                if isinstance(expected, str):
+                    parsed = json.loads(expected)
+                else:
+                    parsed = expected
+                self.expectedDrawing = json.dumps(parsed)
+            except Exception:
+                logging.exception("Invalid expectedDrawing provided; keeping previous value")
+        
+        initial = data.get('initialDrawingState', None)
+        if initial is not None:
+            try:
+                if isinstance(initial, str):
+                    parsed = json.loads(initial)
+                else:
+                    parsed = initial
+                self.initialDrawingState = json.dumps(parsed)
+            except Exception:
+                logging.exception("Invalid initialDrawingState provided; keeping previous value")
+        
+        # Save grading config
+        try:
+            self.gradingTolerance = float(data.get('gradingTolerance', self.gradingTolerance))
+        except Exception:
+            pass
+        
+        grading_config = data.get('gradingConfig', None)
+        if grading_config is not None:
+            try:
+                if isinstance(grading_config, str):
+                    parsed = json.loads(grading_config)
+                else:
+                    parsed = grading_config
+                # Store as JSON if needed, or just validate
+                # For now, we don't have a gradingConfig field, so we just validate
+            except Exception:
+                logging.exception("Invalid gradingConfig provided")
+        
+        # Return parsed values so Studio can display them prettily
+        try:
+            expected_obj = json.loads(self.expectedDrawing) if isinstance(self.expectedDrawing, str) else self.expectedDrawing
+        except Exception:
+            expected_obj = {}
+        
+        try:
+            initial_obj = json.loads(self.initialDrawingState) if isinstance(self.initialDrawingState, str) else self.initialDrawingState
+        except Exception:
+            initial_obj = {}
+        
+        return {
+            "result": "success",
+            "expectedDrawing": expected_obj,
+            "initialDrawingState": initial_obj
+        }
     # Removed MCQ answer/grade logic. Diagram blocks may implement their own grading if needed.
 
     def max_score(self):

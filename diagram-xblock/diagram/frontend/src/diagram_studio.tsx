@@ -17,42 +17,38 @@ const messages = {
 
 interface InitData {
   // Common fields
-  question: string;
   max_attempts?: number;
   weight?: number;
   has_score?: boolean;
 
   // Diagram-specific fields
+  questionText?: string;
   index?: number;
   AssessName?: string;
-  canvasWidth?: number;
-  canvasHeight?: number;
-  scaleFactors?: number[];
-  bgnumber?: number;
-  visibleModes?: string[];
-  axisLabels?: string[];
-  hideLabels?: boolean;
-  initialDiagram?: any;
+  visibleTools?: string[];
+  visibleButtons?: string[];
+  expectedDrawing?: string;
+  initialDrawingState?: string;
+  gradingTolerance?: number;
+  gradingConfig?: any;
 }
 
 type Props = InitData & { runtime: BoundRuntime };
 
 const StudioView: React.FC<Props> = ({ 
   runtime, 
-  question, 
+  questionText, 
   max_attempts, 
   weight, 
   has_score, 
   index, 
   AssessName, 
-  canvasWidth, 
-  canvasHeight, 
-  scaleFactors, 
-  bgnumber, 
-  visibleModes, 
-  axisLabels, 
-  hideLabels, 
-  initialDiagram 
+  visibleTools,
+  visibleButtons,
+  expectedDrawing,
+  initialDrawingState,
+  gradingTolerance,
+  gradingConfig
 }) => {
   // Helper to coerce possibly-undefined props to numbers
   function propsToNumber(val: any, fallback: number) {
@@ -60,25 +56,30 @@ const StudioView: React.FC<Props> = ({
     return Number.isFinite(n) ? n : fallback;
   }
 
-  const [q, setQ] = React.useState<string>(question || '');
+  // State for all fields
+  const [q, setQ] = React.useState<string>(questionText || '');
   const [idx, setIdx] = React.useState<number>(index ?? 0);
   const [assessName, setAssessName] = React.useState<string>(AssessName ?? '');
-  const [cw, setCw] = React.useState<number>(propsToNumber(canvasWidth, 500));
-  const [ch, setCh] = React.useState<number>(propsToNumber(canvasHeight, 400));
-  const [scale, setScale] = React.useState<number[]>(scaleFactors ?? [10,20,75,84,25,35]);
-  const [bgNumber, setBgNumber] = React.useState<number>(propsToNumber(bgnumber, 0));
-  const [visibleModesState, setVisibleModesState] = React.useState<string[]>(visibleModes ?? []);
-  const [axes, setAxes] = React.useState<string[]>(axisLabels ?? []);
-  const [hideLbls, setHideLbls] = React.useState<boolean>(hideLabels ?? false);
-  const [initialDrawStr, setInitialDrawStr] = React.useState<string>(
-    // If initialDiagram is an object, show it as pretty JSON. If it's a
-    // URL string, leave the JSON textarea empty (the URL input is used).
-    (typeof initialDiagram === 'object') ? JSON.stringify(initialDiagram ?? {}, null, 2) : (typeof initialDiagram === 'string' && /^https?:\/\//i.test(initialDiagram) ? '' : JSON.stringify(initialDiagram ?? {}, null, 2))
+  
+  const [toolsStr, setToolsStr] = React.useState<string>(
+    Array.isArray(visibleTools) ? visibleTools.join(', ') : ''
   );
-  const [initialDraw, setInitialDraw] = React.useState<any>(initialDiagram ?? {});
-  const [initialDrawUrl, setInitialDrawUrl] = React.useState<string>(
-    (typeof initialDiagram === 'string' && /^https?:\/\//i.test(initialDiagram)) ? initialDiagram : ''
+  const [buttonsStr, setButtonsStr] = React.useState<string>(
+    Array.isArray(visibleButtons) ? visibleButtons.join(', ') : ''
   );
+  
+  const [expectedDrawingStr, setExpectedDrawingStr] = React.useState<string>(
+    typeof expectedDrawing === 'string' ? expectedDrawing : JSON.stringify(expectedDrawing ?? {}, null, 2)
+  );
+  const [initialDrawingStateStr, setInitialDrawingStateStr] = React.useState<string>(
+    typeof initialDrawingState === 'string' ? initialDrawingState : JSON.stringify(initialDrawingState ?? {}, null, 2)
+  );
+  
+  const [tolerance, setTolerance] = React.useState<number>(propsToNumber(gradingTolerance, 0.8));
+  const [gradingConfigStr, setGradingConfigStr] = React.useState<string>(
+    gradingConfig ? JSON.stringify(gradingConfig, null, 2) : JSON.stringify({ mode: 'tolerance', tolerance: 0.8, partialCredit: true, requireAll: false }, null, 2)
+  );
+
   const [maxAttempts, setMaxAttempts] = React.useState<number>(propsToNumber(max_attempts, 3));
   const [w, setW] = React.useState<number>(propsToNumber(weight, 1));
   const [hasScore, setHasScore] = React.useState<boolean>(has_score ?? true);
@@ -86,61 +87,72 @@ const StudioView: React.FC<Props> = ({
   const [isSaving, setIsSaving] = React.useState(false);
   const [errors, setErrors] = React.useState<string[]>([]);
 
-  // Helpers for editing diagram-specific arrays (scaleFactors, visibleModes, axisLabels)
-  const setScaleFromString = (val: string) => {
-    const parts = val.split(',').map(s => Number(s.trim())).filter(n => Number.isFinite(n));
-    if (parts.length > 0) setScale(parts);
-  };
-  
-  const setModesFromString = (val: string) => {
-    const parts = val.split(',').map(s => s.trim()).filter(s => s.length > 0);
-    setVisibleModesState(parts);
-  };
-  
-  const setAxesFromString = (val: string) => {
-    const parts = val.split(',').map(s => s.trim());
-    setAxes(parts);
-  };
-
-  const handleInitialDrawChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInitialDrawStr(e.target.value);
+  // Helper for JSON change handlers
+  const handleExpectedDrawingChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setExpectedDrawingStr(e.target.value);
     try {
-      const parsed = JSON.parse(e.target.value);
-      setInitialDraw(parsed);
-      // Clear JSON error if it exists
-      setErrors(prev => prev.filter(err => !err.includes('Initial Diagram')));
+      JSON.parse(e.target.value);
+      setErrors(prev => prev.filter(err => !err.includes('Expected Drawing')));
     } catch (err) {
-      // Add JSON parse error
       setErrors(prev => {
-        const filtered = prev.filter(err => !err.includes('Initial Diagram'));
-        return [...filtered, 'Initial Diagram must be valid JSON'];
+        const filtered = prev.filter(err => !err.includes('Expected Drawing'));
+        return [...filtered, 'Expected Drawing must be valid JSON'];
       });
     }
   };
 
-  const handleInitialUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInitialDrawUrl(e.target.value);
-    // When user starts editing URL, clear JSON errors related to initial diagram
-    setErrors(prev => prev.filter(err => !err.includes('Initial Diagram')));
+  const handleInitialDrawingStateChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInitialDrawingStateStr(e.target.value);
+    try {
+      JSON.parse(e.target.value);
+      setErrors(prev => prev.filter(err => !err.includes('Initial Drawing State')));
+    } catch (err) {
+      setErrors(prev => {
+        const filtered = prev.filter(err => !err.includes('Initial Drawing State'));
+        return [...filtered, 'Initial Drawing State must be valid JSON'];
+      });
+    }
+  };
+
+  const handleGradingConfigChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setGradingConfigStr(e.target.value);
+    try {
+      JSON.parse(e.target.value);
+      setErrors(prev => prev.filter(err => !err.includes('Grading Config')));
+    } catch (err) {
+      setErrors(prev => {
+        const filtered = prev.filter(err => !err.includes('Grading Config'));
+        return [...filtered, 'Grading Config must be valid JSON'];
+      });
+    }
   };
 
   const validate = (): string[] => {
     const errs: string[] = [];
     if (!q || q.trim().length === 0) errs.push('Question is required.');
-    if (!Number.isFinite(cw) || cw <= 0) errs.push('Canvas width must be a positive number.');
-    if (!Number.isFinite(ch) || ch <= 0) errs.push('Canvas height must be a positive number.');
     
-    // Final validation of JSON
-    // Either a non-empty valid URL is provided, or the JSON textarea must be valid JSON.
-    if (initialDrawUrl && /^https?:\/\//i.test(initialDrawUrl)) {
-      // basic URL sanity check passed
-    } else {
-      try {
-        JSON.parse(initialDrawStr || '{}');
-      } catch {
-        if (!errs.some(e => e.includes('Initial Diagram'))) {
-          errs.push('Initial Diagram must be valid JSON or provide a valid URL');
-        }
+    // Validate JSON fields
+    try {
+      JSON.parse(expectedDrawingStr || '{}');
+    } catch {
+      if (!errs.some(e => e.includes('Expected Drawing'))) {
+        errs.push('Expected Drawing must be valid JSON');
+      }
+    }
+    
+    try {
+      JSON.parse(initialDrawingStateStr || '{}');
+    } catch {
+      if (!errs.some(e => e.includes('Initial Drawing State'))) {
+        errs.push('Initial Drawing State must be valid JSON');
+      }
+    }
+    
+    try {
+      JSON.parse(gradingConfigStr || '{}');
+    } catch {
+      if (!errs.some(e => e.includes('Grading Config'))) {
+        errs.push('Grading Config must be valid JSON');
       }
     }
     
@@ -148,78 +160,73 @@ const StudioView: React.FC<Props> = ({
   };
 
   const save = async () => {
-  console.log('Save button clicked');
-  const validation = validate();
-  setErrors(validation);
-  if (validation.length > 0) {
-    console.log('Validation errors:', validation);
-    return;
-  }
-
-  setIsSaving(true);
-  
-  try {
-    // Build payload; send the initial diagram as a JSON string to be explicit
-    // about the stored format. The backend accepts either an object or a JSON
-    // string, sanitizes it, and returns the canonical/sanitized object.
-    const payload = {
-      question: q,
-      max_attempts: maxAttempts,
-      weight: w,
-      has_score: hasScore,
-      index: idx,
-      AssessName: assessName,
-      canvasWidth: cw,
-      canvasHeight: ch,
-      scaleFactors: scale,
-      bgnumber: bgNumber,
-      visibleModes: visibleModesState,
-      axisLabels: axes,
-      hideLabels: hideLbls,
-      // If a URL is provided prefer sending that; otherwise send the
-      // serialized JSON string (the backend will accept either).
-      initialDiagram: (initialDrawUrl && initialDrawUrl.trim().length > 0) ? initialDrawUrl.trim() : initialDrawStr,
-    };
-
-    console.log('Saving payload:', payload);
-
-    // Call postHandler once and reuse the promise so we can both update the
-    // UI from the server response and let the runtime close the editor when
-    // the save completes.
-    const savePromise = runtime.postHandler('studio_save', payload);
-    const response = await savePromise;
-
-    // Update editor with server-sanitized JSON (pretty-printed) if the
-    // handler returned the `initialDiagram` key. Use a property check so
-    // we update even when the value is empty/null (and normalize to an
-    // empty object for the textarea/preview). This avoids leaving the
-    // studio textarea in an "undefined" state when the backend returns
-    // null/None for the field.
-    if (response && Object.prototype.hasOwnProperty.call(response, 'initialDiagram')) {
-      const serverInitial = response.initialDiagram;
-      if (typeof serverInitial === 'string' && /^https?:\/\//i.test(serverInitial)) {
-        setInitialDrawUrl(serverInitial);
-        setInitialDrawStr('');
-        setInitialDraw({});
-      } else {
-        const pretty = JSON.stringify(serverInitial ?? {}, null, 2);
-        setInitialDrawStr(pretty);
-        setInitialDraw(serverInitial ?? {});
-        setInitialDrawUrl('');
-      }
+    console.log('Save button clicked');
+    const validation = validate();
+    setErrors(validation);
+    if (validation.length > 0) {
+      console.log('Validation errors:', validation);
+      return;
     }
 
-    // Let the runtime close the editor (pass the original promise)
-    await runtime.studioSaveAndClose(savePromise);
-    console.log('Save successful');
-  } catch (error) {
-    console.error('Save failed:', error);
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    setErrors([`Failed to save: ${errorMsg}`]);
-  } finally {
-    setIsSaving(false);
-  }
-};
+    setIsSaving(true);
+    
+    try {
+      // Parse arrays from comma-separated strings
+      const toolsArray = toolsStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
+      const buttonsArray = buttonsStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
+      
+      const payload = {
+        questionText: q,
+        max_attempts: maxAttempts,
+        weight: w,
+        has_score: hasScore,
+        index: idx,
+        AssessName: assessName,
+        visibleTools: toolsArray,
+        visibleButtons: buttonsArray,
+        expectedDrawing: expectedDrawingStr,
+        initialDrawingState: initialDrawingStateStr,
+        gradingTolerance: tolerance,
+        gradingConfig: gradingConfigStr
+      };
+
+      console.log('Saving payload:', payload);
+
+      const savePromise = runtime.postHandler('studio_save', payload);
+      const response = await savePromise;
+
+      // Update editor with server-sanitized values if returned
+      if (response) {
+        if (response.expectedDrawing) {
+          const pretty = typeof response.expectedDrawing === 'string' 
+            ? response.expectedDrawing 
+            : JSON.stringify(response.expectedDrawing, null, 2);
+          setExpectedDrawingStr(pretty);
+        }
+        if (response.initialDrawingState) {
+          const pretty = typeof response.initialDrawingState === 'string' 
+            ? response.initialDrawingState 
+            : JSON.stringify(response.initialDrawingState, null, 2);
+          setInitialDrawingStateStr(pretty);
+        }
+        if (response.gradingConfig) {
+          const pretty = typeof response.gradingConfig === 'string' 
+            ? response.gradingConfig 
+            : JSON.stringify(response.gradingConfig, null, 2);
+          setGradingConfigStr(pretty);
+        }
+      }
+
+      await runtime.studioSaveAndClose(savePromise);
+      console.log('Save successful');
+    } catch (error) {
+      console.error('Save failed:', error);
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      setErrors([`Failed to save: ${errorMsg}`]);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const cancel = () => {
     runtime.notify('cancel', {});
@@ -280,36 +287,12 @@ const StudioView: React.FC<Props> = ({
       
       <div style={{ marginBottom: '15px' }}>
         <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-          Question:
+          Question Text:
         </label>
-        <input 
-          type="text" 
+        <textarea 
           value={q} 
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQ(e.target.value)}
-          style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
-        />
-      </div>
-
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-          Assessment Name:
-        </label>
-        <input 
-          type="text" 
-          value={assessName} 
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssessName(e.target.value)}
-          style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
-        />
-      </div>
-
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-          Index:
-        </label>
-        <input 
-          type="number" 
-          value={idx} 
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdx(Number(e.target.value))}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setQ(e.target.value)}
+          rows={3}
           style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
         />
       </div>
@@ -317,24 +300,24 @@ const StudioView: React.FC<Props> = ({
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
         <div>
           <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-            Canvas Width (px):
+            Index:
           </label>
           <input 
             type="number" 
-            value={cw} 
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCw(Number(e.target.value))}
+            value={idx} 
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdx(Number(e.target.value))}
             style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
           />
         </div>
 
         <div>
           <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-            Canvas Height (px):
+            Assessment Name:
           </label>
           <input 
-            type="number" 
-            value={ch} 
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCh(Number(e.target.value))}
+            type="text" 
+            value={assessName} 
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssessName(e.target.value)}
             style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
           />
         </div>
@@ -342,95 +325,42 @@ const StudioView: React.FC<Props> = ({
 
       <div style={{ marginBottom: '15px' }}>
         <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-          Scale Factors (comma-separated numbers):
+          Visible Tools (comma-separated):
         </label>
         <input 
           type="text" 
-          value={scale.join(', ')} 
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setScaleFromString(e.target.value)}
+          value={toolsStr} 
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolsStr(e.target.value)}
           style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
         />
         <small style={{ color: '#666', fontSize: '12px' }}>
-          Format: xlim, ylim, bottom_margin, left_margin, top_margin, right_margin
+          Available: point, segment, triangle, circle, arrow, curve, polygon, rectangle
         </small>
       </div>
 
       <div style={{ marginBottom: '15px' }}>
         <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-          Background Number:
-        </label>
-        <input 
-          type="number" 
-          value={bgNumber} 
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBgNumber(Number(e.target.value))}
-          style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
-        />
-      </div>
-
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-          Visible Modes (comma-separated):
+          Visible Buttons (comma-separated):
         </label>
         <input 
           type="text" 
-          value={visibleModesState.join(', ')} 
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setModesFromString(e.target.value)}
+          value={buttonsStr} 
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setButtonsStr(e.target.value)}
           style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
         />
         <small style={{ color: '#666', fontSize: '12px' }}>
-          Available: point, line, singlearrowhead, doublearrowhead, polygon, rect, circle, freedraw, coordinate, curve, curve4pts, text, transform, color, strokeWidth, download
+          Available: undo, redo, clear, downloadPNG, downloadJSON, submit
         </small>
       </div>
 
       <div style={{ marginBottom: '15px' }}>
         <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-          Axis Labels (comma-separated):
-        </label>
-        <input 
-          type="text" 
-          value={axes.join(', ')} 
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAxesFromString(e.target.value)}
-          style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
-        />
-        <small style={{ color: '#666', fontSize: '12px' }}>
-          Format: X-axis label, Y-axis label
-        </small>
-      </div>
-
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-          <input 
-            type="checkbox" 
-            checked={hideLbls} 
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHideLbls(e.target.checked)}
-            style={{ marginRight: '8px' }}
-          />
-          <span style={{ fontWeight: 'bold' }}>Hide Axis Labels</span>
-        </label>
-      </div>
-
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-          Initial Diagram URL (optional):
-        </label>
-        <input
-          type="text"
-          value={initialDrawUrl}
-          onChange={handleInitialUrlChange}
-          placeholder="https://example.com/my-diagram.json"
-          style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
-        />
-        <small style={{ color: '#666', fontSize: '12px' }}>
-          If provided, the URL will be used as the initial diagram source. Otherwise you may paste JSON below.
-        </small>
-
-        <label style={{ display: 'block', marginTop: '12px', marginBottom: '5px', fontWeight: 'bold' }}>
-          Initial Diagram (JSON, optional):
+          Expected Drawing (JSON):
         </label>
         <textarea 
-          value={initialDrawStr} 
-          onChange={handleInitialDrawChange}
-          rows={8}
+          value={expectedDrawingStr} 
+          onChange={handleExpectedDrawingChange}
+          rows={10}
           style={{ 
             width: '100%', 
             padding: '8px', 
@@ -441,9 +371,72 @@ const StudioView: React.FC<Props> = ({
           }}
         />
         <small style={{ color: '#666', fontSize: '12px' }}>
-          Enter valid JSON for initial canvas objects (Fabric.js format). This is ignored if an Initial Diagram URL is provided.
+          Enter valid JSON for the expected drawing state (BoardState format with objects array)
         </small>
       </div>
+
+      <div style={{ marginBottom: '15px' }}>
+        <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+          Initial Drawing State (JSON):
+        </label>
+        <textarea 
+          value={initialDrawingStateStr} 
+          onChange={handleInitialDrawingStateChange}
+          rows={10}
+          style={{ 
+            width: '100%', 
+            padding: '8px', 
+            border: '1px solid #ccc', 
+            borderRadius: '4px',
+            fontFamily: 'monospace',
+            fontSize: '13px'
+          }}
+        />
+        <small style={{ color: '#666', fontSize: '12px' }}>
+          Enter valid JSON for the initial drawing state (BoardState format with objects array)
+        </small>
+      </div>
+
+      <div style={{ marginBottom: '15px' }}>
+        <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+          Grading Tolerance:
+        </label>
+        <input 
+          type="number" 
+          step="0.1"
+          min="0"
+          max="1"
+          value={tolerance} 
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTolerance(Number(e.target.value))}
+          style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+        />
+        <small style={{ color: '#666', fontSize: '12px' }}>
+          Value between 0 and 1 (e.g., 0.8 = 80% match required)
+        </small>
+      </div>
+
+      <div style={{ marginBottom: '15px' }}>
+        <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+          Grading Config (JSON):
+        </label>
+        <textarea 
+          value={gradingConfigStr} 
+          onChange={handleGradingConfigChange}
+          rows={6}
+          style={{ 
+            width: '100%', 
+            padding: '8px', 
+            border: '1px solid #ccc', 
+            borderRadius: '4px',
+            fontFamily: 'monospace',
+            fontSize: '13px'
+          }}
+        />
+        <small style={{ color: '#666', fontSize: '12px' }}>
+          Enter valid JSON for grading configuration (mode, tolerance, partialCredit, requireAll)
+        </small>
+      </div>
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginBottom: '15px' }}>
         <div>
           <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
