@@ -5824,87 +5824,95 @@
 	    fa: faMessages,
 	    fr: frMessages,
 	};
-	const StudioView = ({ runtime, question, max_attempts, weight, has_score, index, AssessName, canvasWidth, canvasHeight, scaleFactors, bgnumber, visibleModes, axisLabels, hideLabels, initialDiagram }) => {
+	const StudioView = ({ runtime, questionText, max_attempts, weight, has_score, index, AssessName, visibleTools, visibleButtons, boardSize, expectedDrawing, initialDrawingState, gradingTolerance, gradingConfig }) => {
 	    // Helper to coerce possibly-undefined props to numbers
 	    function propsToNumber(val, fallback) {
 	        const n = Number(val);
 	        return Number.isFinite(n) ? n : fallback;
 	    }
-	    const [q, setQ] = React.useState(question || '');
+	    // State for all fields
+	    const [q, setQ] = React.useState(questionText || '');
 	    const [idx, setIdx] = React.useState(index ?? 0);
 	    const [assessName, setAssessName] = React.useState(AssessName ?? '');
-	    const [cw, setCw] = React.useState(propsToNumber(canvasWidth, 500));
-	    const [ch, setCh] = React.useState(propsToNumber(canvasHeight, 400));
-	    const [scale, setScale] = React.useState(scaleFactors ?? [10, 20, 75, 84, 25, 35]);
-	    const [bgNumber, setBgNumber] = React.useState(propsToNumber(bgnumber, 0));
-	    const [visibleModesState, setVisibleModesState] = React.useState(visibleModes ?? []);
-	    const [axes, setAxes] = React.useState(axisLabels ?? []);
-	    const [hideLbls, setHideLbls] = React.useState(hideLabels ?? false);
-	    const [initialDrawStr, setInitialDrawStr] = React.useState(
-	    // If initialDiagram is an object, show it as pretty JSON. If it's a
-	    // URL string, leave the JSON textarea empty (the URL input is used).
-	    (typeof initialDiagram === 'object') ? JSON.stringify(initialDiagram ?? {}, null, 2) : (typeof initialDiagram === 'string' && /^https?:\/\//i.test(initialDiagram) ? '' : JSON.stringify(initialDiagram ?? {}, null, 2)));
-	    const [initialDraw, setInitialDraw] = React.useState(initialDiagram ?? {});
-	    const [initialDrawUrl, setInitialDrawUrl] = React.useState((typeof initialDiagram === 'string' && /^https?:\/\//i.test(initialDiagram)) ? initialDiagram : '');
+	    const [toolsStr, setToolsStr] = React.useState(Array.isArray(visibleTools) ? visibleTools.join(', ') : '');
+	    const [buttonsStr, setButtonsStr] = React.useState(Array.isArray(visibleButtons) ? visibleButtons.join(', ') : '');
+	    const [boardSizeStr, setBoardSizeStr] = React.useState(Array.isArray(boardSize) ? boardSize.join(', ') : '-1, 11, 11, -1');
+	    const [expectedDrawingStr, setExpectedDrawingStr] = React.useState(typeof expectedDrawing === 'string' ? expectedDrawing : JSON.stringify(expectedDrawing ?? {}, null, 2));
+	    const [initialDrawingStateStr, setInitialDrawingStateStr] = React.useState(typeof initialDrawingState === 'string' ? initialDrawingState : JSON.stringify(initialDrawingState ?? {}, null, 2));
+	    const [tolerance, setTolerance] = React.useState(propsToNumber(gradingTolerance, 0.8));
+	    const [gradingConfigStr, setGradingConfigStr] = React.useState(gradingConfig ? JSON.stringify(gradingConfig, null, 2) : JSON.stringify({ mode: 'tolerance', tolerance: 0.8, partialCredit: true, requireAll: false }, null, 2));
 	    const [maxAttempts, setMaxAttempts] = React.useState(propsToNumber(max_attempts, 3));
 	    const [w, setW] = React.useState(propsToNumber(weight, 1));
 	    const [hasScore, setHasScore] = React.useState(has_score ?? true);
 	    const [isSaving, setIsSaving] = React.useState(false);
 	    const [errors, setErrors] = React.useState([]);
-	    // Helpers for editing diagram-specific arrays (scaleFactors, visibleModes, axisLabels)
-	    const setScaleFromString = (val) => {
-	        const parts = val.split(',').map(s => Number(s.trim())).filter(n => Number.isFinite(n));
-	        if (parts.length > 0)
-	            setScale(parts);
-	    };
-	    const setModesFromString = (val) => {
-	        const parts = val.split(',').map(s => s.trim()).filter(s => s.length > 0);
-	        setVisibleModesState(parts);
-	    };
-	    const setAxesFromString = (val) => {
-	        const parts = val.split(',').map(s => s.trim());
-	        setAxes(parts);
-	    };
-	    const handleInitialDrawChange = (e) => {
-	        setInitialDrawStr(e.target.value);
+	    // Helper for JSON change handlers
+	    const handleExpectedDrawingChange = (e) => {
+	        setExpectedDrawingStr(e.target.value);
 	        try {
-	            const parsed = JSON.parse(e.target.value);
-	            setInitialDraw(parsed);
-	            // Clear JSON error if it exists
-	            setErrors(prev => prev.filter(err => !err.includes('Initial Diagram')));
+	            JSON.parse(e.target.value);
+	            setErrors(prev => prev.filter(err => !err.includes('Expected Drawing')));
 	        }
 	        catch (err) {
-	            // Add JSON parse error
 	            setErrors(prev => {
-	                const filtered = prev.filter(err => !err.includes('Initial Diagram'));
-	                return [...filtered, 'Initial Diagram must be valid JSON'];
+	                const filtered = prev.filter(err => !err.includes('Expected Drawing'));
+	                return [...filtered, 'Expected Drawing must be valid JSON'];
 	            });
 	        }
 	    };
-	    const handleInitialUrlChange = (e) => {
-	        setInitialDrawUrl(e.target.value);
-	        // When user starts editing URL, clear JSON errors related to initial diagram
-	        setErrors(prev => prev.filter(err => !err.includes('Initial Diagram')));
+	    const handleInitialDrawingStateChange = (e) => {
+	        setInitialDrawingStateStr(e.target.value);
+	        try {
+	            JSON.parse(e.target.value);
+	            setErrors(prev => prev.filter(err => !err.includes('Initial Drawing State')));
+	        }
+	        catch (err) {
+	            setErrors(prev => {
+	                const filtered = prev.filter(err => !err.includes('Initial Drawing State'));
+	                return [...filtered, 'Initial Drawing State must be valid JSON'];
+	            });
+	        }
+	    };
+	    const handleGradingConfigChange = (e) => {
+	        setGradingConfigStr(e.target.value);
+	        try {
+	            JSON.parse(e.target.value);
+	            setErrors(prev => prev.filter(err => !err.includes('Grading Config')));
+	        }
+	        catch (err) {
+	            setErrors(prev => {
+	                const filtered = prev.filter(err => !err.includes('Grading Config'));
+	                return [...filtered, 'Grading Config must be valid JSON'];
+	            });
+	        }
 	    };
 	    const validate = () => {
 	        const errs = [];
 	        if (!q || q.trim().length === 0)
 	            errs.push('Question is required.');
-	        if (!Number.isFinite(cw) || cw <= 0)
-	            errs.push('Canvas width must be a positive number.');
-	        if (!Number.isFinite(ch) || ch <= 0)
-	            errs.push('Canvas height must be a positive number.');
-	        // Final validation of JSON
-	        // Either a non-empty valid URL is provided, or the JSON textarea must be valid JSON.
-	        if (initialDrawUrl && /^https?:\/\//i.test(initialDrawUrl)) ;
-	        else {
-	            try {
-	                JSON.parse(initialDrawStr || '{}');
+	        // Validate JSON fields
+	        try {
+	            JSON.parse(expectedDrawingStr || '{}');
+	        }
+	        catch {
+	            if (!errs.some(e => e.includes('Expected Drawing'))) {
+	                errs.push('Expected Drawing must be valid JSON');
 	            }
-	            catch {
-	                if (!errs.some(e => e.includes('Initial Diagram'))) {
-	                    errs.push('Initial Diagram must be valid JSON or provide a valid URL');
-	                }
+	        }
+	        try {
+	            JSON.parse(initialDrawingStateStr || '{}');
+	        }
+	        catch {
+	            if (!errs.some(e => e.includes('Initial Drawing State'))) {
+	                errs.push('Initial Drawing State must be valid JSON');
+	            }
+	        }
+	        try {
+	            JSON.parse(gradingConfigStr || '{}');
+	        }
+	        catch {
+	            if (!errs.some(e => e.includes('Grading Config'))) {
+	                errs.push('Grading Config must be valid JSON');
 	            }
 	        }
 	        return errs;
@@ -5919,54 +5927,49 @@
 	        }
 	        setIsSaving(true);
 	        try {
-	            // Build payload; send the initial diagram as a JSON string to be explicit
-	            // about the stored format. The backend accepts either an object or a JSON
-	            // string, sanitizes it, and returns the canonical/sanitized object.
+	            // Parse arrays from comma-separated strings
+	            const toolsArray = toolsStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
+	            const buttonsArray = buttonsStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
+	            const boardSizeArray = boardSizeStr.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
 	            const payload = {
-	                question: q,
+	                questionText: q,
 	                max_attempts: maxAttempts,
 	                weight: w,
 	                has_score: hasScore,
 	                index: idx,
 	                AssessName: assessName,
-	                canvasWidth: cw,
-	                canvasHeight: ch,
-	                scaleFactors: scale,
-	                bgnumber: bgNumber,
-	                visibleModes: visibleModesState,
-	                axisLabels: axes,
-	                hideLabels: hideLbls,
-	                // If a URL is provided prefer sending that; otherwise send the
-	                // serialized JSON string (the backend will accept either).
-	                initialDiagram: (initialDrawUrl && initialDrawUrl.trim().length > 0) ? initialDrawUrl.trim() : initialDrawStr,
+	                visibleTools: toolsArray,
+	                visibleButtons: buttonsArray,
+	                boardSize: boardSizeArray.length === 4 ? boardSizeArray : [-1, 11, 11, -1],
+	                expectedDrawing: expectedDrawingStr,
+	                initialDrawingState: initialDrawingStateStr,
+	                gradingTolerance: tolerance,
+	                gradingConfig: gradingConfigStr
 	            };
 	            console.log('Saving payload:', payload);
-	            // Call postHandler once and reuse the promise so we can both update the
-	            // UI from the server response and let the runtime close the editor when
-	            // the save completes.
 	            const savePromise = runtime.postHandler('studio_save', payload);
 	            const response = await savePromise;
-	            // Update editor with server-sanitized JSON (pretty-printed) if the
-	            // handler returned the `initialDiagram` key. Use a property check so
-	            // we update even when the value is empty/null (and normalize to an
-	            // empty object for the textarea/preview). This avoids leaving the
-	            // studio textarea in an "undefined" state when the backend returns
-	            // null/None for the field.
-	            if (response && Object.prototype.hasOwnProperty.call(response, 'initialDiagram')) {
-	                const serverInitial = response.initialDiagram;
-	                if (typeof serverInitial === 'string' && /^https?:\/\//i.test(serverInitial)) {
-	                    setInitialDrawUrl(serverInitial);
-	                    setInitialDrawStr('');
-	                    setInitialDraw({});
+	            // Update editor with server-sanitized values if returned
+	            if (response) {
+	                if (response.expectedDrawing) {
+	                    const pretty = typeof response.expectedDrawing === 'string'
+	                        ? response.expectedDrawing
+	                        : JSON.stringify(response.expectedDrawing, null, 2);
+	                    setExpectedDrawingStr(pretty);
 	                }
-	                else {
-	                    const pretty = JSON.stringify(serverInitial ?? {}, null, 2);
-	                    setInitialDrawStr(pretty);
-	                    setInitialDraw(serverInitial ?? {});
-	                    setInitialDrawUrl('');
+	                if (response.initialDrawingState) {
+	                    const pretty = typeof response.initialDrawingState === 'string'
+	                        ? response.initialDrawingState
+	                        : JSON.stringify(response.initialDrawingState, null, 2);
+	                    setInitialDrawingStateStr(pretty);
+	                }
+	                if (response.gradingConfig) {
+	                    const pretty = typeof response.gradingConfig === 'string'
+	                        ? response.gradingConfig
+	                        : JSON.stringify(response.gradingConfig, null, 2);
+	                    setGradingConfigStr(pretty);
 	                }
 	            }
-	            // Let the runtime close the editor (pass the original promise)
 	            await runtime.studioSaveAndClose(savePromise);
 	            console.log('Save successful');
 	        }
@@ -5982,48 +5985,62 @@
 	    const cancel = () => {
 	        runtime.notify('cancel', {});
 	    };
-	    return (jsxRuntimeExports.jsxs("div", { className: "myxblock-studio", style: { padding: '20px', maxWidth: '800px' }, children: [jsxRuntimeExports.jsxs("div", { style: {
-	                    display: 'flex',
-	                    justifyContent: 'space-between',
-	                    alignItems: 'center',
-	                    marginBottom: '20px',
-	                    position: 'sticky',
-	                    top: 0,
-	                    backgroundColor: 'white',
-	                    paddingTop: '6px',
-	                    paddingBottom: '6px',
-	                    zIndex: 2
-	                }, children: [jsxRuntimeExports.jsx("h2", { style: { margin: 0, fontSize: '24px', fontWeight: 'bold' }, children: "Edit Diagram XBlock" }), jsxRuntimeExports.jsxs("div", { style: { display: 'flex', gap: '10px' }, children: [jsxRuntimeExports.jsx("button", { onClick: save, disabled: isSaving, style: {
-	                                    padding: '8px 16px',
-	                                    backgroundColor: isSaving ? '#6c757d' : '#007bff',
-	                                    color: 'white',
-	                                    border: 'none',
+	    return (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsxs("div", { className: "myxblock-studio", style: { padding: '20px', maxWidth: '800px' }, children: [jsxRuntimeExports.jsxs("div", { style: {
+	                            display: 'flex',
+	                            justifyContent: 'space-between',
+	                            alignItems: 'center',
+	                            marginBottom: '20px',
+	                            position: 'sticky',
+	                            top: 0,
+	                            backgroundColor: 'white',
+	                            paddingTop: '6px',
+	                            paddingBottom: '6px',
+	                            zIndex: 2
+	                        }, children: [jsxRuntimeExports.jsx("h2", { style: { margin: 0, fontSize: '24px', fontWeight: 'bold' }, children: "Edit Diagram XBlock" }), jsxRuntimeExports.jsxs("div", { style: { display: 'flex', gap: '10px' }, children: [jsxRuntimeExports.jsx("button", { onClick: save, disabled: isSaving, style: {
+	                                            padding: '8px 16px',
+	                                            backgroundColor: isSaving ? '#6c757d' : '#007bff',
+	                                            color: 'white',
+	                                            border: 'none',
+	                                            borderRadius: '4px',
+	                                            cursor: isSaving ? 'not-allowed' : 'pointer',
+	                                            fontWeight: 'bold',
+	                                            fontSize: '14px'
+	                                        }, children: isSaving ? 'Saving...' : 'Save' }), jsxRuntimeExports.jsx("button", { onClick: cancel, disabled: isSaving, style: {
+	                                            padding: '8px 16px',
+	                                            backgroundColor: '#6c757d',
+	                                            color: 'white',
+	                                            border: 'none',
+	                                            borderRadius: '4px',
+	                                            cursor: isSaving ? 'not-allowed' : 'pointer',
+	                                            fontSize: '14px'
+	                                        }, children: "Cancel" })] })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Question Text:" }), jsxRuntimeExports.jsx("textarea", { value: q, onChange: (e) => setQ(e.target.value), rows: 3, style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }, children: [jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Index:" }), jsxRuntimeExports.jsx("input", { type: "number", value: idx, onChange: (e) => setIdx(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Assessment Name:" }), jsxRuntimeExports.jsx("input", { type: "text", value: assessName, onChange: (e) => setAssessName(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Visible Tools (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: toolsStr, onChange: (e) => setToolsStr(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Available: point, segment, triangle, circle, arrow, curve, polygon, rectangle" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Visible Buttons (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: buttonsStr, onChange: (e) => setButtonsStr(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Available: undo, redo, clear, downloadPNG, downloadJSON, submit" })] }), jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Board Size (comma-separated: left, top, right, bottom):" }), jsxRuntimeExports.jsx("input", { type: "text", value: boardSizeStr, onChange: (e) => setBoardSizeStr(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Board bounding box coordinates. Default: -1, 11, 11, -1" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Expected Drawing (JSON):" }), jsxRuntimeExports.jsx("textarea", { value: expectedDrawingStr, onChange: handleExpectedDrawingChange, rows: 10, style: {
+	                                    width: '100%',
+	                                    padding: '8px',
+	                                    border: '1px solid #ccc',
 	                                    borderRadius: '4px',
-	                                    cursor: isSaving ? 'not-allowed' : 'pointer',
-	                                    fontWeight: 'bold',
-	                                    fontSize: '14px'
-	                                }, children: isSaving ? 'Saving...' : 'Save' }), jsxRuntimeExports.jsx("button", { onClick: cancel, disabled: isSaving, style: {
-	                                    padding: '8px 16px',
-	                                    backgroundColor: '#6c757d',
-	                                    color: 'white',
-	                                    border: 'none',
+	                                    fontFamily: 'monospace',
+	                                    fontSize: '13px'
+	                                } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Enter valid JSON for the expected drawing state (BoardState format with objects array)" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Initial Drawing State (JSON):" }), jsxRuntimeExports.jsx("textarea", { value: initialDrawingStateStr, onChange: handleInitialDrawingStateChange, rows: 10, style: {
+	                                    width: '100%',
+	                                    padding: '8px',
+	                                    border: '1px solid #ccc',
 	                                    borderRadius: '4px',
-	                                    cursor: isSaving ? 'not-allowed' : 'pointer',
-	                                    fontSize: '14px'
-	                                }, children: "Cancel" })] })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Question:" }), jsxRuntimeExports.jsx("input", { type: "text", value: q, onChange: (e) => setQ(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Assessment Name:" }), jsxRuntimeExports.jsx("input", { type: "text", value: assessName, onChange: (e) => setAssessName(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Index:" }), jsxRuntimeExports.jsx("input", { type: "number", value: idx, onChange: (e) => setIdx(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }, children: [jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Canvas Width (px):" }), jsxRuntimeExports.jsx("input", { type: "number", value: cw, onChange: (e) => setCw(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Canvas Height (px):" }), jsxRuntimeExports.jsx("input", { type: "number", value: ch, onChange: (e) => setCh(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Scale Factors (comma-separated numbers):" }), jsxRuntimeExports.jsx("input", { type: "text", value: scale.join(', '), onChange: (e) => setScaleFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Format: xlim, ylim, bottom_margin, left_margin, top_margin, right_margin" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Background Number:" }), jsxRuntimeExports.jsx("input", { type: "number", value: bgNumber, onChange: (e) => setBgNumber(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Visible Modes (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: visibleModesState.join(', '), onChange: (e) => setModesFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Available: point, line, singlearrowhead, doublearrowhead, polygon, rect, circle, freedraw, coordinate, curve, curve4pts, text, transform, color, strokeWidth, download" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Axis Labels (comma-separated):" }), jsxRuntimeExports.jsx("input", { type: "text", value: axes.join(', '), onChange: (e) => setAxesFromString(e.target.value), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Format: X-axis label, Y-axis label" })] }), jsxRuntimeExports.jsx("div", { style: { marginBottom: '15px' }, children: jsxRuntimeExports.jsxs("label", { style: { display: 'flex', alignItems: 'center', cursor: 'pointer' }, children: [jsxRuntimeExports.jsx("input", { type: "checkbox", checked: hideLbls, onChange: (e) => setHideLbls(e.target.checked), style: { marginRight: '8px' } }), jsxRuntimeExports.jsx("span", { style: { fontWeight: 'bold' }, children: "Hide Axis Labels" })] }) }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Initial Diagram URL (optional):" }), jsxRuntimeExports.jsx("input", { type: "text", value: initialDrawUrl, onChange: handleInitialUrlChange, placeholder: "https://example.com/my-diagram.json", style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "If provided, the URL will be used as the initial diagram source. Otherwise you may paste JSON below." }), jsxRuntimeExports.jsx("label", { style: { display: 'block', marginTop: '12px', marginBottom: '5px', fontWeight: 'bold' }, children: "Initial Diagram (JSON, optional):" }), jsxRuntimeExports.jsx("textarea", { value: initialDrawStr, onChange: handleInitialDrawChange, rows: 8, style: {
-	                            width: '100%',
-	                            padding: '8px',
-	                            border: '1px solid #ccc',
-	                            borderRadius: '4px',
-	                            fontFamily: 'monospace',
-	                            fontSize: '13px'
-	                        } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Enter valid JSON for initial canvas objects (Fabric.js format). This is ignored if an Initial Diagram URL is provided." })] }), jsxRuntimeExports.jsxs("div", { style: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginBottom: '15px' }, children: [jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Max Attempts:" }), jsxRuntimeExports.jsx("input", { type: "number", value: maxAttempts, onChange: (e) => setMaxAttempts(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Weight (points):" }), jsxRuntimeExports.jsx("input", { type: "number", value: w, onChange: (e) => setW(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsx("div", { children: jsxRuntimeExports.jsxs("label", { style: { display: 'flex', alignItems: 'center', cursor: 'pointer', height: '100%', paddingTop: '30px' }, children: [jsxRuntimeExports.jsx("input", { type: "checkbox", checked: hasScore, onChange: (e) => setHasScore(e.target.checked), style: { marginRight: '8px' } }), jsxRuntimeExports.jsx("span", { style: { fontWeight: 'bold' }, children: "Graded" })] }) })] }), errors.length > 0 && (jsxRuntimeExports.jsx("div", { style: {
-	                    marginBottom: '15px',
-	                    padding: '12px',
-	                    backgroundColor: '#f8d7da',
-	                    border: '1px solid #f5c6cb',
-	                    borderRadius: '4px'
-	                }, children: errors.map((err, i) => (jsxRuntimeExports.jsxs("div", { style: { color: '#721c24', marginBottom: errors.length > 1 && i < errors.length - 1 ? '8px' : '0' }, children: ["\u2022 ", err] }, i))) }))] }));
+	                                    fontFamily: 'monospace',
+	                                    fontSize: '13px'
+	                                } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Enter valid JSON for the initial drawing state (BoardState format with objects array)" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Grading Tolerance:" }), jsxRuntimeExports.jsx("input", { type: "number", step: "0.1", min: "0", max: "1", value: tolerance, onChange: (e) => setTolerance(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Value between 0 and 1 (e.g., 0.8 = 80% match required)" })] }), jsxRuntimeExports.jsxs("div", { style: { marginBottom: '15px' }, children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Grading Config (JSON):" }), jsxRuntimeExports.jsx("textarea", { value: gradingConfigStr, onChange: handleGradingConfigChange, rows: 6, style: {
+	                                    width: '100%',
+	                                    padding: '8px',
+	                                    border: '1px solid #ccc',
+	                                    borderRadius: '4px',
+	                                    fontFamily: 'monospace',
+	                                    fontSize: '13px'
+	                                } }), jsxRuntimeExports.jsx("small", { style: { color: '#666', fontSize: '12px' }, children: "Enter valid JSON for grading configuration (mode, tolerance, partialCredit, requireAll)" })] }), jsxRuntimeExports.jsxs("div", { style: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginBottom: '15px' }, children: [jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Max Attempts:" }), jsxRuntimeExports.jsx("input", { type: "number", value: maxAttempts, onChange: (e) => setMaxAttempts(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx("label", { style: { display: 'block', marginBottom: '5px', fontWeight: 'bold' }, children: "Weight (points):" }), jsxRuntimeExports.jsx("input", { type: "number", value: w, onChange: (e) => setW(Number(e.target.value)), style: { width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' } })] }), jsxRuntimeExports.jsx("div", { children: jsxRuntimeExports.jsxs("label", { style: { display: 'flex', alignItems: 'center', cursor: 'pointer', height: '100%', paddingTop: '30px' }, children: [jsxRuntimeExports.jsx("input", { type: "checkbox", checked: hasScore, onChange: (e) => setHasScore(e.target.checked), style: { marginRight: '8px' } }), jsxRuntimeExports.jsx("span", { style: { fontWeight: 'bold' }, children: "Graded" })] }) })] }), errors.length > 0 && (jsxRuntimeExports.jsx("div", { style: {
+	                            marginBottom: '15px',
+	                            padding: '12px',
+	                            backgroundColor: '#f8d7da',
+	                            border: '1px solid #f5c6cb',
+	                            borderRadius: '4px'
+	                        }, children: errors.map((err, i) => (jsxRuntimeExports.jsxs("div", { style: { color: '#721c24', marginBottom: errors.length > 1 && i < errors.length - 1 ? '8px' : '0' }, children: ["\u2022 ", err] }, i))) }))] })] }));
 	};
 	function initStudioView(runtime, container, initData) {
 	    if ('jquery' in container)
@@ -6032,6 +6049,7 @@
 	    const root = ReactDOM.createRoot(container);
 	    root.render(jsxRuntimeExports.jsx(IntlProvider, { messages: messages[languageCode], locale: languageCode, defaultLocale: "en", children: jsxRuntimeExports.jsx(StudioView, { runtime: new BoundRuntime(runtime, container), ...initData }) }));
 	}
+	globalThis.initDiagramXBlockStudioView = initStudioView;
 	globalThis.initDiagramXBlockStudioView = initStudioView;
 
 })();

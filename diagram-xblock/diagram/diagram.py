@@ -139,6 +139,13 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
         help="List of buttons to show in the DrawingBoard toolbar",
     )
 
+    boardSize = List(
+        display_name="Board Size",
+        scope=Scope.settings,
+        default=[-1, 12, 12, -1],
+        help="Board bounding box [left, top, right, bottom]",
+    )
+
     expectedDrawing = String(
         display_name="Expected Drawing",
         scope=Scope.settings,
@@ -149,7 +156,7 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
     initialDrawingState = String(
         display_name="Initial Drawing State",
         scope=Scope.settings,
-        default='{"version":"1.0","boardSettings":{"boundingBox":[-1,11,11,-1]},"objects":[{"id":"initial_segment_1","type":"segment","point1":{"x":0,"y":10},"point2":{"x":5,"y":0},"properties":{"strokeColor":"#2563eb","strokeWidth":2},"isInitial":true}]}',
+        default='{"version":"1.0","boardSettings":{"boundingBox":[-1,11,11,-1]},"objects":[{"id":"initial_segment_1","type":"segment","point1":{"x":0,"y":9},"point2":{"x":6,"y":0},"properties":{"strokeColor":"#2563eb","strokeWidth":2},"isInitial":true}]}',
         help="Initial drawing state with pre-drawn objects (BoardState JSON)",
     )
 
@@ -195,6 +202,7 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
             "questionText": self.questionText,
             "visibleTools": self.visibleTools,
             "visibleButtons": self.visibleButtons,
+            "boardSize": self.boardSize,
             "expectedDrawing": expected_obj,
             "initialDrawingState": initial_obj,
             "gradingTolerance": self.gradingTolerance,
@@ -238,6 +246,7 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
             "AssessName": self.AssessName,
             "visibleTools": self.visibleTools,
             "visibleButtons": self.visibleButtons,
+            "boardSize": self.boardSize,
             "expectedDrawing": expected_obj,
             "initialDrawingState": initial_obj,
             "gradingTolerance": self.gradingTolerance,
@@ -275,6 +284,7 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
         # Save array fields
         self.visibleTools = data.get('visibleTools', self.visibleTools)
         self.visibleButtons = data.get('visibleButtons', self.visibleButtons)
+        self.boardSize = data.get('boardSize', self.boardSize)
         
         # Save JSON fields (expectedDrawing, initialDrawingState)
         expected = data.get('expectedDrawing', None)

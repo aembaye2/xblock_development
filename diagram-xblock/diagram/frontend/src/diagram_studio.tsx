@@ -27,6 +27,7 @@ interface InitData {
   AssessName?: string;
   visibleTools?: string[];
   visibleButtons?: string[];
+  boardSize?: number[];
   expectedDrawing?: string;
   initialDrawingState?: string;
   gradingTolerance?: number;
@@ -45,6 +46,7 @@ const StudioView: React.FC<Props> = ({
   AssessName, 
   visibleTools,
   visibleButtons,
+  boardSize,
   expectedDrawing,
   initialDrawingState,
   gradingTolerance,
@@ -66,6 +68,9 @@ const StudioView: React.FC<Props> = ({
   );
   const [buttonsStr, setButtonsStr] = React.useState<string>(
     Array.isArray(visibleButtons) ? visibleButtons.join(', ') : ''
+  );
+  const [boardSizeStr, setBoardSizeStr] = React.useState<string>(
+    Array.isArray(boardSize) ? boardSize.join(', ') : '-1, 11, 11, -1'
   );
   
   const [expectedDrawingStr, setExpectedDrawingStr] = React.useState<string>(
@@ -174,6 +179,7 @@ const StudioView: React.FC<Props> = ({
       // Parse arrays from comma-separated strings
       const toolsArray = toolsStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
       const buttonsArray = buttonsStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
+      const boardSizeArray = boardSizeStr.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
       
       const payload = {
         questionText: q,
@@ -184,6 +190,7 @@ const StudioView: React.FC<Props> = ({
         AssessName: assessName,
         visibleTools: toolsArray,
         visibleButtons: buttonsArray,
+        boardSize: boardSizeArray.length === 4 ? boardSizeArray : [-1, 11, 11, -1],
         expectedDrawing: expectedDrawingStr,
         initialDrawingState: initialDrawingStateStr,
         gradingTolerance: tolerance,
@@ -233,7 +240,8 @@ const StudioView: React.FC<Props> = ({
   };
 
   return (
-    <div className="myxblock-studio" style={{ padding: '20px', maxWidth: '800px' }}>
+    <>
+      <div className="myxblock-studio" style={{ padding: '20px', maxWidth: '800px' }}>
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -352,6 +360,21 @@ const StudioView: React.FC<Props> = ({
           Available: undo, redo, clear, downloadPNG, downloadJSON, submit
         </small>
       </div>
+        <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+          Board Size (comma-separated: left, top, right, bottom):
+        </label>
+        <input 
+          type="text" 
+          value={boardSizeStr} 
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBoardSizeStr(e.target.value)}
+          style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+        />
+        <small style={{ color: '#666', fontSize: '12px' }}>
+          Board bounding box coordinates. Default: -1, 11, 11, -1
+        </small>
+      </div>
+
+      <div style={{ marginBottom: '15px' }}>
 
       <div style={{ marginBottom: '15px' }}>
         <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
@@ -491,7 +514,8 @@ const StudioView: React.FC<Props> = ({
       )}
 
       {/* Bottom Save/Cancel removed to avoid duplicate controls; use the top toolbar */}
-    </div>
+      </div>
+    </>
   );
 };
 
@@ -508,5 +532,7 @@ function initStudioView(runtime: XBlockRuntime, container: HTMLDivElement | JQue
     </IntlProvider>
   );
 }
+
+(globalThis as any).initDiagramXBlockStudioView = initStudioView;
 
 (globalThis as any).initDiagramXBlockStudioView = initStudioView;

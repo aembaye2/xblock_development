@@ -28,14 +28,15 @@ const DEFAULT_QUESTION_TEXT = 'Frontend fallback question: draw a line from (0,0
 const DEFAULT_VISIBLE_TOOLS = ['point', 'segment', 'triangle', 'circle', 'arrow', 'curve'];
 const DEFAULT_VISIBLE_BUTTONS = ['undo', 'redo', 'clear', 'downloadPNG', 'downloadJSON', 'submit'];
 const DEFAULT_GRADING_TOLERANCE = 0.8;
+const DEFAULT_BOARD_SIZE = [-1, 13, 13, -1]; // [left, top, right, bottom]
 const DEFAULT_EXPECTED_DRAWING: BoardState = {
   version: '1.0',
-  boardSettings: { boundingBox: [-1, 11, 11, -1] },
+  boardSettings: { boundingBox: DEFAULT_BOARD_SIZE },
   objects: []
 };
 const DEFAULT_INITIAL_DRAWING: BoardState = {
   version: '1.0',
-  boardSettings: { boundingBox: [-1, 11, 11, -1] },
+  boardSettings: { boundingBox: DEFAULT_BOARD_SIZE },
   objects: []
 };
 
@@ -49,6 +50,7 @@ interface InitData {
   questionText?: string;
   visibleTools?: string[];
   visibleButtons?: string[];
+  boardSize?: number[]; // [left, top, right, bottom]
   expectedDrawing?: string;
   initialDrawingState?: string;
   gradingTolerance?: number;
@@ -65,6 +67,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   const visibleTools = initData.visibleTools ?? DEFAULT_VISIBLE_TOOLS;
   const visibleButtons = initData.visibleButtons ?? DEFAULT_VISIBLE_BUTTONS;
   const gradingTolerance = initData.gradingTolerance ?? DEFAULT_GRADING_TOLERANCE;
+  const boardSize = initData.boardSize ?? DEFAULT_BOARD_SIZE;
   
   // Parse expected and initial drawing states
   const [expectedDrawing, setExpectedDrawing] = useState<BoardState | null>(null);
@@ -81,13 +84,25 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
         const parsed = typeof initData.expectedDrawing === 'string' 
           ? JSON.parse(initData.expectedDrawing) 
           : initData.expectedDrawing;
+        // Override boardSettings with configured boardSize
+        if (parsed.boardSettings) {
+          parsed.boardSettings.boundingBox = boardSize;
+        } else {
+          parsed.boardSettings = { boundingBox: boardSize };
+        }
         setExpectedDrawing(parsed);
       } catch (e) {
         console.error('Failed to parse expectedDrawing:', e);
-        setExpectedDrawing(DEFAULT_EXPECTED_DRAWING);
+        setExpectedDrawing({
+          ...DEFAULT_EXPECTED_DRAWING,
+          boardSettings: { boundingBox: boardSize }
+        });
       }
     } else {
-      setExpectedDrawing(DEFAULT_EXPECTED_DRAWING);
+      setExpectedDrawing({
+        ...DEFAULT_EXPECTED_DRAWING,
+        boardSettings: { boundingBox: boardSize }
+      });
     }
 
     // Parse initialDrawingState
@@ -96,15 +111,27 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
         const parsed = typeof initData.initialDrawingState === 'string' 
           ? JSON.parse(initData.initialDrawingState) 
           : initData.initialDrawingState;
+        // Override boardSettings with configured boardSize
+        if (parsed.boardSettings) {
+          parsed.boardSettings.boundingBox = boardSize;
+        } else {
+          parsed.boardSettings = { boundingBox: boardSize };
+        }
         setInitialDrawingState(parsed);
       } catch (e) {
         console.error('Failed to parse initialDrawingState:', e);
-        setInitialDrawingState(DEFAULT_INITIAL_DRAWING);
+        setInitialDrawingState({
+          ...DEFAULT_INITIAL_DRAWING,
+          boardSettings: { boundingBox: boardSize }
+        });
       }
     } else {
-      setInitialDrawingState(DEFAULT_INITIAL_DRAWING);
+      setInitialDrawingState({
+        ...DEFAULT_INITIAL_DRAWING,
+        boardSettings: { boundingBox: boardSize }
+      });
     }
-  }, [initData.expectedDrawing, initData.initialDrawingState]);
+  }, [initData.expectedDrawing, initData.initialDrawingState, boardSize]);
 
   // Combine initial drawing and expected drawing when both are available
   useEffect(() => {
