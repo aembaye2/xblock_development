@@ -203,7 +203,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
           {/* Row 1: Question and Summary */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="p-4 bg-white dark:bg-zinc-800 rounded-lg shadow-md">
-              <h2 className="text-base font-semibold mb-2 text-zinc-900 dark:text-zinc-50">Question</h2>
+              <h2 className="text-base font-semibold mb-2 text-zinc-900 dark:text-zinc-50">Question (Version 1.0.12)</h2>
               <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">{questionText}</p>
               {gradeResult && (
                 <div className="mt-3 pt-3 border-t border-zinc-200 dark:border-zinc-700">
