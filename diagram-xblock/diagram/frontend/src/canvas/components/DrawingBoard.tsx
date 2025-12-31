@@ -7,7 +7,7 @@ import {
   type DrawingContext 
 } from "@/canvas/libs/drawingModes";
 import { ALL_DRAWING_TOOLS, TOOL_SETS, getToolsByIds } from "@/canvas/libs/drawingTools";
-import DrawingToolbar from "@/canvas/components/DrawingToolbar";
+import { DrawingTools, ActionButtons } from "@/canvas/components/DrawingToolbar";
 
 type ActionButton = "undo" | "redo" | "clear" | "downloadPNG" | "downloadJSON" | "submit";
 
@@ -46,6 +46,9 @@ interface DrawingBoardProps {
 
   // Optional container id for the JSXGraph board (allows multiple boards)
   containerId?: string;
+
+  // Canvas size in pixels [width, height]
+  boardPixelSize?: [number, number];
 }
 
 export default function DrawingBoard({ 
@@ -56,6 +59,7 @@ export default function DrawingBoard({
   onSubmit,
   onStateChange,
   containerId = "jxgbox",
+  boardPixelSize = [600, 500],
 }: DrawingBoardProps) {
   const boardRef = useRef<HTMLDivElement>(null);
   const [board, setBoard] = useState<any>(null);
@@ -70,6 +74,9 @@ export default function DrawingBoard({
   const JSXGraphRef = useRef<any>(null);
   const boundingBox: [number, number, number, number] = [-1, 11, 11, -1];
   const initialObjectsRef = useRef<Set<string>>(new Set());
+
+  // Extract canvas dimensions
+  const [canvasWidth, canvasHeight] = boardPixelSize;
 
   // Determine which tools to display
   const displayTools = typeof tools === "string" 
@@ -129,7 +136,7 @@ export default function DrawingBoard({
                 },
               },
               name: 'x',
-              withLabel: true,
+              withLabel: false, // we'll place a custom label at the positive end
               label: {
                 fontsize: 18,
               },
@@ -141,12 +148,34 @@ export default function DrawingBoard({
                 },
               },
               name: 'y',
-              withLabel: true,
+              withLabel: false, // we'll place a custom label at the positive end
               label: {
                 fontsize: 18,
               },
             },
           },
+        });
+
+        // Place axis labels at the positive ends (right for x, top for y)
+        const bb = newBoard.getBoundingBox();
+        const xLen = bb[2] - bb[0];
+        const yLen = bb[1] - bb[3];
+
+        // Slight inset from the edge to avoid clipping
+        newBoard.create('text', [bb[2] - 0.05 * xLen, 0 + 0.05 * yLen, 'x'], {
+          anchorX: 'right',
+          anchorY: 'top',
+          fontSize: 18,
+          fixed: true,
+          highlight: false,
+        });
+
+        newBoard.create('text', [0 + 0.05 * xLen, bb[1] - 0.05 * yLen, 'y'], {
+          anchorX: 'left',
+          anchorY: 'top',
+          fontSize: 18,
+          fixed: true,
+          highlight: false,
         });
 
         setBoard(newBoard);
@@ -792,35 +821,37 @@ export default function DrawingBoard({
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 p-8">
-      <DrawingToolbar
+    <div className="flex flex-col items-start gap-4 p-4">
+      {/* Drawing Tools at the top */}
+      <DrawingTools
         tools={displayTools}
         currentMode={mode}
         onModeChange={handleModeChange}
-        onUndo={undo}
-        onRedo={redo}
-        onClear={clearBoard}
-        onDownloadPNG={downloadPNG}
-        onDownloadJSON={downloadJSON}
-        canUndo={undoStackRef.current.length > 0}
-        canRedo={redoStackRef.current.length > 0}
-        buttons={buttons.filter(btn => btn !== "submit")}
       />
       
-      {/* {mode && (
-        <div className="text-sm text-muted-foreground">
-          {isDrawing
-            ? "Release mouse to finish drawing"
-            : `Click and drag to draw a ${mode}`}
+      {/* Canvas with action buttons on the right side */}
+      <div className="flex items-start gap-4">
+        <div
+          id={containerId}
+          ref={boardRef}
+          className="border-2 border-gray-300 rounded-lg shadow-lg"
+          style={{ width: `${canvasWidth}px`, height: `${canvasHeight}px` }}
+        />
+        
+        {/* Action buttons on the right (east) side */}
+        <div className="flex flex-col gap-2 bg-white rounded-lg shadow-lg p-2 border border-gray-200">
+          <ActionButtons
+            onUndo={undo}
+            onRedo={redo}
+            onClear={clearBoard}
+            onDownloadPNG={downloadPNG}
+            onDownloadJSON={downloadJSON}
+            canUndo={undoStackRef.current.length > 0}
+            canRedo={redoStackRef.current.length > 0}
+            buttons={buttons.filter(btn => btn !== "submit")}
+          />
         </div>
-      )} */}
-
-      <div
-        id={containerId}
-        ref={boardRef}
-        className="border-2 border-gray-300 rounded-lg shadow-lg"
-        style={{ width: "600px", height: "500px" }}
-      />
+      </div>
       
       {/* Submit button below canvas */}
       {buttons.includes("submit") && (

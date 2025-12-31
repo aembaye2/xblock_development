@@ -128,7 +128,7 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
     visibleTools = List(
         display_name="Visible Tools",
         scope=Scope.settings,
-        default=["point", "segment", "rectangle", "curve"],
+        default=["point", "segment", "rectangle", "curve", "arrow", "doubleArrow", "text", "polygon", "circle", "triangle",], #"circle", "triangle",
         help="List of drawing tools to show in the DrawingBoard toolbar",
     )
 
@@ -144,6 +144,13 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
         scope=Scope.settings,
         default=[-1, 12, 12, -1],
         help="Board bounding box [left, top, right, bottom]",
+    )
+
+    boardPixelSize = List(
+        display_name="Board Pixel Size",
+        scope=Scope.settings,
+        default=[400, 350],
+        help="Canvas size in pixels [width, height]",
     )
 
     expectedDrawing = String(
@@ -203,6 +210,7 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
             "visibleTools": self.visibleTools,
             "visibleButtons": self.visibleButtons,
             "boardSize": self.boardSize,
+            "boardPixelSize": self.boardPixelSize,
             "expectedDrawing": expected_obj,
             "initialDrawingState": initial_obj,
             "gradingTolerance": self.gradingTolerance,
@@ -247,6 +255,7 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
             "visibleTools": self.visibleTools,
             "visibleButtons": self.visibleButtons,
             "boardSize": self.boardSize,
+            "boardPixelSize": self.boardPixelSize,
             "expectedDrawing": expected_obj,
             "initialDrawingState": initial_obj,
             "gradingTolerance": self.gradingTolerance,
@@ -285,6 +294,7 @@ class DiagramXBlock(ScorableXBlockMixin, XBlock):
         self.visibleTools = data.get('visibleTools', self.visibleTools)
         self.visibleButtons = data.get('visibleButtons', self.visibleButtons)
         self.boardSize = data.get('boardSize', self.boardSize)
+        self.boardPixelSize = data.get('boardPixelSize', self.boardPixelSize)
         
         # Save JSON fields (expectedDrawing, initialDrawingState)
         expected = data.get('expectedDrawing', None)

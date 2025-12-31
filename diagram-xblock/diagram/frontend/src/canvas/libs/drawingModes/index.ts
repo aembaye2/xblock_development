@@ -7,6 +7,8 @@ export { rectangleHandler } from './rectangle';
 export { circleHandler } from './circle';
 export { triangleHandler, handleTriangleEscape } from './triangle';
 export { curveHandler } from './curve';
+export { textHandler } from './text';
+export { polygonHandler } from './polygon';
 
 // Export types
 export type { DrawingMode, Point, DrawingModeHandler, DrawingContext } from './types';
@@ -20,6 +22,8 @@ import { rectangleHandler } from './rectangle';
 import { circleHandler } from './circle';
 import { triangleHandler } from './triangle';
 import { curveHandler } from './curve';
+import { textHandler } from './text';
+import { polygonHandler } from './polygon';
 import { DrawingMode, DrawingModeHandler } from './types';
 
 export const drawingModeHandlers: Record<NonNullable<DrawingMode>, DrawingModeHandler> = {
@@ -31,4 +35,6 @@ export const drawingModeHandlers: Record<NonNullable<DrawingMode>, DrawingModeHa
   circle: circleHandler,
   triangle: triangleHandler,
   curve: curveHandler,
+  text: textHandler,
+  polygon: polygonHandler,
 };

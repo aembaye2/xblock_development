@@ -7,6 +7,8 @@ import {
   MoveUpRight, 
   MoveDiagonal, 
   Spline,
+  Type,
+  Pentagon,
   type LucideIcon
 } from "lucide-react";
 import type { DrawingMode } from "./drawingModes";
@@ -54,7 +56,7 @@ export const ALL_DRAWING_TOOLS: DrawingTool[] = [
     id: "curve",
     icon: Spline,
     title: "Draw Curve",
-    description: "Click and drag to place 4 points for a smooth curve"
+    description: "Click to add points, drag to adjust, double-click to finish"
   },
   {
     id: "rectangle",
@@ -67,6 +69,18 @@ export const ALL_DRAWING_TOOLS: DrawingTool[] = [
     icon: Circle,
     title: "Draw Circle",
     description: "Click center and drag to set radius"
+  },
+  {
+    id: "text",
+    icon: Type,
+    title: "Add Text",
+    description: "Click to place text on the canvas"
+  },
+  {
+    id: "polygon",
+    icon: Pentagon,
+    title: "Draw Polygon",
+    description: "Click to add vertices, double-click to close"
   },
 ];
 

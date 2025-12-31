@@ -28,6 +28,7 @@ interface InitData {
   visibleTools?: string[];
   visibleButtons?: string[];
   boardSize?: number[];
+  boardPixelSize?: number[];
   expectedDrawing?: string;
   initialDrawingState?: string;
   gradingTolerance?: number;
@@ -47,6 +48,7 @@ const StudioView: React.FC<Props> = ({
   visibleTools,
   visibleButtons,
   boardSize,
+  boardPixelSize,
   expectedDrawing,
   initialDrawingState,
   gradingTolerance,
@@ -71,6 +73,9 @@ const StudioView: React.FC<Props> = ({
   );
   const [boardSizeStr, setBoardSizeStr] = React.useState<string>(
     Array.isArray(boardSize) ? boardSize.join(', ') : '-1, 11, 11, -1'
+  );
+  const [boardPixelSizeStr, setBoardPixelSizeStr] = React.useState<string>(
+    Array.isArray(boardPixelSize) ? boardPixelSize.join(', ') : '600, 500'
   );
   
   const [expectedDrawingStr, setExpectedDrawingStr] = React.useState<string>(
@@ -180,6 +185,7 @@ const StudioView: React.FC<Props> = ({
       const toolsArray = toolsStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
       const buttonsArray = buttonsStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
       const boardSizeArray = boardSizeStr.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+      const boardPixelSizeArray = boardPixelSizeStr.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
       
       const payload = {
         questionText: q,
@@ -191,6 +197,7 @@ const StudioView: React.FC<Props> = ({
         visibleTools: toolsArray,
         visibleButtons: buttonsArray,
         boardSize: boardSizeArray.length === 4 ? boardSizeArray : [-1, 11, 11, -1],
+        boardPixelSize: boardPixelSizeArray.length === 2 ? boardPixelSizeArray : [600, 500],
         expectedDrawing: expectedDrawingStr,
         initialDrawingState: initialDrawingStateStr,
         gradingTolerance: tolerance,
@@ -371,6 +378,21 @@ const StudioView: React.FC<Props> = ({
         />
         <small style={{ color: '#666', fontSize: '12px' }}>
           Board bounding box coordinates. Default: -1, 11, 11, -1
+        </small>
+      </div>
+
+      <div style={{ marginBottom: '15px' }}>
+        <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+          Canvas Pixel Size (comma-separated: width, height):
+        </label>
+        <input 
+          type="text" 
+          value={boardPixelSizeStr} 
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBoardPixelSizeStr(e.target.value)}
+          style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+        />
+        <small style={{ color: '#666', fontSize: '12px' }}>
+          Canvas dimensions in pixels. Default: 600, 500
         </small>
       </div>
 

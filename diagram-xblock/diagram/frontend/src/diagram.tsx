@@ -29,6 +29,7 @@ const DEFAULT_VISIBLE_TOOLS = ['point', 'segment', 'triangle', 'circle', 'arrow'
 const DEFAULT_VISIBLE_BUTTONS = ['undo', 'redo', 'clear', 'downloadPNG', 'downloadJSON', 'submit'];
 const DEFAULT_GRADING_TOLERANCE = 0.8;
 const DEFAULT_BOARD_SIZE = [-1, 13, 13, -1]; // [left, top, right, bottom]
+const DEFAULT_BOARD_PIXEL_SIZE = [600, 500]; // [width, height] in pixels
 const DEFAULT_EXPECTED_DRAWING: BoardState = {
   version: '1.0',
   boardSettings: { boundingBox: DEFAULT_BOARD_SIZE },
@@ -51,6 +52,7 @@ interface InitData {
   visibleTools?: string[];
   visibleButtons?: string[];
   boardSize?: number[]; // [left, top, right, bottom]
+  boardPixelSize?: number[]; // [width, height] in pixels
   expectedDrawing?: string;
   initialDrawingState?: string;
   gradingTolerance?: number;
@@ -68,6 +70,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
   const visibleButtons = initData.visibleButtons ?? DEFAULT_VISIBLE_BUTTONS;
   const gradingTolerance = initData.gradingTolerance ?? DEFAULT_GRADING_TOLERANCE;
   const boardSize = initData.boardSize ?? DEFAULT_BOARD_SIZE;
+  const boardPixelSize = (initData.boardPixelSize ?? DEFAULT_BOARD_PIXEL_SIZE) as [number, number];
   
   // Parse expected and initial drawing states
   const [expectedDrawing, setExpectedDrawing] = useState<BoardState | null>(null);
@@ -227,10 +230,11 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
             </div>
           </div>
 
-          {/* Row 2: Two canvases side by side */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Row 2: Two canvases side by side (always horizontal) */}
+          <div className="flex flex-row gap-6 items-start">
             {/* Your Drawing */}
-            <div>
+            <div className="flex-1">
+              <h2 className="text-base font-semibold mb-3 text-zinc-900 dark:text-zinc-50">Your Drawing</h2>
               {initialDrawingState && (
                 <DrawingBoard
                   tools={visibleTools as any}
@@ -239,15 +243,16 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
                   readOnlyInitial={true}
                   onSubmit={handleSubmit}
                   containerId="jxgbox-student"
+                  boardPixelSize={boardPixelSize}
                 />
               )}
             </div>
 
             {/* Expected Drawing */}
-            <div>
-              <h2 className="text-base font-semibold mb-2 text-zinc-900 dark:text-zinc-50">Expected Drawing</h2>
+            <div className="flex-1">
+              <h2 className="text-base font-semibold mb-3 text-zinc-900 dark:text-zinc-50">Expected Drawing</h2>
               {!showExpected ? (
-                <div className="w-full h-[400px] border-2 border-dashed border-gray-300 dark:border-zinc-600 rounded-lg flex items-center justify-center text-zinc-500 dark:text-zinc-400 bg-white dark:bg-zinc-800">
+                <div className="border-2 border-dashed border-gray-300 dark:border-zinc-600 rounded-lg flex items-center justify-center text-zinc-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 p-8" style={{ minHeight: '400px' }}>
                   <p className="text-center px-4 text-xs">Expected drawing will be revealed after submission</p>
                 </div>
               ) : (
@@ -258,6 +263,7 @@ const StudentView: React.FC<{ runtime: BoundRuntime; initData: InitData }> = ({ 
                     initialState={combinedExpectedDrawing}
                     readOnlyInitial={true}
                     containerId="jxgbox-expected"
+                    boardPixelSize={boardPixelSize}
                   />
                 )
               )}

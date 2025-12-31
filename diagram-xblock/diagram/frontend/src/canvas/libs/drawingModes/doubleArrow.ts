@@ -1,5 +1,9 @@
 import { DrawingModeHandler, DrawingContext } from './types';
 
+/**
+ * Double Arrow Drawing Mode Handler
+ * Creates a line segment with arrowheads on both ends
+ */
 export const doubleArrowHandler: DrawingModeHandler = {
   handleMouseDown: (e: MouseEvent, context: DrawingContext) => {
     const coords = context.getMouseCoords(e);
@@ -11,6 +15,7 @@ export const doubleArrowHandler: DrawingModeHandler = {
       y: coords.usrCoords[2],
     });
 
+    // Create two invisible fixed points for the endpoints
     const p1 = context.board.create("point", [coords.usrCoords[1], coords.usrCoords[2]], {
       visible: false,
       fixed: true,
@@ -19,18 +24,18 @@ export const doubleArrowHandler: DrawingModeHandler = {
       visible: false,
       fixed: true,
     });
-    const double1 = context.board.create("arrow", [p1, p2], {
+
+    // Create a line segment with arrows on both ends
+    // Using lastArrow and firstArrow properties for double-headed arrow
+    const line = context.board.create("segment", [p1, p2], {
       strokeColor: "#3b82f6",
       strokeWidth: 2,
       fixed: true,
-    });
-    const double2 = context.board.create("arrow", [p2, p1], {
-      strokeColor: "#3b82f6",
-      strokeWidth: 2,
-      fixed: true,
+      lastArrow: { type: 2, size: 6 },  // Arrow at p2
+      firstArrow: { type: 2, size: 6 }, // Arrow at p1
     });
     
-    context.setCurrentShape({ double1, double2, p1, p2 });
+    context.setCurrentShape({ line, p1, p2 });
   },
 
   handleMouseMove: (e: MouseEvent, context: DrawingContext) => {
@@ -42,6 +47,7 @@ export const doubleArrowHandler: DrawingModeHandler = {
     const currentX = coords.usrCoords[1];
     const currentY = coords.usrCoords[2];
 
+    // Update the positions of both endpoints
     context.board.suspendUpdate();
     context.currentShape.p1.setPosition((window as any).JXG.COORDS_BY_USER, [
       context.startPoint.x,
@@ -51,17 +57,15 @@ export const doubleArrowHandler: DrawingModeHandler = {
       currentX,
       currentY,
     ]);
-    context.currentShape.double1.update && context.currentShape.double1.update();
-    context.currentShape.double2.update && context.currentShape.double2.update();
     context.board.unsuspendUpdate();
   },
 
   handleMouseUp: (e: MouseEvent, context: DrawingContext) => {
     if (!context.isDrawing || !context.currentShape) return;
 
+    // Store all objects in the undo stack
     const shapeObjects = [
-      context.currentShape.double1,
-      context.currentShape.double2,
+      context.currentShape.line,
       context.currentShape.p1,
       context.currentShape.p2
     ];
@@ -69,6 +73,7 @@ export const doubleArrowHandler: DrawingModeHandler = {
     context.redoStackRef.current = [];
     context.setVersion((v) => v + 1);
 
+    // Reset drawing state
     context.setIsDrawing(false);
     context.setCurrentShape(null);
     context.setStartPoint(null);
