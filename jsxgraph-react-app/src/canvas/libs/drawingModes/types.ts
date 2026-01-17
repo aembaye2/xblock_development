@@ -1,6 +1,6 @@
 // Shared types for drawing modes
 
-export type DrawingMode = "point" | "segment" | "arrow" | "doubleArrow" | "triangle" | "rectangle" | "circle" | "curve" | "text" | "polygon" | "select" | null;
+export type DrawingMode = "point" | "segment" | "arrow" | "doubleArrow" | "triangle" | "rectangle" | "circle" | "curve" | "text" | "polygon" | "select" | "delete2" | null;
 
 export interface Point {
   x: number;

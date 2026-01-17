@@ -91,6 +91,9 @@ export default function DrawingBoard({
   const [version, setVersion] = useState(0);
   const JSXGraphRef = useRef<any>(null);
   const initialObjectsRef = useRef<Set<string>>(new Set());
+  
+  // Refs to track current state for event handlers
+  const stateRef = useRef({ mode, isDrawing, startPoint, currentShape });
 
     const xLabelRef = useRef<any>(null);
     const yLabelRef = useRef<any>(null);
@@ -488,18 +491,23 @@ export default function DrawingBoard({
   // Create drawing context helper
   const createDrawingContext = (): DrawingContext => ({
     board,
-    mode,
-    isDrawing,
+    mode: stateRef.current.mode,
+    isDrawing: stateRef.current.isDrawing,
     setIsDrawing,
-    startPoint,
+    startPoint: stateRef.current.startPoint,
     setStartPoint,
-    currentShape,
+    currentShape: stateRef.current.currentShape,
     setCurrentShape,
     undoStackRef,
     redoStackRef,
     setVersion,
     getMouseCoords,
   });
+
+  // Update state ref whenever drawing state changes
+  useEffect(() => {
+    stateRef.current = { mode, isDrawing, startPoint, currentShape };
+  }, [mode, isDrawing, startPoint, currentShape]);
 
   useEffect(() => {
     if (!board || !mode) return;

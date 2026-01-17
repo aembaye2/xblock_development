@@ -12,11 +12,11 @@ export const segmentHandler: DrawingModeHandler = {
     });
 
     const p1 = context.board.create("point", [coords.usrCoords[1], coords.usrCoords[2]], {
-      visible: false,
+      visible: true,
       fixed: true,
     });
     const p2 = context.board.create("point", [coords.usrCoords[1], coords.usrCoords[2]], {
-      visible: false,
+      visible: true,
       fixed: true,
     });
     const segment = context.board.create("segment", [p1, p2], {
@@ -29,7 +29,7 @@ export const segmentHandler: DrawingModeHandler = {
   },
 
   handleMouseMove: (e: MouseEvent, context: DrawingContext) => {
-    if (!context.isDrawing || !context.currentShape || !context.startPoint) return;
+    if (!context.currentShape || !context.startPoint) return;
 
     const coords = context.getMouseCoords(e);
     if (!coords) return;

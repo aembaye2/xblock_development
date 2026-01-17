@@ -1,3 +1,7 @@
+# How to start:
+cd jsxgraph-react-app && npm i && npm run dev
+
+
 # JSXGraph React App
 
 A standalone React application for drawing geometric shapes using JSXGraph, with the ability to export drawings as PNG or JSON.

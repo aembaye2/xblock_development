@@ -35,11 +35,8 @@ function App() {
       <main className="container mx-auto py-8 px-4">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-2">
-            JSXGraph Drawing App
+            Drawing Canvas for Econ Work
           </h1>
-          <p className="text-lg text-zinc-600 dark:text-zinc-400">
-            Draw geometric shapes and export as PNG or JSON
-          </p>
           {downloadMessage && (
             <p className="mt-4 text-green-600 dark:text-green-400 font-medium">
               {downloadMessage}
@@ -47,14 +44,11 @@ function App() {
           )}
         </div>
 
-        <div className="max-w-2xl mx-auto mb-6">
-          <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-4">
-            <h2 className="text-lg font-semibold mb-3 text-zinc-900 dark:text-zinc-50">
-              Axes Names
-            </h2>
-            <div className="flex gap-4 items-center justify-center">
-              <div className="w-40">
-                <label htmlFor="xAxis" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+        <div className="max-w-3xl mx-auto mb-8">
+          <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-6">
+            <div className="flex gap-6 items-end justify-center">
+              <div>
+                <label htmlFor="xAxis" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2 text-center">
                   X-Axis Name
                 </label>
                 <input
@@ -62,12 +56,12 @@ function App() {
                   type="text"
                   value={xAxisLabel}
                   onChange={(e) => setXAxisLabel(e.target.value)}
-                  className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-48 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
                   placeholder="x"
                 />
               </div>
-              <div className="w-40">
-                <label htmlFor="yAxis" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+              <div>
+                <label htmlFor="yAxis" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2 text-center">
                   Y-Axis Name
                 </label>
                 <input
@@ -75,25 +69,19 @@ function App() {
                   type="text"
                   value={yAxisLabel}
                   onChange={(e) => setYAxisLabel(e.target.value)}
-                  className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-48 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
                   placeholder="y"
                 />
               </div>
             </div>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
-              Change the axis names and they will update in real-time
-            </p>
           </div>
         </div>
 
-        <div className="max-w-2xl mx-auto mb-6">
-          <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-4">
-            <h2 className="text-lg font-semibold mb-3 text-zinc-900 dark:text-zinc-50">
-              Axis Ranges
-            </h2>
-            <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+        <div className="max-w-3xl mx-auto mb-8">
+          <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-6">
+            <div className="flex gap-3 items-end justify-center flex-wrap">
               <div>
-                <label htmlFor="minX" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                <label htmlFor="minX" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2 text-center">
                   Min X
                 </label>
                 <input
@@ -101,11 +89,11 @@ function App() {
                   type="number"
                   value={minX}
                   onChange={(e) => setMinX(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-24 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
                 />
               </div>
               <div>
-                <label htmlFor="maxX" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                <label htmlFor="maxX" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2 text-center">
                   Max X
                 </label>
                 <input
@@ -113,11 +101,11 @@ function App() {
                   type="number"
                   value={maxX}
                   onChange={(e) => setMaxX(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-24 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
                 />
               </div>
               <div>
-                <label htmlFor="minY" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                <label htmlFor="minY" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2 text-center">
                   Min Y
                 </label>
                 <input
@@ -125,11 +113,11 @@ function App() {
                   type="number"
                   value={minY}
                   onChange={(e) => setMinY(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-24 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
                 />
               </div>
               <div>
-                <label htmlFor="maxY" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                <label htmlFor="maxY" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2 text-center">
                   Max Y
                 </label>
                 <input
@@ -137,20 +125,17 @@ function App() {
                   type="number"
                   value={maxY}
                   onChange={(e) => setMaxY(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-24 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
                 />
               </div>
             </div>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
-              Set the range for each axis (changes take effect immediately)
-            </p>
           </div>
         </div>
 
         <div className="max-w-4xl mx-auto flex justify-center">
           <DrawingBoard
             key={`${minX}-${maxX}-${minY}-${maxY}`}
-            tools={['point', 'segment', 'circle', 'triangle', 'arrow', 'curve', 'polygon', 'text', 'rectangle', 'doubleArrow','select']}
+            tools={['point', 'segment', 'circle', 'triangle', 'arrow', 'curve', 'polygon', 'text', 'rectangle', 'doubleArrow','select', 'delete2']}
             buttons={['undo', 'redo', 'clear', 'downloadPNG']} //, 'downloadJSON'
             initialState={initialDrawingState}
             readOnlyInitial={false}

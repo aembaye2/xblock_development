@@ -10,6 +10,8 @@ import {
   Type,
   Pentagon,
   MousePointer,
+  Trash2,
+  XCircle,
   type LucideIcon
 } from "lucide-react";
 import type { DrawingMode } from "./drawingModes";
@@ -88,6 +90,12 @@ export const ALL_DRAWING_TOOLS: DrawingTool[] = [
     icon: Pentagon,
     title: "Draw Polygon",
     description: "Click to add vertices, double-click to close"
+  },
+  {
+    id: "delete2",
+    icon: XCircle,
+    title: "Delete Shape",
+    description: "Click on a shape to delete it"
   },
 ];
 
