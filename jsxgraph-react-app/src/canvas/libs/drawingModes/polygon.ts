@@ -1,4 +1,4 @@
-import { DrawingModeHandler, DrawingContext } from './types';
+import { DrawingModeHandler, DrawingContext, generateShapeId } from './types';
 
 // Polygon mode state
 let polygonPointsRef: any[] = [];
@@ -47,16 +47,25 @@ function finishPolygon(context: DrawingContext) {
   const closingSegment = context.board.create("segment", [lastPoint, firstPoint], {
     strokeWidth: 2,
     strokeColor: '#8b5cf6',
-    fixed: true,
+    fixed: false,
     highlight: false,
   });
   
   polygonSegmentsRef.push(closingSegment);
 
-  // Lock all points
+  // Assign a shared UID to all polygon parts (segments + points)
+  const uid = generateShapeId();
+  for (const s of polygonSegmentsRef) {
+    try { s.__uid = uid; } catch (e) {}
+  }
+  for (const p of polygonPointsRef) {
+    try { p.__uid = uid; } catch (e) {}
+  }
+
+  // Keep all points draggable (don't lock them)
   polygonPointsRef.forEach((p) => {
     p.setAttribute({
-      fixed: true,
+      fixed: false,
       highlight: false,
     });
   });
@@ -134,7 +143,7 @@ export const polygonHandler: DrawingModeHandler = {
       const segment = context.board.create("segment", [previousPoint, newPoint], {
         strokeWidth: 2,
         strokeColor: '#8b5cf6',
-        fixed: true,
+        fixed: false,
         highlight: false,
       });
       polygonSegmentsRef.push(segment);

@@ -24,8 +24,15 @@ export interface DrawingContext {
   setStartPoint: (point: Point | null) => void;
   currentShape: any;
   setCurrentShape: (shape: any) => void;
+  selectedObject?: any;
+  setSelectedObject?: (obj: any) => void;
   undoStackRef: React.MutableRefObject<any[][]>;
   redoStackRef: React.MutableRefObject<any[][]>;
   setVersion: React.Dispatch<React.SetStateAction<number>>;
   getMouseCoords: (e: MouseEvent) => any;
 }
+
+// Simple UID generator for grouping shape elements
+export const generateShapeId = () => {
+  return `s_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,9)}`;
+};

@@ -52,6 +52,11 @@ export const arrowHandler: DrawingModeHandler = {
   handleMouseUp: (e: MouseEvent, context: DrawingContext) => {
     if (!context.isDrawing || !context.currentShape) return;
 
+    // Make the arrow points draggable after creation
+    context.currentShape.p1.setAttribute({ fixed: false });
+    context.currentShape.p2.setAttribute({ fixed: false });
+    context.currentShape.arrow.setAttribute({ fixed: false });
+
     const shapeObjects = [context.currentShape.arrow, context.currentShape.p1, context.currentShape.p2];
     context.undoStackRef.current.push(shapeObjects);
     context.redoStackRef.current = [];

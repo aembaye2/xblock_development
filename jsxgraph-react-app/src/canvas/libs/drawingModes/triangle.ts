@@ -1,4 +1,4 @@
-import { DrawingModeHandler, DrawingContext, Point } from './types';
+import { DrawingModeHandler, DrawingContext, Point, generateShapeId } from './types';
 
 // Triangle mode state
 let trianglePointsRef: Point[] = [];
@@ -179,6 +179,8 @@ export const triangleHandler: DrawingModeHandler = {
       },
       fixed: true,
     });
+
+    try { finalTriangle.__uid = generateShapeId(); } catch (e) {}
 
     // Add to undo stack
     context.undoStackRef.current.push([finalTriangle]);

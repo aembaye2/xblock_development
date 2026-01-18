@@ -1,4 +1,4 @@
-import { DrawingModeHandler, DrawingContext } from './types';
+import { DrawingModeHandler, DrawingContext, generateShapeId } from './types';
 
 export const circleHandler: DrawingModeHandler = {
   handleMouseDown: (e: MouseEvent, context: DrawingContext) => {
@@ -49,6 +49,15 @@ export const circleHandler: DrawingModeHandler = {
 
   handleMouseUp: (e: MouseEvent, context: DrawingContext) => {
     if (!context.isDrawing || !context.currentShape) return;
+
+    // Make the circle points draggable after creation
+    context.currentShape.center.setAttribute({ fixed: false });
+    context.currentShape.radiusPoint.setAttribute({ fixed: false });
+    context.currentShape.circle.setAttribute({ fixed: false });
+    const uid = generateShapeId();
+    try { context.currentShape.circle.__uid = uid; } catch (e) {}
+    try { context.currentShape.center.__uid = uid; } catch (e) {}
+    try { context.currentShape.radiusPoint.__uid = uid; } catch (e) {}
 
     const shapeObjects = [
       context.currentShape.circle,

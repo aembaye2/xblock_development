@@ -21,6 +21,8 @@ export const selectHandler: DrawingModeHandler = {
       const selectedObject = selectableObjects[0];
       setCurrentShape(selectedObject);
       setIsDrawing(true);
+      // Inform board about selection
+      if (context.setSelectedObject) context.setSelectedObject(selectedObject);
 
       // Store initial position and fixed state for dragging
       selectedObject._mouseStartX = coords.usrCoords[1];
@@ -146,8 +148,10 @@ export const selectHandler: DrawingModeHandler = {
       setVersion(prev => prev + 1);
     }
 
+    // Clear current dragging state
     setCurrentShape(null);
     setIsDrawing(false);
+    // Keep selectedObject as-is (selection persists after drag)
   },
 
   cleanup: (context: DrawingContext) => {

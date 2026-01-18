@@ -63,6 +63,11 @@ export const doubleArrowHandler: DrawingModeHandler = {
   handleMouseUp: (e: MouseEvent, context: DrawingContext) => {
     if (!context.isDrawing || !context.currentShape) return;
 
+    // Make the double arrow points draggable after creation
+    context.currentShape.p1.setAttribute({ fixed: false });
+    context.currentShape.p2.setAttribute({ fixed: false });
+    context.currentShape.line.setAttribute({ fixed: false });
+
     // Store all objects in the undo stack
     const shapeObjects = [
       context.currentShape.line,

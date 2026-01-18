@@ -52,10 +52,10 @@ function updateCurve(context: DrawingContext, includePreview: boolean = false) {
 function finishCurve(context: DrawingContext, startNew: boolean = false) {
   if (curvePointsRef.length < 2) return;
 
-  // Lock current points
+  // Keep current points draggable (don't lock them)
   curvePointsRef.forEach((p) => {
     p.setAttribute({
-      fixed: true,
+      fixed: false,
       highlight: false,
     });
   });

@@ -23,6 +23,9 @@ export const pointHandler: DrawingModeHandler = {
   handleMouseUp: (e: MouseEvent, context: DrawingContext) => {
     if (!context.currentShape) return;
 
+    // Make the point draggable after creation
+    context.currentShape.setAttribute({ fixed: false });
+
     context.undoStackRef.current.push([context.currentShape]);
     context.redoStackRef.current = [];
     context.setVersion((v) => v + 1);

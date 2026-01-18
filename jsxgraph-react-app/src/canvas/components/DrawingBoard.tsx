@@ -66,7 +66,7 @@ interface DrawingBoardProps {
 
 export default function DrawingBoard({ 
   tools = "all",
-  buttons = ["undo", "redo", "clear", "downloadPNG", "downloadJSON"],
+  buttons = ["undo", "redo", "clear", "downloadPNG", "downloadJSON", "editAxes"],
   initialState,
   readOnlyInitial = false,
   onSubmit,
@@ -85,6 +85,7 @@ export default function DrawingBoard({
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPoint, setStartPoint] = useState<Point | null>(null);
   const [currentShape, setCurrentShape] = useState<any>(null);
+  const [selectedObject, setSelectedObject] = useState<any>(null);
   
   const undoStackRef = useRef<any[][]>([]);
   const redoStackRef = useRef<any[][]>([]);
@@ -191,6 +192,8 @@ export default function DrawingBoard({
           fixed: true,
           highlight: false,
         });
+
+        // (graph title element removed)
 
         // Y-axis label centered to the left of the axis (rotated 90 degrees)
           yLabelRef.current = newBoard.create('text', [-0.08 * xLen, (bb[1] + bb[3]) / 2, yAxisLabel], {
@@ -498,6 +501,8 @@ export default function DrawingBoard({
     setStartPoint,
     currentShape: stateRef.current.currentShape,
     setCurrentShape,
+    selectedObject,
+    setSelectedObject,
     undoStackRef,
     redoStackRef,
     setVersion,
@@ -511,6 +516,18 @@ export default function DrawingBoard({
 
   useEffect(() => {
     if (!board || !mode) return;
+
+    // Set initial cursor for delete mode when entering
+    try {
+      const el = boardRef.current as HTMLElement | null;
+      if (el) {
+        if (mode === 'delete2') {
+          el.style.cursor = 'crosshair';
+        } else {
+          el.style.cursor = 'default';
+        }
+      }
+    } catch (err) {}
 
     const handler = drawingModeHandlers[mode];
     
@@ -538,6 +555,17 @@ export default function DrawingBoard({
 
     const boardElement = boardRef.current;
     if (boardElement) {
+      // Keep selection when clicking on the board (clear if clicking empty space)
+      const handleBoardClickClear = (ev: MouseEvent) => {
+        const context = createDrawingContext();
+        const coords = context.getMouseCoords(ev);
+        if (!coords) return;
+        const objects = board.getAllUnderPoint(coords.scrCoords[1], coords.scrCoords[2]);
+        if (!objects || objects.length === 0) {
+          setSelectedObject(null);
+        }
+      };
+      boardElement.addEventListener('click', handleBoardClickClear);
       boardElement.addEventListener("mousedown", handleMouseDown);
       boardElement.addEventListener("mousemove", handleMouseMove);
       boardElement.addEventListener("mouseup", handleMouseUp);
@@ -560,6 +588,12 @@ export default function DrawingBoard({
         boardElement.removeEventListener("dblclick", handleDoubleClick as any);
         boardElement.removeEventListener("mouseleave", handleMouseUp);
         document.removeEventListener("keydown", handleKeyDown);
+        boardElement.removeEventListener('click', handleBoardClickClear);
+        // Reset cursor when leaving mode
+        try {
+          const el = boardRef.current as HTMLElement | null;
+          if (el) el.style.cursor = 'default';
+        } catch (err) {}
       };
     }
   }, [board, mode, isDrawing, currentShape, startPoint]);
@@ -573,57 +607,65 @@ export default function DrawingBoard({
     ) {
       return;
     }
+    if (!board) return;
 
-    if (board && JSXGraphRef.current) {
-      // Free the current board
-      JSXGraphRef.current.freeBoard(board);
-      
-      // Reinitialize the board
-      const newBoard = JSXGraphRef.current.initBoard(containerId, {
-        boundingbox: boundingBox,
-        axis: true,
-        showCopyright: false,
-        showNavigation: true,
-        keepaspectratio: true,
-        pan: {
-          enabled: false,
-        },
-        zoom: {
-          enabled: false,
-        },
-        defaultAxes: {
-          x: {
-            ticks: {
-              label: {
-                fontsize: 16,
-              },
-            },
-            name: 'x',
-            withLabel: true,
-            label: {
-              fontsize: 18,
-            },
-          },
-          y: {
-            ticks: {
-              label: {
-                fontsize: 16,
-              },
-            },
-            name: 'y',
-            withLabel: true,
-            label: {
-              fontsize: 18,
-            },
-          },
-        },
-      });
-      setBoard(newBoard);
-      undoStackRef.current = [];
-      redoStackRef.current = [];
-      setVersion((v) => v + 1);
+    // Remove only user-created objects (points, segments, lines, polygons, arrows, circles, curves, text)
+    const objectsList = [...(board.objectsList || [])];
+    objectsList.forEach((obj: any) => {
+      // Skip axes, grid, ticks
+      if (obj.elType === 'axis' || obj.elType === 'grid' || obj.elType === 'ticks') return;
+
+      // Remove common user element types
+      if (
+        obj.elType === 'point' ||
+        obj.elType === 'segment' ||
+        obj.elType === 'line' ||
+        obj.elType === 'polygon' ||
+        obj.elType === 'arrow' ||
+        obj.elType === 'circle' ||
+        obj.elType === 'curve' ||
+        obj.elType === 'text'
+      ) {
+        try {
+          board.removeObject(obj);
+        } catch (e) {
+          // ignore removal errors
+        }
+      }
+    });
+
+    // Clear preview/selection state
+    setCurrentShape(null);
+    setStartPoint(null);
+    setIsDrawing(false);
+
+    // Reset undo/redo stacks
+    undoStackRef.current = [];
+    redoStackRef.current = [];
+    setVersion((v) => v + 1);
+
+    // Ensure board re-renders
+    try {
+      board.update && board.update();
+    } catch (e) {}
+
+    // If axes/ticks were accidentally removed as non-user objects, recreate them
+    try {
+      const remaining = [...(board.objectsList || [])];
+      const hasAxis = remaining.some((o: any) => o.elType === 'axis' || o.name === 'x' || o.name === 'y');
+      if (!hasAxis && JSXGraphRef.current) {
+        // Create X and Y axes with ticks and labels
+        const xAxis = board.create('axis', [[0, 0], [1, 0]], { name: 'x', withLabel: true });
+        const yAxis = board.create('axis', [[0, 0], [0, 1]], { name: 'y', withLabel: true });
+        try { board.create('ticks', [xAxis]); } catch (e) {}
+        try { board.create('ticks', [yAxis]); } catch (e) {}
+        board.update && board.update();
+      }
+    } catch (err) {
+      // ignore
     }
   };
+
 
   const undo = () => {
     const last = undoStackRef.current.pop();
@@ -744,6 +786,8 @@ export default function DrawingBoard({
   }
 };
 
+  
+
   const downloadJSON = () => {
     if (!board) return;
 
@@ -855,6 +899,25 @@ export default function DrawingBoard({
     setMode(newMode);
   };
 
+  const deleteSelected = () => {
+    if (!board) return;
+    if (!selectedObject) {
+      alert('No shape selected to delete');
+      return;
+    }
+
+    try {
+      board.removeObject(selectedObject);
+      // push to undo stack
+      undoStackRef.current.push([selectedObject]);
+      redoStackRef.current = [];
+      setVersion(v => v + 1);
+      setSelectedObject(null);
+    } catch (err) {
+      console.error('Failed to delete selected object', err);
+    }
+  };
+
   const handleSubmit = () => {
     const state = getCurrentState();
     if (onSubmit) {
@@ -868,12 +931,7 @@ export default function DrawingBoard({
 
   return (
     <div className="flex flex-col items-start gap-4 p-4">
-      {/* Drawing Tools at the top */}
-      <DrawingTools
-        tools={displayTools}
-        currentMode={mode}
-        onModeChange={handleModeChange}
-      />
+      {/* Drawing Tools moved to the right-side toolbar (vertical) */}
       
       {/* Canvas with action buttons on the right side */}
       <div className="flex items-start gap-4">
@@ -884,18 +942,34 @@ export default function DrawingBoard({
           style={{ width: `${canvasWidth}px`, height: `${canvasHeight}px` }}
         />
         
-        {/* Action buttons on the right (east) side */}
-        <div className="flex flex-col gap-2 bg-white rounded-lg shadow-lg p-2 border border-gray-200">
-          <ActionButtons
-            onUndo={undo}
-            onRedo={redo}
-            onClear={clearBoard}
-            onDownloadPNG={downloadPNG}
-            onDownloadJSON={downloadJSON}
-            canUndo={undoStackRef.current.length > 0}
-            canRedo={redoStackRef.current.length > 0}
-            buttons={buttons.filter(btn => btn !== "submit")}
-          />
+        {/* Right-side vertical palette: left = tools, right = action icons (aligned bottom) */}
+        <div className="flex bg-white rounded-lg shadow-lg p-2 border border-gray-200" style={{ width: 96 }}>
+          <div className="flex-shrink-0">
+            <DrawingTools
+              tools={displayTools}
+              currentMode={mode}
+              onModeChange={handleModeChange}
+            />
+          </div>
+
+          <div className="flex flex-col justify-end ml-2">
+            <ActionButtons
+              onUndo={undo}
+              onRedo={redo}
+              onClear={clearBoard}
+              onDownloadPNG={downloadPNG}
+              onDownloadJSON={downloadJSON}
+              onDeleteSelected={deleteSelected}
+              canUndo={undoStackRef.current.length > 0}
+              canRedo={redoStackRef.current.length > 0}
+              buttons={buttons.filter(btn => btn !== "submit")}
+              selectedObjectId={selectedObject ? selectedObject.id : null}
+            />
+
+            <div className="w-full flex justify-center mt-2">
+              <button onClick={clearBoard} className="text-sm px-3 py-1 bg-gray-100 border rounded-md">Reset</button>
+            </div>
+          </div>
         </div>
       </div>
       

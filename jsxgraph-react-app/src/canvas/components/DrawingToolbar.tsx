@@ -3,7 +3,7 @@ import { Undo, Redo, Trash2, Download, FileJson } from "lucide-react";
 import type { DrawingMode } from "@/canvas/libs/drawingModes/types";
 import type { DrawingTool } from "@/canvas/libs/drawingTools";
 
-type ActionButton = "undo" | "redo" | "clear" | "downloadPNG" | "downloadJSON" | "submit";
+type ActionButton = "undo" | "redo" | "clear" | "downloadPNG" | "downloadJSON" | "submit" | "deleteSelected";
 
 interface DrawingToolbarProps {
   // Drawing tools to display
@@ -21,6 +21,8 @@ interface DrawingToolbarProps {
   onClear: () => void;
   onDownloadPNG: () => void;
   onDownloadJSON: () => void;
+  onDeleteSelected?: () => void;
+  selectedObjectId?: string | number | null;
   
   // State for disabling buttons
   canUndo: boolean;
@@ -41,18 +43,19 @@ export function DrawingTools({
   onModeChange: (mode: DrawingMode) => void;
 }) {
   return (
-    <div className="flex items-center gap-1 flex-wrap">
+    <div className="flex flex-col items-center gap-3 p-2 bg-transparent rounded-md">
       {tools.map((tool) => {
         const Icon = tool.icon;
         return (
           <Button
             key={tool.id}
             onClick={() => onModeChange(tool.id)}
-            variant={currentMode === tool.id ? "default" : "outline"}
+            variant={currentMode === tool.id ? "default" : "ghost"}
             title={tool.title}
-            size="default"
+            size="icon"
+            className="rounded-md px-2 py-2 flex items-center justify-center"
           >
-            <Icon className="h-4 w-4" />
+            <Icon className="h-5 w-5" />
           </Button>
         );
       })}
@@ -69,6 +72,8 @@ export function ActionButtons({
   onDownloadJSON,
   canUndo,
   canRedo,
+  onDeleteSelected,
+  selectedObjectId,
   buttons,
 }: {
   onUndo: () => void;
@@ -78,64 +83,41 @@ export function ActionButtons({
   onDownloadJSON: () => void;
   canUndo: boolean;
   canRedo: boolean;
+  onDeleteSelected?: () => void;
+  selectedObjectId?: string | number | null;
   buttons: ActionButton[];
 }) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-2 items-center">
       {buttons.includes("undo") && (
-        <Button 
-          onClick={onUndo} 
-          variant="outline"
-          disabled={!canUndo}
-          title="Undo"
-          className="w-full"
-        >
+        <Button onClick={onUndo} variant="outline" disabled={!canUndo} title="Undo" className="w-full">
           <Undo className="h-4 w-4" />
         </Button>
       )}
-      
+
       {buttons.includes("redo") && (
-        <Button 
-          onClick={onRedo} 
-          variant="outline"
-          disabled={!canRedo}
-          title="Redo"
-          className="w-full"
-        >
+        <Button onClick={onRedo} variant="outline" disabled={!canRedo} title="Redo" className="w-full">
           <Redo className="h-4 w-4" />
         </Button>
       )}
-      
-      {buttons.includes("clear") && (
-        <Button 
-          onClick={onClear} 
-          variant="destructive" 
-          title="Clear All"
-          className="w-full"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      )}
-      
+
       {buttons.includes("downloadPNG") && (
-        <Button 
-          onClick={onDownloadPNG} 
-          variant="outline" 
-          title="Download PNG"
-          className="w-full"
-        >
-          <Download className="h-4 w-4" />
+        <Button onClick={onDownloadPNG} variant="ghost" title="Download PNG" size="icon" className="rounded-md px-2 py-2">
+          <Download className="h-5 w-5" />
         </Button>
       )}
-      
+
       {buttons.includes("downloadJSON") && (
-        <Button 
-          onClick={onDownloadJSON} 
-          variant="outline" 
-          title="Download JSON"
-          className="w-full"
-        >
-          <FileJson className="h-4 w-4" />
+        <Button onClick={onDownloadJSON} variant="ghost" title="Download JSON" size="icon" className="rounded-md px-2 py-2">
+          <FileJson className="h-5 w-5" />
+        </Button>
+      )}
+
+
+
+      {buttons.includes("deleteSelected") && (
+        <Button onClick={onDeleteSelected} variant="ghost" title="Delete Selected" size="icon" className="rounded-md px-2 py-2" disabled={!selectedObjectId}>
+          <Trash2 className="h-5 w-5" />
         </Button>
       )}
     </div>
@@ -201,9 +183,9 @@ export default function DrawingToolbar({
         <Button 
           onClick={onClear} 
           variant="destructive" 
-          title="Clear All"
+          title="Reset"
         >
-          <Trash2 className="h-4 w-4" />
+          Reset
         </Button>
       )}
       
@@ -224,6 +206,16 @@ export default function DrawingToolbar({
           title="Download JSON"
         >
           <FileJson className="h-4 w-4" />
+        </Button>
+      )}
+
+      {buttons.includes("clear") && (
+        <Button 
+          onClick={onClear} 
+          variant="destructive" 
+          title="Reset"
+        >
+          Reset
         </Button>
       )}
     </div>

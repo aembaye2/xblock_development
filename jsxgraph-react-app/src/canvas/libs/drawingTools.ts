@@ -93,7 +93,7 @@ export const ALL_DRAWING_TOOLS: DrawingTool[] = [
   },
   {
     id: "delete2",
-    icon: XCircle,
+    icon: Trash2,
     title: "Delete Shape",
     description: "Click on a shape to delete it"
   },
