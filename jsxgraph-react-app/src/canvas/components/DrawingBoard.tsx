@@ -92,6 +92,7 @@ export default function DrawingBoard({
   const [version, setVersion] = useState(0);
   const JSXGraphRef = useRef<any>(null);
   const initialObjectsRef = useRef<Set<string>>(new Set());
+  const lastMouseEventRef = useRef<MouseEvent | null>(null);
   
   // Refs to track current state for event handlers
   const stateRef = useRef({ mode, isDrawing, startPoint, currentShape });
@@ -390,33 +391,29 @@ export default function DrawingBoard({
     }
 
     const objects: any[] = [];
-    
+
     for (const id in board.objects) {
       const obj = board.objects[id];
-      
+
       // Skip axes and grid elements
-      if (obj.elType === 'axis' || obj.elType === 'ticks' || obj.elType === 'grid' || 
-          obj.name === 'x' || obj.name === 'y') {
+      if (obj.elType === 'axis' || obj.elType === 'ticks' || obj.elType === 'grid' || obj.name === 'x' || obj.name === 'y') {
         continue;
       }
-      
+
       // Skip invisible objects
-      if (!obj.visProp.visible) {
+      if (!obj.visProp || !obj.visProp.visible) {
         continue;
       }
-      
+
       const objData: any = {
         id: obj.id,
         type: obj.elType,
         name: obj.name || undefined,
         isInitial: initialObjectsRef.current.has(obj.id),
       };
-      
+
       if (obj.elType === 'point') {
-        objData.coords = {
-          x: obj.X(),
-          y: obj.Y(),
-        };
+        objData.coords = { x: obj.X(), y: obj.Y() };
         objData.properties = {
           size: obj.visProp.size,
           fillColor: obj.visProp.fillcolor,
@@ -431,10 +428,7 @@ export default function DrawingBoard({
           strokeWidth: obj.visProp.strokewidth,
         };
       } else if (obj.elType === 'polygon') {
-        objData.vertices = obj.vertices.map((v: any) => ({
-          x: v.X(),
-          y: v.Y(),
-        }));
+        objData.vertices = obj.vertices.map((v: any) => ({ x: v.X(), y: v.Y() }));
         objData.properties = {
           fillColor: obj.visProp.fillcolor,
           fillOpacity: obj.visProp.fillopacity,
@@ -456,10 +450,10 @@ export default function DrawingBoard({
           strokeWidth: obj.visProp.strokewidth,
         };
       }
-      
+
       objects.push(objData);
     }
-    
+
     return {
       version: '1.0',
       boardSettings: {
@@ -555,6 +549,11 @@ export default function DrawingBoard({
 
     const boardElement = boardRef.current;
     if (boardElement) {
+      // Track last mouse event for keyboard-based deletion
+      const storeLastMouse = (ev: MouseEvent) => {
+        lastMouseEventRef.current = ev;
+      };
+      boardElement.addEventListener('mousemove', storeLastMouse);
       // Keep selection when clicking on the board (clear if clicking empty space)
       const handleBoardClickClear = (ev: MouseEvent) => {
         const context = createDrawingContext();
@@ -580,6 +579,85 @@ export default function DrawingBoard({
         }
       };
       document.addEventListener("keydown", handleKeyDown);
+      // Delete / Backspace key handler (global) - delete selected or hovered shape
+      const handleGlobalDelete = (ev: KeyboardEvent) => {
+        if (ev.key !== 'Delete' && ev.key !== 'Backspace') return;
+        if (!board) return;
+
+        // Helper to remove a collection of objects
+        const removeObjects = (objs: any[]) => {
+          const removed: any[] = [];
+          for (const o of objs) {
+            try { board.removeObject(o); removed.push(o); } catch (err) {}
+          }
+          if (removed.length > 0) {
+            undoStackRef.current.push(removed);
+            redoStackRef.current = [];
+            setVersion(v => v + 1);
+            try { board.update && board.update(); } catch (e) {}
+            return true;
+          }
+          return false;
+        };
+
+        // 1) If user has an explicit selection, prefer deleting that
+        const sel = selectedObject;
+        if (sel) {
+          try {
+            if (sel.shapeId) {
+              const toRemove = (board.objectsList || []).filter((o: any) => o && o.shapeId === sel.shapeId);
+              if (toRemove.length && removeObjects(toRemove)) return;
+            }
+            if (sel.__uid) {
+              const toRemove = (board.objectsList || []).filter((o: any) => o && o.__uid === sel.__uid);
+              if (toRemove.length && removeObjects(toRemove)) return;
+            }
+            // fallback: remove the selected object itself
+            if (removeObjects([sel])) return;
+          } catch (err) {}
+        }
+
+        // 2) Try hovered object under last mouse position
+        try {
+          const lastEv = lastMouseEventRef.current as any;
+          let candidates: any[] = [];
+          if (lastEv) {
+            const coords = getMouseCoords(lastEv as MouseEvent);
+            if (coords) {
+              candidates = board.getAllUnderPoint(coords.scrCoords[1], coords.scrCoords[2]) || [];
+            }
+          } else if ((board as any).getAllUnderMouse) {
+            // fallback API
+            candidates = (board as any).getAllUnderMouse(lastEv) || [];
+          }
+
+          if (candidates && candidates.length) {
+            // Prefer shapeId
+            for (const el of candidates) {
+              if (el && el.shapeId) {
+                const toRemove = (board.objectsList || []).filter((o: any) => o && o.shapeId === el.shapeId);
+                if (toRemove.length && removeObjects(toRemove)) return;
+              }
+            }
+
+            // Then try __uid grouping
+            const byUid = candidates.find((o: any) => o && o.__uid);
+            if (byUid && byUid.__uid) {
+              const uid = byUid.__uid;
+              const toRemove = (board.objectsList || []).filter((o: any) => o && o.__uid === uid);
+              if (toRemove.length && removeObjects(toRemove)) return;
+            }
+
+            // Fallback: remove top-most safe object
+            const top = candidates[0];
+            if (top && top.elType && top.elType !== 'axis' && top.elType !== 'ticks' && top.elType !== 'grid' && top.elType !== 'text' && top.name !== 'x' && top.name !== 'y') {
+              removeObjects([top]);
+              return;
+            }
+          }
+        } catch (err) {}
+      };
+      document.addEventListener('keydown', handleGlobalDelete);
 
       return () => {
         boardElement.removeEventListener("mousedown", handleMouseDown);

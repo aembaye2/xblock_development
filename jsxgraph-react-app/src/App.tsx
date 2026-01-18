@@ -135,7 +135,7 @@ function App() {
         <div className="max-w-4xl mx-auto flex justify-center">
           <DrawingBoard
             key={`${minX}-${maxX}-${minY}-${maxY}`}
-            tools={['point', 'segment', 'circle', 'triangle', 'arrow', 'curve', 'polygon', 'text', 'rectangle', 'doubleArrow','select', 'delete2']}
+            tools={[,'select','point', 'segment', 'circle', 'triangle', 'arrow', 'curve', 'polygon', 'text', 'rectangle', 'doubleArrow']} //, 'delete2'
             buttons={['undo', 'redo', 'clear', 'downloadPNG']} //, 'downloadJSON'
             initialState={initialDrawingState}
             readOnlyInitial={false}
